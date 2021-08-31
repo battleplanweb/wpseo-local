@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Local\PostType;
 
+use WPSEO_Local_Option;
 use WPSEO_Options;
 use Yoast\WP\Local\Conditionals\Multiple_Locations_Conditional;
 use Yoast\WP\SEO\Initializers\Initializer_Interface;
@@ -45,6 +46,8 @@ class PostType implements Initializer_Interface {
 	 */
 	public function initialize() {
 		$this->post_type = (string) \apply_filters( $this->post_type_filter_tag, $this->post_type );
+		// Make sure that the singular and plural labels are available when registering the post type.
+		WPSEO_Options::register_option( WPSEO_Local_Option::get_instance() );
 		$this->register_post_type();
 	}
 

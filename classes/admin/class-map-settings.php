@@ -154,7 +154,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Map_Settings' ) ) {
 					$this->wpseo_local_core->check_custom_marker_size( $custom_marker );
 				}
 				else {
-					echo '<p>' . esc_html__( 'The custom marker should be 100x100 px. If the image exceeds those dimensions it could (partially) cover the info popup.', 'yoast-local-seo' ) . '</p>';
+					echo '<p>' . esc_html__( 'The custom marker should be 100x100px. If the image exceeds those dimensions it could (partially) cover the info popup.', 'yoast-local-seo' ) . '</p>';
 				}
 
 				WPSEO_Local_Admin_Page::section_after(); // End wpseo-local-custom-marker section.

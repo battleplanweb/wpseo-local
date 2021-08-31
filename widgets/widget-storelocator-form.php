@@ -21,7 +21,7 @@ class WPSEO_Storelocator_Form extends WP_Widget {
 			'description' => __( 'Shows form to search the nearest store. Will submit to the page which contains the store locator.', 'yoast-local-seo' ),
 		];
 
-		parent::__construct( false, __( 'WP SEO - Storelocator form', 'yoast-local-seo' ), $widget_options );
+		parent::__construct( false, __( 'WP SEO - Store locator form', 'yoast-local-seo' ), $widget_options );
 	}
 
 	/**
