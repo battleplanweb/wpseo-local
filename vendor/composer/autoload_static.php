@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3d66d6998e113ae854236622f8052391
+class ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129
 {
     public static $files = array (
         '3c8b39556c5001c1c8eca33d0e219ceb' => __DIR__ . '/../..' . '/includes/ajax-functions.php',
@@ -101,7 +101,7 @@ class ComposerStaticInit3d66d6998e113ae854236622f8052391
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit3d66d6998e113ae854236622f8052391::$classMap;
+            $loader->classMap = ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129::$classMap;
 
         }, null, ClassLoader::class);
     }

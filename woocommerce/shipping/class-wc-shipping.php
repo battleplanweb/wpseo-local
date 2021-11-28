@@ -191,6 +191,9 @@ class Yoast_WCSEO_Local_Shipping {
 				$yoast_wcseo_local_translations['select2'] = 'enabled';
 				$asset_manager->enqueue_script( 'select2' );
 				$woocommerce_assets_path = str_replace( [ 'http:', 'https:' ], '', WC()->plugin_url() ) . '/assets/';
+
+				// As the version shipped with WooCommerce is used, we don't manage the version ourselves.
+				// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
 				wp_enqueue_style( 'select2', $woocommerce_assets_path . 'css/select2.css' );
 			}
 

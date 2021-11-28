@@ -170,6 +170,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 				'wpseo_dashboard',
 				'Yoast SEO: Local SEO',
 				'Local SEO',
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- YoastSEO Free hook.
 				apply_filters( 'wpseo_manage_options_capability', 'wpseo_manage_options' ),
 				'wpseo_local',
 				[ 'WPSEO_Local_Admin_Page', 'build_page' ],
@@ -266,7 +267,6 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		 */
 		public function config_page_footer() {
 			if ( $this->is_settings_page || $this->is_locations_page ) {
-				// @codingStandardsIgnoreStart
 				?>
 				<script>
 					jQuery( document ).ready( function( $ ) {
@@ -302,7 +302,6 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 					} );
 				</script>
 				<?php
-				// @codingStandardsIgnoreEnd
 			}
 
 			if ( $this->is_yoast_seo_titles_page ) {

@@ -80,10 +80,9 @@ class WPSEO_Local_WooCommerce {
 
 	public function alter_shipping_method_description( $method_description, $instance ) {
 
-		if (
-			is_a( $instance, 'WC_Shipping_Local_Pickup' ) ||
-			is_a( $instance, 'WC_Shipping_Legacy_Local_Pickup' ) ||
-			is_a( $instance, 'WC_Shipping_Legacy_Local_Delivery' )
+		if ( is_a( $instance, 'WC_Shipping_Local_Pickup' )
+			|| is_a( $instance, 'WC_Shipping_Legacy_Local_Pickup' )
+			|| is_a( $instance, 'WC_Shipping_Legacy_Local_Delivery' )
 		) {
 			/* translators: %s expands to "Yoast SEO: Local SEO for WooCommerce". */
 			$method_description .= sprintf( __( '%s disabled this shipping method. To configure local pickup, go to the Local Store Pickup settings.', 'yoast-local-seo' ), 'Yoast SEO: Local SEO for WooCommerce' );

@@ -61,6 +61,8 @@ class Front_End_Integration implements Integration_Interface {
 
 	/**
 	 * Adds the GEO presenters if they're needed.
+	 *
+	 * @param Meta_Tags_Context $context The meta tags context.
 	 */
 	private function get_geo_presenters( $context ) {
 		$location = $this->locations->for_context( $context );

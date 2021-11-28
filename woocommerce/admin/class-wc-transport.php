@@ -59,7 +59,7 @@ class Yoast_WCSEO_Local_Transport {
 			AND woim.meta_value LIKE 'yoast_wcseo_local_pickup%';
 		";
 
-		// phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared
-		return $wpdb->get_results( $query ); // @codingStandardsIgnoreLine
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Query is defined as a literal string above. No preparing needed.
+		return $wpdb->get_results( $query );
 	}
 }

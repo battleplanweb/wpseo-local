@@ -179,6 +179,7 @@ class Yoast_WCSEO_Local_Shipping_Method extends WC_Shipping_Flat_Rate {
 
 		foreach ( $keys as $key ) {
 			if ( isset( $_POST[ $key ] ) ) {
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Unslashing not needed for numeric values and the intval mapping takes care of sanitization.
 				$ids = array_merge( $ids, array_map( 'intval', array_keys( $_POST[ $key ] ) ) );
 			}
 		}

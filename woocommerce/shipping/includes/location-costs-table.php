@@ -56,6 +56,7 @@ $cost_desc = __( 'Enter a cost (excl. tax) or sum, e.g. 10.00 * [qty].', 'yoast-
 						/* Row attributes - placeholder 1 to 3. */
 						(int) $location->ID,
 						esc_attr( $location->post_title ),
+						// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug: methods can't be globally ignored yet.
 						WPSEO_Utils::format_json_encode( array_map( 'esc_attr', $defaults ) ),
 						/* First column - placeholder 4. */
 						esc_html( $location->post_title ),
@@ -88,6 +89,7 @@ $cost_desc = __( 'Enter a cost (excl. tax) or sum, e.g. 10.00 * [qty].', 'yoast-
 							foreach ( $this->available_locations as $location ) {
 								$defaults = $this->resolve_defaults( $location );
 								echo '<option value="' . (int) $location->ID . '" data-defaults=\''
+									// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug: methods can't be globally ignored yet.
 									. WPSEO_Utils::format_json_encode( $defaults )
 									. '\'>' . $location->post_title . '</option>';
 							}

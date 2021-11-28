@@ -283,7 +283,6 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 
 									$text = ( ( $this->options['unit_system'] === 'METRIC' ) ? $text_km : $text_mi );
 									$text = apply_filters_deprecated( 'wpso_local_no_stores_in_radius', [ $text ], 'WPSEO Local 12.3', 'Yoast\WP\Local\no_stores_in_radius' );
-									// @codingStandardsIgnoreLine
 									$text = apply_filters( 'Yoast\WP\Local\no_stores_in_radius', $text );
 
 									echo '<p class="nearest_location">' . esc_html( $text ) . '</p>';
@@ -415,7 +414,10 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 
 			$replacements[] = $nr_results;
 
-			// @codingStandardsIgnoreStart
+			/*
+			 * The `$inner_join` variable is SQL being "concatenated" in, not a variable which needs to be prepared.
+			 * @phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			 */
 			$results = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT p.ID, m1.meta_value as lat, m2.meta_value as lng,
@@ -437,7 +439,7 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 				),
 				ARRAY_A
 			);
-			// @codingStandardsIgnoreEnd
+			// phpcs:enable
 
 			$location_count = $wpdb->num_rows;
 

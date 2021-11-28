@@ -1,10 +1,4 @@
 <?php
-/**
- * Yoast SEO: Local plugin file.
- *
- * @package WPSEO_Local\Main
- * @since   4.2
- */
 
 namespace Yoast\WP\Local\Repositories;
 

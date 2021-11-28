@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast SEO: Local plugin file.
- *
- * @package WPSEO_Local/PostType
- */
 
 namespace Yoast\WP\Local\PostType;
 
@@ -28,11 +23,6 @@ class PostType implements Initializer_Interface {
 	private $post_type = 'wpseo_locations';
 
 	/**
-	 * @var string The tag used for filtering the locations post type.
-	 */
-	private $post_type_filter_tag = 'wpseo_local_post_type';
-
-	/**
 	 * @return array A list of conditionals that must be met to use the class
 	 */
 	public static function get_conditionals() {
@@ -45,7 +35,7 @@ class PostType implements Initializer_Interface {
 	 * Initialize PostType
 	 */
 	public function initialize() {
-		$this->post_type = (string) \apply_filters( $this->post_type_filter_tag, $this->post_type );
+		$this->post_type = (string) \apply_filters( 'wpseo_local_post_type', $this->post_type );
 		// Make sure that the singular and plural labels are available when registering the post type.
 		WPSEO_Options::register_option( WPSEO_Local_Option::get_instance() );
 		$this->register_post_type();
@@ -118,7 +108,7 @@ class PostType implements Initializer_Interface {
 	 * @return bool
 	 */
 	public function is_post_type_filtered() {
-		return \has_filter( $this->post_type_filter_tag );
+		return \has_filter( 'wpseo_local_post_type' );
 	}
 
 	/**

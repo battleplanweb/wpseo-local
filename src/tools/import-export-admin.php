@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast SEO: Local plugin file.
- *
- * @package WPSEO_LOCAL\Import_Export_Admin
- */
 
 namespace Yoast\WP\Local\Tools;
 

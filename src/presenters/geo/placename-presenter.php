@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast SEO: Local plugin file.
- *
- * @package WPSEO_Local\Frontend
- */
 
 namespace Yoast\WP\Local\Presenters\Geo;
 

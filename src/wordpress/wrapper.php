@@ -1,9 +1,4 @@
 <?php
-/**
- * Yoast SEO Local Plugin File.
- *
- * @package Yoast\YoastSEO\Local\WordPress
- */
 
 namespace Yoast\WP\Local\WordPress;
 

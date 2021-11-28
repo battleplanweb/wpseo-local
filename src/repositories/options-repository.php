@@ -1,10 +1,4 @@
 <?php
-/**
- * Yoast SEO: Local plugin file.
- *
- * @package WPSEO_Local/options
- * @since   13.9
- */
 
 namespace Yoast\WP\Local\Repositories;
 
@@ -15,6 +9,8 @@ if ( ! \class_exists( Options_Repository::class ) ) {
 
 	/**
 	 * WPSEO_Local_Options_Repository class. Handles all basic needs for the options.
+	 *
+	 * @since 13.9
 	 */
 	class Options_Repository implements Initializer_Interface {
 

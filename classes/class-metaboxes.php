@@ -394,7 +394,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				sprintf(
 				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
 					__( 'If your business type is not listed, please read %1$sthe FAQ entry%2$s.', 'yoast-local-seo' ),
-					'<a href="https://yoa.st/business-listing" target="_blank">',
+					'<a href="' . WPSEO_Shortlinker::get( 'https://yoa.st/business-listing' ) . '" target="_blank">',
 					'</a>'
 				),
 				'has-wrapper'
@@ -1122,7 +1122,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				echo '<input type="hidden" id="hidden_custom_marker" name="_wpseo_business_location_custom_marker" value="' . ( ( ! empty( $custom_marker ) ) ? esc_url( $custom_marker ) : '' ) . '">';
 				echo '</div> <!-- .wpseo-local-custom_marker-wrapper -->';
 				if ( empty( $custom_marker ) ) {
-					echo '<p class="yoast-local-seo-field-desc">' . esc_html__( 'The custom marker should be 100x100 px. If the image exceeds those dimensions it could (partially) cover the info popup.', 'yoast-local-seo' ) . '</p>';
+					echo '<p class="yoast-local-seo-field-desc">' . esc_html__( 'The custom marker should be 100x100px. If the image exceeds those dimensions it could (partially) cover the info popup.', 'yoast-local-seo' ) . '</p>';
 				}
 				/* translators: %s extends to Yoast Local SEO brand name */
 				echo '<p class="yoast-local-seo-field-desc">' . sprintf( esc_html__( 'This custom marker will override the custom markers for the location category and general %s settings', 'yoast-local-seo' ), 'Yoast Local SEO' ) . '</p>';
@@ -1462,7 +1462,6 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			$use_multiple_locations = $this->options_repository->use_multiple_locations();
 
 			?>
-			<?php // @codingStandardsIgnoreStart ?>
 			<script>
 				jQuery( document ).ready( function( $ ) {
 					$( ".add-location-shortcode-button" ).on( "click", function() {
@@ -2348,10 +2347,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 						</div>
 					</div>
 				</div>
-				<?php // @codingStandardsIgnoreEnd ?>
-			<?php } ?>
-
-			<?php
+				<?php
+			}
 		}
 
 		/**

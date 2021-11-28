@@ -69,7 +69,7 @@ if ( ! class_exists( 'WPSEO_Local_Taxonomy' ) ) {
 			echo '<input type="hidden" id="hidden_custom_marker" name="wpseo_local_custom_marker" value="' . ( ( isset( $tax_meta['wpseo_local_custom_marker'] ) && $tax_meta['wpseo_local_custom_marker'] !== '' ) ? esc_url( wp_get_attachment_url( $tax_meta['wpseo_local_custom_marker'] ) ) : '' ) . '">';
 
 			if ( empty( $tax_meta['wpseo_local_custom_marker'] ) ) {
-				echo '<p class="description">' . esc_html__( 'The custom marker should be 100x100 px. If the image exceeds those dimensions it could (partially) cover the info popup.', 'yoast-local-seo' ) . '</p>';
+				echo '<p class="description">' . esc_html__( 'The custom marker should be 100x100px. If the image exceeds those dimensions it could (partially) cover the info popup.', 'yoast-local-seo' ) . '</p>';
 			}
 			echo '<p class="description">' . esc_html__( 'A custom marker can be set per category. If no marker is set here, the global marker will be used.', 'yoast-local-seo' ) . '</p>';
 			echo '</div>';

@@ -965,6 +965,14 @@ function wpseo_show_hour_options( $use_24h = false, $selected = '09:00' ) {
 	$output .= ( ! empty( $options['closed_label'] ) ? esc_html( $options['closed_label'] ) : esc_html__( 'Closed', 'yoast-local-seo' ) );
 	$output .= '</option>';
 
+	/*
+	 * These are hard-coded times not affected by timezone. Using gmdate()
+	 * would _make_ them affected by timezone, which would make the list start at
+	 * the local version of GMT midnight, instead of the "local" midnight time,
+	 * so using date() is correct in this case.
+	 *
+	 * @phpcs:disable WordPress.DateTime.RestrictedFunctions.date_date
+	 */
 	for ( $i = 0; $i < 24; $i++ ) {
 		$time                = strtotime( sprintf( '%1$02d', $i ) . ':00' );
 		$time_quarter        = strtotime( sprintf( '%1$02d', $i ) . ':15' );
@@ -1002,6 +1010,8 @@ function wpseo_show_hour_options( $use_24h = false, $selected = '09:00' ) {
 		$output .= '<option value="' . esc_attr( $value_half ) . '" ' . selected( $value_half, $selected, false ) . ' data-time-format-12-hours="' . esc_attr( $time_12h_half_value ) . '" data-time-format-24-hours="' . esc_attr( $time_24h_half_value ) . '">' . esc_html( $text_time_half_value ) . '</option>';
 		$output .= '<option value="' . esc_attr( $value_threequarters ) . '" ' . selected( $value_threequarters, $selected, false ) . ' data-time-format-12-hours="' . esc_attr( $time_12h_threequarters_value ) . '" data-time-format-24-hours="' . esc_attr( $time_24h_threequarters_value ) . '">' . esc_html( $text_time_threequarters_value ) . '</option>';
 	}
+
+	// phpcs:enable WordPress.DateTime.RestrictedFunctions.date_date
 
 	return $output;
 }
@@ -1298,6 +1308,7 @@ function wpseo_local_do_upgrade( $options ) {
 			return;
 		}
 
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- YoastSEO Free hook.
 		$shutdown_limit = \apply_filters( 'wpseo_shutdown_indexation_limit', 25 );
 
 		$indexables_repository = YoastSEO()->classes->get( Indexable_Repository::class );
@@ -1352,6 +1363,8 @@ function wpseo_local_do_upgrade( $options ) {
  * @param int $post_id The post ID of which the excerpt should be retrieved.
  *
  * @return string
+ *
+ * @phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited -- Variable gets overruled, but reset straight after.
  */
 function wpseo_local_get_excerpt( $post_id ) {
 	global $post;
@@ -1365,6 +1378,7 @@ function wpseo_local_get_excerpt( $post_id ) {
 	// Set back original $post;.
 	$post = $original_post;
 	wp_reset_postdata();
+	// phpcs:enable
 
 	return $output;
 }

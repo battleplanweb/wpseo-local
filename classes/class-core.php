@@ -365,6 +365,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 */
 		public static function update_sitemap() {
 			// Empty sitemap cache.
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- YoastSEO Free hook.
 			$caching = apply_filters( 'wpseo_enable_xml_sitemap_transient_caching', true );
 			if ( $caching ) {
 				delete_transient( 'wpseo_sitemap_cache_kml' );
@@ -437,7 +438,9 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 */
 		public function build_kml() {
 
-			$output  = '';
+			$output = '';
+
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- YoastSEO Free hook.
 			$caching = apply_filters( 'wpseo_enable_xml_sitemap_transient_caching', true );
 
 			if ( $caching ) {
@@ -541,6 +544,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 */
 		public function save_permalinks_on_option_save() {
 			// Empty sitemap cache.
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- YoastSEO Free hook.
 			$caching = apply_filters( 'wpseo_enable_xml_sitemap_transient_caching', true );
 			if ( $caching ) {
 				delete_transient( 'wpseo_sitemap_cache_kml' );

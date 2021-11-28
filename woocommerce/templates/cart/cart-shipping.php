@@ -132,6 +132,7 @@ $radiobuttons             = [];
 					);
 				}
 
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
 				do_action( 'woocommerce_after_shipping_rate', $method, $index );
 
 				?>
@@ -177,6 +178,7 @@ $radiobuttons             = [];
 						$calculator_text = __( 'Change address', 'yoast-local-seo' );
 					}
 					else {
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
 						echo wp_kses_post( apply_filters( 'woocommerce_shipping_estimate_html', __( 'Shipping options will be updated during checkout.', 'yoast-local-seo' ) ) );
 					}
 					?>
@@ -191,11 +193,14 @@ $radiobuttons             = [];
 				else {
 					printf( '%3$s <input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d" value="%2$s" class="shipping_method" />', $index, esc_attr( $method->id ), wc_cart_totals_shipping_method_label( $method ) );
 				}
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
 				do_action( 'woocommerce_after_shipping_rate', $method, $index );
 
 			elseif ( ! WC()->customer->has_calculated_shipping() ) :
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
 				echo wp_kses_post( apply_filters( 'woocommerce_shipping_may_be_available_html', __( 'Enter your address to view shipping options.', 'yoast-local-seo' ) ) );
 			else :
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
 				echo wp_kses_post( apply_filters( 'woocommerce_no_shipping_available_html', __( 'There are no shipping options available. Please ensure that your address has been entered correctly, or contact us if you need any help.', 'yoast-local-seo' ) ) );
 			endif;
 			?>

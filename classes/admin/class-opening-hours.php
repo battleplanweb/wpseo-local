@@ -145,7 +145,7 @@ class WPSEO_Local_Admin_Opening_Hours {
 
 		echo '<p>' . esc_html__( 'This is the default setting for all locations and can be overridden per location.', 'yoast-local-seo' ) . '</p>';
 
-		$shared_opening_hours_help_link       = new Help_Link_Presenter(
+		$shared_opening_hours_help_link = new Help_Link_Presenter(
 			WPSEO_Shortlinker::get( 'https://yoa.st/local-new-3' ),
 			__( 'Learn more about shared opening hours', 'yoast-local-seo' )
 		);

@@ -93,7 +93,6 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Page' ) ) {
 			foreach ( self::$tabs as $slug => $titles ) {
 				self::section_before( $slug, null, 'wpseotab ' . ( $slug === current( array_keys( self::$tabs ) ) ? 'active' : '' ) );
 
-				// @codingStandardsIgnoreLine
 				do_action( 'Yoast\WP\Local\before_option_content_' . $slug );
 
 				self::section_before( 'local-' . $slug, null, 'yoastbox paper tab-block search-appearance' );

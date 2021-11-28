@@ -156,7 +156,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 			printf(
 			/* translators: 1: link open tag; 2: link close tag. %3$s expands to Yoast SEO */
 				esc_html__( 'If you have multiple locations, %3$s will create a new Custom Post Type where you can manage your locations. %1$sRead more about managing multiple locations with CPTs%2$s.', 'yoast-local-seo' ),
-				'<a href="https://yoast.com/help/configuration-guide-for-local-seo/#multiple-locations" target="_blank">',
+				'<a href="' . WPSEO_Shortlinker::get( 'https://yoa.st/4fi' ) . '" target="_blank">',
 				WPSEO_Admin_Utils::get_new_tab_message() . '</a>',
 				'Yoast SEO'
 			);
@@ -203,7 +203,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 				sprintf(
 				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
 					__( 'If your business type is not listed, please read %1$sthe FAQ entry%2$s.', 'yoast-local-seo' ),
-					'<a href="https://yoa.st/business-listing" target="_blank">',
+					'<a href="' . WPSEO_Shortlinker::get( 'https://yoa.st/business-listing' ) . '" target="_blank">',
 					WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
 				),
 				'has-wrapper'
@@ -478,7 +478,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 				}
 			}
 
-			$primary_location_help_link       = new Help_Link_Presenter(
+			$primary_location_help_link = new Help_Link_Presenter(
 				WPSEO_Shortlinker::get( 'https://yoa.st/local-new-2' ),
 				__( 'Learn more about the primary location', 'yoast-local-seo' )
 			);
@@ -494,7 +494,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 			);
 			echo '</div>';
 
-			$shared_business_info_help_link       = new Help_Link_Presenter(
+			$shared_business_info_help_link = new Help_Link_Presenter(
 				WPSEO_Shortlinker::get( 'https://yoa.st/local-new-1' ),
 				__( 'Learn more about shared business info', 'yoast-local-seo' )
 			);

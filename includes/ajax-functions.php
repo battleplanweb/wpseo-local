@@ -79,6 +79,7 @@ function wpseo_copy_location_callback() {
 
 	$ret_array['location'] = $location;
 
+	// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug: methods can't be globally ignored yet.
 	die( WPSEO_Utils::format_json_encode( $ret_array ) );
 }
 

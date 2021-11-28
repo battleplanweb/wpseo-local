@@ -6,14 +6,14 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO: Local
- * Version: 14.1
+ * Version: 14.2
  * Plugin URI: https://yoast.com/wordpress/local-seo/
  * Description: This Local SEO module adds all the needed functionality to get your site ready for Local Search Optimization
  * GitHub Plugin URI: battleplanweb/wpseo-local
  */
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
-	define( 'WPSEO_LOCAL_VERSION', '14.1' );
+	define( 'WPSEO_LOCAL_VERSION', '14.2' );
 }
 
 if ( ! defined( 'WPSEO_LOCAL_PATH' ) ) {

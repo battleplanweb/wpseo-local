@@ -55,7 +55,7 @@ if ( ! class_exists( 'WPSEO_Local_Blocks' ) ) {
 			 *
 			 * @api bool If false, our structured data blocks won't show.
 			 */
-			$enabled = apply_filters( 'wpseo_enable_structured_data_blocks', true );
+			$enabled = apply_filters( 'wpseo_enable_structured_data_blocks', true ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- YoastSEO Free hook.
 			if ( ! $enabled ) {
 				return;
 			}

@@ -16,7 +16,7 @@ use Yoast\WP\Local\Main;
  *
  * @throws Exception If loading fails and YOAST_ENVIRONMENT is development.
  */
-function YoastSEOLocal() { // @codingStandardsIgnoreLine
+function YoastSEOLocal() {
 	// phpcs:enable
 
 	static $main;
