@@ -362,7 +362,7 @@ if ( ! class_exists( 'WPSEO_Local_Opening_Hours_Repository' ) ) {
 			// Loop through opening hours and remove empty ones.
 			$opening_hours = \array_filter(
 				$opening_hours,
-				function ( $value ) {
+				static function ( $value ) {
 					return ! empty( $value );
 				}
 			);

@@ -5,6 +5,8 @@
  * @package WPSEO_Local\Frontend
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+
 /**
  * Class WPSEO_Show_Locations_By_Category.
  *
@@ -42,7 +44,8 @@ class WPSEO_Show_Locations_By_Category extends WP_Widget {
 			return;
 		}
 
-		$repo = new WPSEO_Local_Locations_Repository();
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$repo                         = $locations_repository_builder->get_locations_repository();
 		$repo->get( [ 'category_id' => $category_id ] );
 		$locations = $repo->query;
 

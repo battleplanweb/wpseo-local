@@ -7,6 +7,9 @@
  * @todo    CHECK THE @SINCE VERSION NUMBER!!!!!!!!
  */
 
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
+use Yoast\WP\Local\Repositories\Timezone_Repository;
+
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -41,7 +44,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Map_Settings' ) ) {
 		/**
 		 * Holds the API keys repository.
 		 *
-		 * @var WPSEO_Local_Api_Keys_Repository
+		 * @var Api_Keys_Repository
 		 */
 		private $api_repository;
 
@@ -51,7 +54,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Map_Settings' ) ) {
 		public function __construct() {
 			$this->get_core();
 			$this->get_timezone_repository();
-			$this->api_repository = new WPSEO_Local_Api_Keys_Repository();
+			$this->api_repository = new Api_Keys_Repository();
+			$this->api_repository->initialize();
 
 			add_filter( 'wpseo_local_admin_tabs', [ $this, 'create_tab' ] );
 			add_filter( 'wpseo_local_admin_help_center_video', [ $this, 'set_video' ] );
@@ -72,8 +76,9 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Map_Settings' ) ) {
 		 * Set WPSEO Local Core Timezone Repository in local property
 		 */
 		private function get_timezone_repository() {
-			$wpseo_local_timezone_repository       = new WPSEO_Local_Timezone_Repository();
-			$this->wpseo_local_timezone_repository = $wpseo_local_timezone_repository;
+			$timezone_repository = new Timezone_Repository();
+			$timezone_repository->initialize();
+			$this->wpseo_local_timezone_repository = $timezone_repository;
 		}
 
 		/**

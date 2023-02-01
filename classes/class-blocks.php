@@ -6,6 +6,8 @@
  * @since   6.0
  */
 
+use Yoast\WP\Local\PostType\PostType;
+
 if ( ! class_exists( 'WPSEO_Local_Blocks' ) ) {
 
 	/**
@@ -72,12 +74,16 @@ if ( ! class_exists( 'WPSEO_Local_Blocks' ) ) {
 
 			$unit_system = WPSEO_Options::get( 'unit_system' );
 
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
+
 			$localization_data = [
 				'ajax_url'             => admin_url( 'admin-ajax.php' ),
 				'plugin_url'           => trailingslashit( plugins_url( '', WPSEO_LOCAL_FILE ) ),
 				'hasMultipleLocations' => wpseo_has_multiple_locations(),
 				'unitSystem'           => ( ( empty( $unit_system ) || $unit_system === 'METRIC' ) ? 'km' : 'mi' ),
-				'locationsPostType'    => PostType::get_instance()->get_post_type(),
+				'locationsPostType'    => $post_type,
 			];
 
 			$localization_data = $this->maybe_add_preview_address( $localization_data );
@@ -100,7 +106,11 @@ if ( ! class_exists( 'WPSEO_Local_Blocks' ) ) {
 				];
 
 				if ( wpseo_has_multiple_locations() ) {
-					if ( get_post_type( get_the_ID() ) === PostType::get_instance()->get_post_type() ) {
+					$post_type_instance = new PostType();
+					$post_type_instance->initialize();
+					$post_type = $post_type_instance->get_post_type();
+
+					if ( get_post_type( get_the_ID() ) === $post_type ) {
 						$args['id'] = get_the_ID();
 					}
 				}

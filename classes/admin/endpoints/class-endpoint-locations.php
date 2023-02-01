@@ -5,6 +5,8 @@
  * @package WPSEO\Admin\OnPage
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+
 /**
  * Represents an implementation of the WPSEO_Endpoint interface to register one or multiple endpoints.
  */
@@ -63,8 +65,9 @@ class WPSEO_Local_Endpoint_Locations implements WPSEO_Endpoint {
 	 * @return WP_REST_Response
 	 */
 	public function get_data() {
-		$location_repository = new WPSEO_Local_Locations_Repository();
-		$locations           = $location_repository->get( [], false );
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$location_repository          = $locations_repository_builder->get_locations_repository();
+		$locations                    = $location_repository->get( [], false );
 
 		$data = [];
 

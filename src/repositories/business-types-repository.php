@@ -5,7 +5,7 @@ namespace Yoast\WP\Local\Repositories;
 if ( ! \class_exists( Business_Types_Repository::class ) ) {
 
 	/**
-	 * WPSEO_Local_Business_Types_Repository class. Handles all basic needs for the plugin, like custom post_type/taxonomy.
+	 * Business_Types_Repository class. Handles all basic needs for the plugin, like custom post_type/taxonomy.
 	 */
 	class Business_Types_Repository {
 
@@ -30,37 +30,37 @@ if ( ! \class_exists( Business_Types_Repository::class ) ) {
 		/**
 		 * Check whether a given business type is a child of a given parent type.
 		 *
-		 * @param string $parent The given parent business type.
-		 * @param string $child  The child business type on which to match.
-		 * @param array  $array  The business types array or the child array when used recursively.
-		 * @param array  $path   The path containing the route to the current item.
+		 * @param string $parent_business_type The given parent business type.
+		 * @param string $child                The child business type on which to match.
+		 * @param array  $business_types_array The business types array or the child array when used recursively.
+		 * @param array  $path                 The path containing the route to the current item.
 		 *
 		 * @return bool True when the parent / child combination is found in the business types array.
 		 */
-		public function is_business_type_child_of( $parent, $child, $array = [], $path = [] ) {
-			if ( $parent === $child ) {
+		public function is_business_type_child_of( $parent_business_type, $child, $business_types_array = [], $path = [] ) {
+			if ( $parent_business_type === $child ) {
 				return true;
 			}
 
-			if ( empty( $array ) ) {
+			if ( empty( $business_types_array ) ) {
 				$this->populate_business_types();
-				$array = $this->business_types;
+				$business_types_array = $this->business_types;
 			}
 
-			foreach ( $array as $key => $value ) {
-				if ( \in_array( $parent, $path, true ) ) {
+			foreach ( $business_types_array as $key => $value ) {
+				if ( \in_array( $parent_business_type, $path, true ) ) {
 					if ( isset( $value['children'] ) && \is_array( $value['children'] ) && \array_key_exists( $child, $value['children'] ) ) {
 						return true;
 					}
 
-					if ( \array_key_exists( $child, $array ) ) {
+					if ( \array_key_exists( $child, $business_types_array ) ) {
 						return true;
 					}
 				}
 
 				if ( isset( $value['children'] ) && ! empty( $value['children'] ) ) {
 					$path[] = $key;
-					$result = $this->is_business_type_child_of( $parent, $child, $value['children'], $path );
+					$result = $this->is_business_type_child_of( $parent_business_type, $child, $value['children'], $path );
 					if ( $result ) {
 						return $result;
 					}
@@ -92,12 +92,12 @@ if ( ! \class_exists( Business_Types_Repository::class ) ) {
 		 *
 		 * The result is assigned to the $flattened_business_types property.
 		 *
-		 * @param array $array Business types array to flatten.
-		 * @param int   $level Nesting level of the current iteration.
+		 * @param array $business_types_array Business types array to flatten.
+		 * @param int   $level                Nesting level of the current iteration.
 		 */
-		private function flatten_business_types_array( array $array, $level = 0 ) {
+		private function flatten_business_types_array( array $business_types_array, $level = 0 ) {
 
-			foreach ( $array as $key => $value ) {
+			foreach ( $business_types_array as $key => $value ) {
 				// If $value is an array.
 				if ( \is_array( $value ) ) {
 					// We need to loop through it.
@@ -133,6 +133,94 @@ if ( ! \class_exists( Business_Types_Repository::class ) ) {
 					'children' => [
 						/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Airline */
 						'Airline'                 => \__( 'Airline', 'yoast-local-seo' ),
+						'CivicStructure'          => [
+							/* translators: This should be translated according to the definition on schema.org. For more information, visit: https://schema.org/CivicStructure */
+							'label'    => \__( 'Civic structure', 'yoast-local-seo' ),
+							'children' => [
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Airport */
+								'Airport'               => \__( 'Airport', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Aquarium */
+								'Aquarium'              => \__( 'Aquarium', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Beach */
+								'Beach'                 => \__( 'Beach', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/BoatTerminal */
+								'BoatTerminal'          => \__( 'Boat terminal', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Bridge */
+								'Bridge'                => \__( 'Bridge', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/BusStation */
+								'BusStation'            => \__( 'Bus station', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/BusStop */
+								'BusStop'               => \__( 'Bus stop', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Cemetery */
+								'Cemetery'              => \__( 'Cemetery', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Crematorium */
+								'Crematorium'           => \__( 'Crematorium', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/EventVenue */
+								'EventVenue'            => \__( 'Event venue', 'yoast-local-seo' ),
+								'GovernmentBuilding'    => [
+									/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/GovernmentBuilding */
+									'label'    => \__( 'Government building', 'yoast-local-seo' ),
+									'children' => [
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/CityHall */
+										'CityHall'             => \__( 'City hall', 'yoast-local-seo' ),
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Courthouse */
+										'Courthouse'           => \__( 'Courthouse', 'yoast-local-seo' ),
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/DefenceEstablishment */
+										'DefenceEstablishment' => \__( 'Defence establishment', 'yoast-local-seo' ),
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Embassy */
+										'Embassy'              => \__( 'Embassy', 'yoast-local-seo' ),
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/LegislativeBuilding */
+										'LegislativeBuilding'  => \__( 'Legislative building', 'yoast-local-seo' ),
+									],
+								],
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Museum */
+								'Museum'                => \__( 'Museum', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/MusicVenue */
+								'MusicVenue'            => \__( 'Music venue', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Park */
+								'Park'                  => \__( 'Park', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/ParkingFacility */
+								'ParkingFacility'       => \__( 'Parking facility', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/PerformingArtsTheater */
+								'PerformingArtsTheater' => \__( 'Performing arts theater', 'yoast-local-seo' ),
+								'PlaceOfWorship'        => [
+									/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/PlaceOfWorship */
+									'label'    => \__( 'Place of worship', 'yoast-local-seo' ),
+									'children' => [
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/BuddhistTemple */
+										'BuddhistTemple' => \__( 'Buddhist temple', 'yoast-local-seo' ),
+										'Church'         => [
+											/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Church */
+											'label'    => \__( 'Church', 'yoast-local-seo' ),
+											'children' => [
+												/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/CatholicChurch */
+												'CatholicChurch' => \__( 'Catholic church', 'yoast-local-seo' ),
+											],
+										],
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/HinduTemple */
+										'HinduTemple'    => \__( 'Hindu temple', 'yoast-local-seo' ),
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Mosque */
+										'Mosque'         => \__( 'Mosque', 'yoast-local-seo' ),
+										/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Synagogue */
+										'Synagogue'      => \__( 'Synagogue', 'yoast-local-seo' ),
+									],
+								],
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Playground */
+								'Playground'            => \__( 'Playground', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/PublicToilet */
+								'PublicToilet'          => \__( 'Public toilet', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/RVPark */
+								'RVPark'                => \__( 'RV park', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/SubwayStation */
+								'SubwayStation'         => \__( 'Subway station', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/TaxiStand */
+								'TaxiStand'             => \__( 'Taxi stand', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/TrainStation */
+								'TrainStation'          => \__( 'Train station', 'yoast-local-seo' ),
+								/* translators: This should be translated according to the definition on Schema.org. For more information, visit: https://schema.org/Zoo */
+								'Zoo'                   => \__( 'Zoo', 'yoast-local-seo' ),
+							],
+						],
 						/* translators: This should be translated according to the definition on schema.org. For more information, visit: https://schema.org/Consortium */
 						'Consortium'              => \__( 'Consortium', 'yoast-local-seo' ),
 						/* translators: This should be translated according to the definition on schema.org. For more information, visit: https://schema.org/Corporation */

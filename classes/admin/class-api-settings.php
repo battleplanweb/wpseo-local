@@ -7,6 +7,9 @@
  * @todo    CHECK THE @SINCE VERSION NUMBER!!!!!!!!
  */
 
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
+use Yoast\WP\Local\PostType\PostType;
+
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
 	header( 'HTTP/1.1 403 Forbidden' );
@@ -34,9 +37,9 @@ if ( ! class_exists( 'WPSEO_Local_Admin_API_Keys' ) ) {
 		/**
 		 * Holds the API keys repository.
 		 *
-		 * @var WPSEO_Local_Api_Keys_Repository
+		 * @var Api_Keys_Repository
 		 */
-		private $wpseo_local_api_key_repository;
+		private $api_keys_repository;
 
 		/**
 		 * WPSEO_Local_Admin_API_Keys constructor.
@@ -49,14 +52,18 @@ if ( ! class_exists( 'WPSEO_Local_Admin_API_Keys' ) ) {
 
 			add_action( 'wpseo_local_admin_' . $this->slug . '_content', [ $this, 'tab_content' ], 10 );
 
-			add_action( 'Yoast\WP\Local\before_option_content_' . $this->slug, [ $this, 'maybe_show_google_maps_api_key_update_notification' ] );
+			add_action( 'Yoast\WP\Local\before_option_content_' . $this->slug, [
+				$this,
+				'maybe_show_google_maps_api_key_update_notification',
+			] );
 		}
 
 		/**
 		 * Set WPSEO Local API Keys Repository in local property.
 		 */
 		private function get_api_keys_repository() {
-			$this->wpseo_local_api_key_repository = new WPSEO_Local_Api_Keys_Repository();
+			$this->api_keys_repository = new Api_Keys_Repository();
+			$this->api_keys_repository->initialize();
 		}
 
 		/**
@@ -89,8 +96,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_API_Keys' ) ) {
 		 */
 		public function tab_content() {
 
-			$api_key         = $this->wpseo_local_api_key_repository->get_api_key();
-			$browser_api_key = $this->wpseo_local_api_key_repository->get_api_key( 'browser' );
+			$api_key         = $this->api_keys_repository->get_api_key();
+			$browser_api_key = $this->api_keys_repository->get_api_key( 'browser' );
 
 			/* Only show this bit of copy if the old API keys are filled and the new one is not filled or defined as a constant in wp_config. */
 			if ( empty( $api_key ) ) {
@@ -128,6 +135,10 @@ if ( ! class_exists( 'WPSEO_Local_Admin_API_Keys' ) ) {
 		 */
 		public function maybe_show_google_maps_api_key_update_notification() {
 			if ( get_transient( 'wpseo_local_api_key_changed' ) ) {
+				$post_type_instance = new PostType();
+				$post_type_instance->initialize();
+				$post_type = $post_type_instance->get_post_type();
+
 				$message = sprintf(
 				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
 					esc_html__( 'You\'ve successfully set a Google Maps API Key! Now you\'re able to display Google Maps on your website. Also you can automatically calculate the coordinates of your business location under the %1$sBusiness info tab%2$s.', 'yoast-local-seo' ),
@@ -139,7 +150,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_API_Keys' ) ) {
 					$message = sprintf(
 					/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
 						esc_html__( 'You\'ve successfully set a Google Maps API Key! Now you\'re able to display Google Maps on your website. Also you can automatically calculate the coordinates of your %1$sbusiness locations%2$s.', 'yoast-local-seo' ),
-						'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . PostType::get_instance()->get_post_type() ) ) . '">',
+						'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . $post_type ) ) . '">',
 						'</a>'
 					);
 				}

@@ -65,119 +65,119 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 		/**
 		 * Fallback for the textinput method
 		 *
-		 * @param string       $var    The variable within the option to create the text input field for.
-		 * @param string       $label  The label to show for the variable.
-		 * @param string       $option The name of the used option.
-		 * @param array|string $attr   Extra attributes to add to the input field. Can be class, disabled, autocomplete.
+		 * @param string       $variable The variable within the option to create the text input field for.
+		 * @param string       $label    The label to show for the variable.
+		 * @param string       $option   The name of the used option.
+		 * @param array|string $attr     Extra attributes to add to the input field. Can be class, disabled, autocomplete.
 		 *
 		 * @return void
 		 */
-		public static function textinput( $var, $label, $option = '', $attr = [] ) {
+		public static function textinput( $variable, $label, $option = '', $attr = [] ) {
 			if ( method_exists( 'Yoast_Form', 'textinput' ) ) {
 				if ( $option !== '' ) {
 					Yoast_Form::get_instance()->set_option( $option );
 				}
 
-				Yoast_Form::get_instance()->textinput( $var, $label, $attr );
+				Yoast_Form::get_instance()->textinput( $variable, $label, $attr );
 
 				return;
 			}
 
-			echo self::admin_pages()->textinput( $var, $label, $option );
+			echo self::admin_pages()->textinput( $variable, $label, $option );
 		}
 
 		/**
 		 * Wrapper for select method.
 		 *
-		 * @param string $var    The variable within the option to create the select for.
-		 * @param string $label  The label to show for the variable.
-		 * @param array  $values The select options to choose from.
-		 * @param string $option The name of the used option.
-		 * @param array  $attr   Extra attributes to add to the select.
+		 * @param string $variable The variable within the option to create the select for.
+		 * @param string $label    The label to show for the variable.
+		 * @param array  $values   The select options to choose from.
+		 * @param string $option   The name of the used option.
+		 * @param array  $attr     Extra attributes to add to the select.
 		 *
 		 * @return void
 		 */
-		public static function select( $var, $label, $values, $option = '', $attr = [] ) {
+		public static function select( $variable, $label, $values, $option = '', $attr = [] ) {
 			if ( method_exists( 'Yoast_Form', 'select' ) ) {
 				if ( $option !== '' ) {
 					Yoast_Form::get_instance()->set_option( $option );
 				}
 
-				Yoast_Form::get_instance()->select( $var, $label, $values, 'unstyled', true, $attr );
+				Yoast_Form::get_instance()->select( $variable, $label, $values, 'unstyled', true, $attr );
 
 				return;
 			}
 
-			echo self::admin_pages()->select( $var, $label, $values, $option );
+			echo self::admin_pages()->select( $variable, $label, $values, $option );
 		}
 
 		/**
 		 * Wrapper for checkbox method
 		 *
-		 * @param string $var        The variable within the option to create the checkbox for.
+		 * @param string $variable   The variable within the option to create the checkbox for.
 		 * @param string $label      The label to show for the variable.
 		 * @param bool   $label_left Whether the label should be left (true) or right (false).
 		 * @param string $option     The name of the used option.
 		 *
 		 * @return void
 		 */
-		public static function checkbox( $var, $label, $label_left = false, $option = '' ) {
+		public static function checkbox( $variable, $label, $label_left = false, $option = '' ) {
 			if ( method_exists( 'Yoast_Form', 'checkbox' ) ) {
 				if ( $option !== '' ) {
 					Yoast_Form::get_instance()->set_option( $option );
 				}
 
-				Yoast_Form::get_instance()->checkbox( $var, $label, $label_left );
+				Yoast_Form::get_instance()->checkbox( $variable, $label, $label_left );
 
 				return;
 			}
 
-			echo self::admin_pages()->checkbox( $var, $label, $label_left, $option );
+			echo self::admin_pages()->checkbox( $variable, $label, $label_left, $option );
 		}
 
 		/**
 		 * Create a hidden input field.
 		 *
-		 * @param string $var    The variable within the option to create the hidden input for.
-		 * @param string $option The name of the used option.
+		 * @param string $variable The variable within the option to create the hidden input for.
+		 * @param string $option   The name of the used option.
 		 *
 		 * @return void
 		 */
-		public static function hidden( $var, $option = '' ) {
+		public static function hidden( $variable, $option = '' ) {
 			if ( method_exists( 'Yoast_Form', 'hidden' ) ) {
 				if ( $option !== '' ) {
 					Yoast_Form::get_instance()->set_option( $option );
 				}
 
-				Yoast_Form::get_instance()->hidden( $var );
+				Yoast_Form::get_instance()->hidden( $variable );
 
 				return;
 			}
 
-			echo self::admin_pages()->hidden( $var, $option );
+			echo self::admin_pages()->hidden( $variable, $option );
 		}
 
 		/**
 		 * Create a upload field.
 		 *
-		 * @param string $var    The variable within the option to create the file upload field for.
-		 * @param string $label  The label to show for the variable.
-		 * @param string $option The option the variable belongs to.
+		 * @param string $variable The variable within the option to create the file upload field for.
+		 * @param string $label    The label to show for the variable.
+		 * @param string $option   The option the variable belongs to.
 		 *
 		 * @return void
 		 */
-		public static function file_upload( $var, $label = '', $option = '' ) {
+		public static function file_upload( $variable, $label = '', $option = '' ) {
 			if ( method_exists( 'Yoast_Form', 'file_upload' ) ) {
 				if ( $option !== '' ) {
 					Yoast_Form::get_instance()->set_option( $option );
 				}
 
-				Yoast_Form::get_instance()->file_upload( $var, $label );
+				Yoast_Form::get_instance()->file_upload( $variable, $label );
 
 				return;
 			}
 
-			echo self::admin_pages()->file_upload( $var, $label );
+			echo self::admin_pages()->file_upload( $variable, $label );
 		}
 
 		/**

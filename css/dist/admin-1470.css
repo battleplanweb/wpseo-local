@@ -44,7 +44,7 @@
 	margin: 0 0 0 32px;
 }
 
-#wpseo-local-metabox .wpseo-local-input-wrap .switch-container + .wpseo-local-location-opening-hours-override input[type="checkbox"] {
+#wpseo-local-metabox .wpseo-local-input-wrap .switch-container + .wpseo-local-location-opening-hours-override input[type=checkbox] {
 	margin-left: 0;
 }
 
@@ -418,15 +418,15 @@
 	flex-shrink: 1;
 }
 
-.yoast-seo-local__maptype__radio input[type="radio"] {
+.yoast-seo-local__maptype__radio input[type=radio] {
 	display: none;
 }
 
-.yoast-seo-local__maptype__radio input[type="radio"]:checked + label {
+.yoast-seo-local__maptype__radio input[type=radio]:checked + label {
 	font-weight: 600;
 }
 
-.yoast-seo-local__maptype__radio input[type="radio"]:checked + label img {
+.yoast-seo-local__maptype__radio input[type=radio]:checked + label img {
 	box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
@@ -490,7 +490,7 @@
 	margin-bottom: 20px;
 }
 
-.yoast-seo-local-location-select input[type="text"]:focus {
+.yoast-seo-local-location-select input[type=text]:focus {
 	box-shadow: none;
 }
 
@@ -860,7 +860,7 @@
 .wpseo-local-has-disabled-elements legend,
 .wpseo-local-has-disabled-elements label:not(.wpseo-local-keep-enabled),
 .wpseo-local-has-disabled-elements .switch-container .switch-light-visual-label,
-.wpseo-local-has-disabled-elements .yoast-field-group__checkbox input[type="checkbox"]:disabled {
+.wpseo-local-has-disabled-elements .yoast-field-group__checkbox input[type=checkbox]:disabled {
 	opacity: 0.5;
 }
 

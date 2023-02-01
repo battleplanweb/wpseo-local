@@ -5,6 +5,8 @@
  * @package WPSEO_Local\Frontend
  */
 
+use Yoast\WP\Local\PostType\PostType;
+
 if ( ! class_exists( 'WPSEO_Local_Frontend' ) ) {
 
 	/**
@@ -60,7 +62,10 @@ if ( ! class_exists( 'WPSEO_Local_Frontend' ) ) {
 		 * @return array
 		 */
 		public function genesis_contact_page_schema( $attr ) {
-			if ( is_singular( PostType::get_instance()->get_post_type() ) ) {
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+
+			if ( is_singular( $post_type_instance->get_post_type() ) ) {
 				$attr['itemtype']  = 'http://schema.org/ContactPage';
 				$attr['itemprop']  = '';
 				$attr['itemscope'] = 'itemscope';

@@ -10,6 +10,11 @@ use Yoast\WP\Local\Repositories\Options_Repository;
 use Yoast\WP\Local\Repositories\Timezone_Repository;
 use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
 use Yoast\WP\SEO\Presenters\Admin\Light_Switch_Presenter;
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Repositories\Locations_Repository;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\Repositories\Business_Types_Repository;
 
 if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
@@ -37,16 +42,16 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Holds WPSEO Local Timezone Repository instance.
 		 *
-		 * @var WPSEO_Local_Locations_Repository
+		 * @var Locations_Repository
 		 */
-		private $wpseo_local_locations_repository;
+		private $locations_repository;
 
 		/**
 		 * Holds WPSEO Local Timezone Repository instance.
 		 *
-		 * @var mixed
+		 * @var Timezone_Repository
 		 */
-		private $wpseo_local_timezone_repository;
+		private $timezone_repository;
 
 		/**
 		 * Admin Asset Manager object.
@@ -93,7 +98,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Holds the API keys repository.
 		 *
-		 * @var WPSEO_Local_Api_Keys_Repository
+		 * @var Api_Keys_Repository
 		 */
 		private $api_repository;
 
@@ -152,9 +157,12 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			if ( $this->options_repository->use_multiple_locations() ) {
 				$this->options = get_option( 'wpseo_local' );
 
-				$this->wpseo_local_timezone_repository  = new WPSEO_Local_Timezone_Repository();
-				$this->wpseo_local_locations_repository = new WPSEO_Local_Locations_Repository();
-				$this->api_repository                   = new WPSEO_Local_Api_Keys_Repository();
+				$this->timezone_repository = new Timezone_Repository();
+				$this->timezone_repository->initialize();
+				$locations_repository_builder = new Locations_Repository_Builder();
+				$this->locations_repository   = $locations_repository_builder->get_locations_repository();
+				$this->api_repository         = new Api_Keys_Repository();
+				$this->api_repository->initialize();
 
 				add_action( 'add_meta_boxes', [ $this, 'set_locations' ] );
 				add_action( 'add_meta_boxes', [ $this, 'set_current_location' ] );
@@ -182,7 +190,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 * Set all location ID's to the $locations property.
 		 */
 		public function set_locations() {
-			$this->locations = $this->wpseo_local_locations_repository->get( [], false );
+			$this->locations = $this->locations_repository->get( [], false );
 		}
 
 		/**
@@ -190,7 +198,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 */
 		public function set_current_location() {
 			$this->location_id = get_the_ID();
-			$meta_data         = $this->wpseo_local_locations_repository->get( [ 'id' => $this->location_id ] );
+			$meta_data         = $this->locations_repository->get( [ 'id' => $this->location_id ] );
 
 			$basic_meta = [
 				'business_type',
@@ -326,7 +334,9 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 * Adds metabox for editing screen of the wpseo_locations Custom Post Type.
 		 */
 		public function add_location_metaboxes() {
-			$post_type = PostType::get_instance()->get_post_type();
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
 			add_meta_box(
 				$post_type,
 				__( 'Yoast Local SEO', 'yoast-local-seo' ),
@@ -386,7 +396,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 * The content for the business info tab.
 		 */
 		public function business_info_panel_content() {
-			$business_types_repo      = new WPSEO_Local_Business_Types_Repository();
+			$business_types_repo      = new Business_Types_Repository();
 			$flattened_business_types = $business_types_repo->get_business_types();
 			$business_types_help      = new WPSEO_Local_Admin_Help_Panel(
 				'business_types_help',
@@ -719,7 +729,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 *
 		 * @param string $name           The name attribute of the input element.
 		 * @param string $id             The id attribute of the input element.
-		 * @param string $class          The class attribute of the input element.
+		 * @param string $class_attr     The class attribute of the input element.
 		 * @param string $label          The label of the input element.
 		 * @param string $value          The stored value of the current location.
 		 * @param bool   $may_override   Determine whether the input should show the overide UI.
@@ -728,7 +738,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 *
 		 * @return string The text input.
 		 */
-		private function wpseo_local_input_text( $name, $id, $class, $label, $value, $may_override, $has_overridden, $attr = [] ) {
+		private function wpseo_local_input_text( $name, $id, $class_attr, $label, $value, $may_override, $has_overridden, $attr = [] ) {
 			$defaults = [
 				'disabled' => false,
 			];
@@ -742,7 +752,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			$output  = '<p class="wpseo-local-input-wrap has-override-checkbox">';
 			$output .= '<label class="textinput" for="' . $id . '">' . $label . '</label>';
-			$output .= '<input type="text" name="' . $name . '" id="' . $id . '" value="' . esc_attr( $value ) . '" data-entered-value="' . esc_attr( $value ) . '" class=" ' . $class . ' "' . $disabled_attribute . ' />';
+			$output .= '<input type="text" name="' . $name . '" id="' . $id . '" value="' . esc_attr( $value ) . '" data-entered-value="' . esc_attr( $value ) . '" class=" ' . $class_attr . ' "' . $disabled_attribute . ' />';
 
 			if ( $may_override ) {
 				$output .= $this->wpseo_local_checkbox(
@@ -766,7 +776,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 *
 		 * @param string $name           The name attribute of the input element.
 		 * @param string $id             The id attribute of the input element.
-		 * @param string $class          The class attribute of the input element.
+		 * @param string $class_attr     The class attribute of the input element.
 		 * @param string $label          The label of the input element.
 		 * @param string $placeholder    The placeholder for the select dropdown.
 		 * @param array  $options        The options that should be available within the select dropdown.
@@ -775,7 +785,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 * @param bool   $has_overridden The stored value that indicates that the override toggle is enabled for this field.
 		 * @param array  $attr           Extra attributes to add to the select.
 		 */
-		private function wpseo_local_input_select( $name, $id, $class, $label, $placeholder, $options, $value, $may_override, $has_overridden, $attr = [] ) {
+		private function wpseo_local_input_select( $name, $id, $class_attr, $label, $placeholder, $options, $value, $may_override, $has_overridden, $attr = [] ) {
 			$defaults = [
 				'disabled' => false,
 			];
@@ -791,7 +801,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			$output .= '<label class="textinput" for="' . $id . '">' . $label . '</label>';
 			$output .= sprintf(
 				'<select class="select2-select%1$s" name="%2$s" id="%3$s" data-placeholder="%4$s" data-entered-value="%5$s"%6$s>',
-				' ' . esc_attr( $class ),
+				' ' . esc_attr( $class_attr ),
 				esc_attr( $name ),
 				esc_attr( $id ),
 				esc_attr( $placeholder ),
@@ -1169,8 +1179,11 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				return;
 			}
 
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+
 			// First check if post type is wpseo_locations.
-			if ( $post->post_type === PostType::get_instance()->get_post_type() ) {
+			if ( $post->post_type === $post_type_instance->get_post_type() ) {
 
 				global $wpseo_local_core;
 
@@ -1324,15 +1337,15 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Creates a checkbox input.
 		 *
-		 * @param string $label Is the translatable string in front of the check.
-		 * @param string $name  This is the ID which is saved by the database.
-		 * @param string $class The classname which can be used to change css or js.
-		 * @param bool   $value Checking if the checkbox is checked and returns true or false.
-		 * @param array  $attr  Extra attributes to add to the checkbox.
+		 * @param string $label      Is the translatable string in front of the check.
+		 * @param string $name       This is the ID which is saved by the database.
+		 * @param string $class_name The class name which can be used to change css or js.
+		 * @param bool   $value      Checking if the checkbox is checked and returns true or false.
+		 * @param array  $attr       Extra attributes to add to the checkbox.
 		 *
 		 * @return string
 		 */
-		public function wpseo_local_checkbox( $label, $name, $class, $value, $attr = [] ) {
+		public function wpseo_local_checkbox( $label, $name, $class_name, $value, $attr = [] ) {
 			$wpseo_local_checkbox = '';
 
 			$defaults = [
@@ -1347,10 +1360,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				$input_class        = ( isset( $attr['input_class'] ) && $attr['input_class'] ) ? ' ' . $attr['input_class'] : '';
 				$label_class        = ( isset( $attr['label_class'] ) && $attr['label_class'] ) ? $attr['label_class'] : '';
 
-				$wpseo_local_checkbox  = '<p class="' . $class . '">';
+				$wpseo_local_checkbox  = '<p class="' . $class_name . '">';
 				$wpseo_local_checkbox .= sprintf(
 					'<input type="checkbox" class="%1$s%2$s" id="%3$s" name="%3$s" value="on" data-entered-value="%4$s"%5$s%6$s>',
-					esc_attr( $class ),
+					esc_attr( $class_name ),
 					esc_attr( $input_class ),
 					esc_attr( $name ),
 					(int) wpseo_check_falses( $value ),
@@ -1373,15 +1386,15 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Renders a switch toggle based on a checkbox input that can be disabled/enabled via an additional checkbox.
 		 *
-		 * @param string      $var     The variable to create the checkbox for.
-		 * @param string      $label   The visual label text for the toggle.
-		 * @param array       $buttons Array of two visual labels for the buttons (defaults Disabled/Enabled).
-		 * @param string|bool $value   The variable current value, to determine the checked attribute.
-		 * @param array       $attr    Extra attributes to add to the light switch.
+		 * @param string      $target_var The variable to create the checkbox for.
+		 * @param string      $label      The visual label text for the toggle.
+		 * @param array       $buttons    Array of two visual labels for the buttons (defaults Disabled/Enabled).
+		 * @param string|bool $value      The variable current value, to determine the checked attribute.
+		 * @param array       $attr       Extra attributes to add to the light switch.
 		 *
 		 * @return string The switch toggle HTML.
 		 */
-		protected function wpseo_local_overridable_light_switch( $var, $label, $buttons, $value, $attr = [] ) {
+		protected function wpseo_local_overridable_light_switch( $target_var, $label, $buttons, $value, $attr = [] ) {
 			$defaults = [
 				'disabled' => false,
 			];
@@ -1391,8 +1404,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				$value = 'on';
 			}
 
-			$override_field_name = $var . '_override';
-			$override_value      = $this->get_location_post_meta( $var . '_override' );
+			$override_field_name = $target_var . '_override';
+			$override_value      = $this->get_location_post_meta( $target_var . '_override' );
 
 			$is_disabled        = ( isset( $attr['disabled'] ) && $attr['disabled'] && $override_value !== 'on' );
 			$disabled_attribute = ( $is_disabled ) ? ' disabled' : '';
@@ -1402,10 +1415,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				( $is_disabled ) ? ' wpseo-local-has-disabled-elements' : ''
 			);
 			$output .= new Light_Switch_Presenter(
-				$var,
+				$target_var,
 				$label,
 				$buttons,
-				$var,
+				$target_var,
 				$value,
 				true,
 				'',
@@ -1460,6 +1473,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			}
 
 			$use_multiple_locations = $this->options_repository->use_multiple_locations();
+
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
 
 			?>
 			<script>
@@ -1980,7 +1997,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 							printf(
 							/* translators: 1: link open tag; 2: link close tag. */
 								esc_html__( 'In order to use this shortcode function, please %1$sadd one or more locations%2$s first.', 'yoast-local-seo' ),
-								'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . PostType::get_instance()->get_post_type() ) ) . '">',
+								'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . $post_type ) ) . '">',
 								'</a>'
 							);
 							echo '</p>';
@@ -2130,7 +2147,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 							printf(
 							/* translators: 1: link open tag; 2: link close tag. */
 								esc_html__( 'In order to use this shortcode function, please %1$sadd one or more locations%2$s first.', 'yoast-local-seo' ),
-								'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . PostType::get_instance()->get_post_type() ) ) . '">',
+								'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . $post_type ) ) . '">',
 								'</a>'
 							);
 							echo '</p>';
@@ -2205,7 +2222,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 							printf(
 							/* translators: 1: link open tag; 2: link close tag. */
 								esc_html__( 'In order to use this shortcode function, please %1$sadd one or more locations%2$s first.', 'yoast-local-seo' ),
-								'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . PostType::get_instance()->get_post_type() ) ) . '">',
+								'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . $post_type ) ) . '">',
 								'</a>'
 							);
 							echo '</p>';
@@ -2364,8 +2381,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 */
 		public function filter_linkdex_results( $results, $job, $post ) {
 
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
 			// @todo dit moet nog gaan werken voor single implementaties, first pass enzo.
-			if ( $post->post_type !== PostType::get_instance()->get_post_type() ) {
+			if ( $post->post_type !== $post_type_instance->get_post_type() ) {
 				return $results;
 			}
 
@@ -2404,7 +2423,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 * Enqueues the pluginstyles.
 		 */
 		public function enqueue_styles() {
-			if ( get_post_type() === PostType::get_instance()->get_post_type() ) {
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+
+			if ( get_post_type() === $post_type_instance->get_post_type() ) {
 				$this->wpseo_asset_manager->enqueue_style( 'admin-css' );
 				$this->wpseo_asset_manager->enqueue_style( 'select2' );
 			}
@@ -2414,9 +2436,11 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 * Enqueues the pluginscripts.
 		 */
 		public function enqueue_scripts() {
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
 
 			// Only do this on location pages.
-			if ( get_post_type() === PostType::get_instance()->get_post_type() ) {
+			if ( get_post_type() === $post_type_instance->get_post_type() ) {
 				$this->asset_manager->enqueue_script( 'seo-locations' );
 				$this->wpseo_asset_manager->enqueue_script( 'select2' );
 
@@ -2450,12 +2474,12 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			return [
 				'location'             => ( ! empty( $custom['_wpseo_business_city'][0] ) ) ? $custom['_wpseo_business_city'][0] : '',
-				'location_for_url'     => ( ! empty( $custom['_wpseo_business_city'][0] ) ) ? remove_accents( $custom['_wpseo_business_city'][0] ) : '',
+				'location_for_slug'    => ( ! empty( $custom['_wpseo_business_city'][0] ) ) ? remove_accents( $custom['_wpseo_business_city'][0] ) : '',
 				'locations_script_url' => plugins_url( 'js/dist/wp-seo-local-worker-locations-' . $asset_manager->flatten_version( WPSEO_LOCAL_VERSION ) . '.js', WPSEO_LOCAL_FILE ),
 				'title_no_location'    => __( 'Your title does not contain your location\'s city, you should really add that.', 'yoast-local-seo' ),
 				'title_location'       => __( 'Your title contains your location\'s city, well done!', 'yoast-local-seo' ),
-				'url_no_location'      => __( 'Your URL does not contain your location\'s city, you should really add that.', 'yoast-local-seo' ),
-				'url_location'         => __( 'Your URL contains your location\'s city, well done!', 'yoast-local-seo' ),
+				'slug_no_location'     => __( 'Your URL does not contain your location\'s city, you should really add that.', 'yoast-local-seo' ),
+				'slug_location'        => __( 'Your URL contains your location\'s city, well done!', 'yoast-local-seo' ),
 				'heading_location'     => __( 'Your h1 and/or h2 headings contain your location\'s city, well done!', 'yoast-local-seo' ),
 				'heading_no_location'  => __( 'Your h1 and/or h2 headings do not contain your location\'s city, you should really add that.', 'yoast-local-seo' ),
 				'address_schema'       => $address_schema,
@@ -2464,7 +2488,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		}
 
 		/**
-		 * Localizes scripts for the videoplugin.
+		 * Localizes scripts for the local plugin.
 		 *
 		 * @return array
 		 */
@@ -2480,15 +2504,15 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Gets the location meta data based on the specified meta dataset, location and key.
 		 *
-		 * @param array  $meta_data   The meta data to search in.
-		 * @param int    $location_id The location ID to search for the specified key.
-		 * @param string $meta_key    The key to search for.
-		 * @param mixed  $default     The default to return if the key doesn't exist.
+		 * @param array  $meta_data    The meta data to search in.
+		 * @param int    $location_id  The location ID to search for the specified key.
+		 * @param string $meta_key     The key to search for.
+		 * @param mixed  $default_meta The default to return if the key doesn't exist.
 		 *
 		 * @return mixed The meta data or the default value if the passed key doesn't exist.
 		 */
-		protected function get_location_meta_by_key( $meta_data, $location_id, $meta_key, $default = '' ) {
-			return ( ! empty( $meta_data[ $location_id ][ $meta_key ] ) ? $meta_data[ $location_id ][ $meta_key ] : $default );
+		protected function get_location_meta_by_key( $meta_data, $location_id, $meta_key, $default_meta = '' ) {
+			return ( ! empty( $meta_data[ $location_id ][ $meta_key ] ) ? $meta_data[ $location_id ][ $meta_key ] : $default_meta );
 		}
 
 		/**

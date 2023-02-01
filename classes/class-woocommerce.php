@@ -44,6 +44,9 @@ class WPSEO_Local_WooCommerce {
 				2
 			);
 		}
+
+		// Declare compatibility with HPOS (WooCommerce 7.1+).
+		add_action( 'before_woocommerce_init', [ $this, 'declare_custom_order_tables_compatibility' ] );
 	}
 
 	public function woocommerce_locate_template( $template, $template_name, $template_path ) {
@@ -189,6 +192,15 @@ class WPSEO_Local_WooCommerce {
 	}
 
 	/**
+	 * Declares compatibility with the WooCommerce HPOS feature.
+	 */
+	public function declare_custom_order_tables_compatibility() {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', WPSEO_LOCAL_FILE, true );
+		}
+	}
+
+	/**
 	 * Retrieves the version number of the active WooCommerce plugin.
 	 *
 	 * @return string|null The version number or null if it couldn't be determined.
@@ -231,10 +243,10 @@ class WPSEO_Local_WooCommerce {
 	/**
 	 * Displays a generic admin message.
 	 *
-	 * @param string $message Admin message text.
-	 * @param string $class   CSS class name for the admin notice.
+	 * @param string $message    Admin message text.
+	 * @param string $class_name CSS class name for the admin notice.
 	 */
-	private function admin_message( $message, $class ) {
-		echo '<div class="' . esc_attr( $class ) . '"><p>' . $message . '</p></div>';
+	private function admin_message( $message, $class_name ) {
+		echo '<div class="' . esc_attr( $class_name ) . '"><p>' . $message . '</p></div>';
 	}
 }

@@ -3,8 +3,9 @@
  * @package WPSEO_Local\Frontend\Schema
  */
 
-use Yoast\WP\SEO\Config\Schema_IDs;
 use Yoast\WP\SEO\Generators\Schema\Abstract_Schema_Piece;
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
 
 /**
  * Class WPSEO_Local_Organization_List.
@@ -46,7 +47,10 @@ class WPSEO_Local_Organization_List extends Abstract_Schema_Piece {
 	 * @return bool
 	 */
 	public function is_needed() {
-		return is_post_type_archive( PostType::get_instance()->get_post_type() );
+		$post_type = new PostType();
+		$post_type->initialize();
+
+		return is_post_type_archive( $post_type->get_post_type() );
 	}
 
 	/**
@@ -55,8 +59,9 @@ class WPSEO_Local_Organization_List extends Abstract_Schema_Piece {
 	 * @return bool|array Array with Place schema data. Returns false when no valid location is found.
 	 */
 	public function generate() {
-		$repo      = new WPSEO_Local_Locations_Repository();
-		$locations = $repo->get();
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$repo                         = $locations_repository_builder->get_locations_repository();
+		$locations                    = $repo->get();
 
 		if ( count( $locations ) === 0 ) {
 			return false;
@@ -65,7 +70,7 @@ class WPSEO_Local_Organization_List extends Abstract_Schema_Piece {
 		$data = [
 			'@type'            => 'ItemList',
 			'@id'              => $this->context->canonical . WPSEO_Local_Schema_IDs::LIST_ID,
-			'mainEntityOfPage' => [ '@id' => $this->context->canonical . Schema_IDs::WEBPAGE_HASH ],
+			'mainEntityOfPage' => [ '@id' => $this->context->main_schema_id ],
 		];
 
 		$i = 0;

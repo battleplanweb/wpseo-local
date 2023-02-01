@@ -6,6 +6,8 @@
  */
 
 use Yoast\WP\Local\Repositories\Options_Repository;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\PostType\PostType;
 
 /**
  * Class WPSEO_Show_OpeningHours.
@@ -48,13 +50,16 @@ class WPSEO_Show_OpeningHours extends WP_Widget {
 	 * @return void
 	 */
 	public function widget( $args, $instance ) {
-		$title           = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
-		$location_id     = ! empty( $instance['location_id'] ) ? $instance['location_id'] : '';
-		$show_days       = ! empty( $instance['show_days'] ) ? $instance['show_days'] : [];
-		$hide_closed     = ! empty( $instance['hide_closed'] );
-		$show_open_label = ! empty( $instance['show_open_label'] );
-		$comment         = ! empty( $instance['comment'] ) ? $instance['comment'] : '';
-		$post_type       = PostType::get_instance()->get_post_type();
+		$title              = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
+		$location_id        = ! empty( $instance['location_id'] ) ? $instance['location_id'] : '';
+		$show_days          = ! empty( $instance['show_days'] ) ? $instance['show_days'] : [];
+		$hide_closed        = ! empty( $instance['hide_closed'] );
+		$show_open_label    = ! empty( $instance['show_open_label'] );
+		$comment            = ! empty( $instance['comment'] ) ? $instance['comment'] : '';
+		$post_type_instance = new PostType();
+		$post_type_instance->initialize();
+		$post_type = $post_type_instance->get_post_type();
+
 
 		// Set location ID, since get_post_status() needs an integer as parameter.
 		if ( $location_id === 'current' ) {
@@ -168,8 +173,9 @@ class WPSEO_Show_OpeningHours extends WP_Widget {
 				esc_html__( 'Use current location', 'yoast-local-seo' ) // 6.
 			);
 
-			$repo      = new WPSEO_Local_Locations_Repository();
-			$locations = $repo->get( [], false );
+			$locations_repository_builder = new Locations_Repository_Builder();
+			$repo                         = $locations_repository_builder->get_locations_repository();
+			$locations                    = $repo->get( [], false );
 
 			foreach ( $locations as $loc_id ) {
 				echo '

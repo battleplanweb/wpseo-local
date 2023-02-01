@@ -14,7 +14,7 @@ use Yoast\WP\SEO\Initializers\Initializer_Interface;
 if ( ! \class_exists( Timezone_Repository::class ) ) {
 
 	/**
-	 * WPSEO_Local_Timezone_Repository class. Handles all basic needs for the plugin, like custom post_type/taxonomy.
+	 * Timezone_Repository class. Handles all basic needs for the plugin, like custom post_type/taxonomy.
 	 */
 	class Timezone_Repository implements Initializer_Interface {
 

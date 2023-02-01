@@ -30,11 +30,11 @@ abstract class Abstract_Geo_Tag_Presenter extends Abstract_Indexable_Tag_Present
 	 * @param object $location The location.
 	 */
 	public function __construct( $location ) {
-		if ( is_a( $location, Locations_Repository::class ) ) {
-			_deprecated_argument(
+		if ( \is_a( $location, Locations_Repository::class ) ) {
+			\_deprecated_argument(
 				__FUNCTION__,
 				'14.0',
-				__( 'The Locations_Repository argument has been deprecated, please provide a location object instead.', 'yoast-local-seo' )
+				\__( 'The Locations_Repository argument has been deprecated, please provide a location object instead.', 'yoast-local-seo' )
 			);
 			$this->location = $location->for_current_page();
 		}

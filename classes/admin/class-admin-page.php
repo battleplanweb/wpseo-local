@@ -111,12 +111,12 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Page' ) ) {
 		/**
 		 * Use this function to create sections between settings.
 		 *
-		 * @param string $id    ID of the section.
-		 * @param string $style Styling for the section.
-		 * @param string $class Class names for the section.
+		 * @param string $id            ID of the section.
+		 * @param string $style         Styling for the section.
+		 * @param string $section_class Class names for the section.
 		 */
-		public static function section_before( $id = '', $style = '', $class = '' ) {
-			echo '<div' . ( isset( $id ) ? ' id="' . $id . '"' : '' ) . '' . ( ! empty( $style ) ? ' style="' . $style . '"' : '' ) . '' . ( ! empty( $class ) ? ' class="' . $class . '"' : '' ) . '>';
+		public static function section_before( $id = '', $style = '', $section_class = '' ) {
+			echo '<div' . ( isset( $id ) ? ' id="' . $id . '"' : '' ) . '' . ( ! empty( $style ) ? ' style="' . $style . '"' : '' ) . '' . ( ! empty( $section_class ) ? ' class="' . $section_class . '"' : '' ) . '>';
 		}
 
 		/**

@@ -9,6 +9,7 @@
 
 use Yoast\WP\Local\Repositories\Options_Repository;
 use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
+use Yoast\WP\Local\Repositories\Timezone_Repository;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -76,7 +77,8 @@ class WPSEO_Local_Admin_Opening_Hours {
 	 * Set WPSEO Local Core Timezone Repository in local property
 	 */
 	private function get_timezone_repository() {
-		$wpseo_local_timezone_repository       = new WPSEO_Local_Timezone_Repository();
+		$wpseo_local_timezone_repository = new Timezone_Repository();
+		$wpseo_local_timezone_repository->initialize();
 		$this->wpseo_local_timezone_repository = $wpseo_local_timezone_repository;
 	}
 
@@ -220,7 +222,6 @@ class WPSEO_Local_Admin_Opening_Hours {
 		echo '</div>';
 
 
-
 		$open_247 = ! empty( $this->options->get( $open_247_field_name ) ) && $this->options->get( $open_247_field_name ) === 'on';
 
 		echo '<div id="opening-hours-time-specification-wrap" style="display:' . ( ( $open_247 ) ? 'none' : 'block' ) . '">';
@@ -293,7 +294,7 @@ class WPSEO_Local_Admin_Opening_Hours {
 		}
 
 		echo '<div class="wpseo-local-help-wrapper">';
-		$timezones = WPSEO_Local_Timezone_Repository::get_timezones();
+		$timezones = Timezone_Repository::get_timezones();
 		WPSEO_Local_Admin_Wrappers::select(
 			$location_timezone_field_name,
 			__( 'Timezone', 'yoast-local-seo' ) . $timezone_help->get_button_html(),

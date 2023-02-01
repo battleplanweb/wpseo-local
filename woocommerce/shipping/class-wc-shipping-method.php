@@ -5,6 +5,8 @@
  * @package YoastSEO_Local_WooCommerce
  */
 
+use Yoast\WP\Local\PostType\PostType;
+
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
@@ -54,7 +56,9 @@ class Yoast_WCSEO_Local_Shipping_Method extends WC_Shipping_Flat_Rate {
 
 		$this->enabled = $this->get_option( 'enabled' );
 
-		$this->local_post_type = PostType::get_instance()->get_post_type();
+		$post_type_instance = new PostType();
+		$post_type_instance->initialize();
+		$this->local_post_type = $post_type_instance->get_post_type();
 
 		$this->init();
 	}
@@ -439,7 +443,10 @@ class Yoast_WCSEO_Local_Shipping_Method extends WC_Shipping_Flat_Rate {
 		}
 
 		if ( empty( $this->location_categories ) || is_wp_error( $this->location_categories ) ) {
-			$url = admin_url( 'edit-tags.php?taxonomy=wpseo_locations_category&post_type=' . PostType::get_instance()->get_post_type() );
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+
+			$url = admin_url( 'edit-tags.php?taxonomy=wpseo_locations_category&post_type=' . $post_type_instance->get_post_type() );
 
 			/* translators: %s expands to the admin URL to add location categories. */
 			$no_location_cats_text = __(
@@ -494,7 +501,10 @@ class Yoast_WCSEO_Local_Shipping_Method extends WC_Shipping_Flat_Rate {
 		$this->saved_locations     = $this->get_saved_locations();
 
 		if ( ( empty( $this->available_locations ) && empty( $this->saved_locations ) ) || is_wp_error( $this->available_locations ) ) {
-			$url = admin_url( 'edit.php?post_type=' . PostType::get_instance()->get_post_type() );
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+
+			$url = admin_url( 'edit.php?post_type=' . $post_type_instance->get_post_type() );
 
 			/* translators: %s expands to the admin URL to add locations. */
 			$no_locations_text = __(

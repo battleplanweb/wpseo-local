@@ -9,6 +9,10 @@ use Yoast\WP\Local\Repositories\Options_Repository;
 use Yoast\WP\SEO\Helpers\Indexable_Helper;
 use Yoast\WP\SEO\Integrations\Watchers\Indexable_Permalink_Watcher;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
+use Yoast\WP\Local\Repositories\Timezone_Repository;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\Formatters\Address_Formatter;
+use Yoast\WP\Local\PostType\PostType;
 
 /**
  * Address shortcode handler
@@ -110,13 +114,14 @@ function wpseo_local_show_address( $atts ) {
 	$business_contact_details = apply_filters( 'wpseo_local_contact_details', $business_contact_details );
 
 	// Initiate the Locations repository and get query the locations.
-	$repo        = new WPSEO_Local_Locations_Repository();
-	$filter_args = [
+	$locations_repository_builder = new Locations_Repository_Builder();
+	$repo                         = $locations_repository_builder->get_locations_repository();
+	$filter_args                  = [
 		'id'          => explode( ',', $atts['id'] ),
 		'category_id' => $atts['term_id'],
 		'number'      => $atts['max_number'],
 	];
-	$locations   = $repo->get( $filter_args );
+	$locations                    = $repo->get( $filter_args );
 
 	if ( empty( $locations ) && is_admin() ) {
 		if ( $atts['is_preview'] ) {
@@ -148,9 +153,12 @@ function wpseo_local_show_address( $atts ) {
 		}
 
 		if ( $atts['hide_name'] == false ) {
-			$post_type = PostType::get_instance()->get_post_type();
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
+
 			$pt_object = get_post_type_object( $post_type );
-			$output   .= $tag_title_open . ( ( $atts['from_sl'] && $pt_object->public ) ? '<a href="' . esc_url( $location['business_url'] ) . '">' : '' ) . '<span class="wpseo-business-name">' . esc_html( $location['business_name'] ) . '</span>' . ( ( $atts['from_sl'] ) ? '</a>' : '' ) . $tag_title_close;
+			$output    .= $tag_title_open . ( ( $atts['from_sl'] && $pt_object->public ) ? '<a href="' . esc_url( $location['business_url'] ) . '">' : '' ) . '<span class="wpseo-business-name">' . esc_html( $location['business_name'] ) . '</span>' . ( ( $atts['from_sl'] ) ? '</a>' : '' ) . $tag_title_close;
 		}
 
 		if ( $atts['show_logo'] && ! empty( $location['business_logo'] ) && is_numeric( $location['business_logo'] ) ) {
@@ -168,7 +176,7 @@ function wpseo_local_show_address( $atts ) {
 		}
 
 		if ( ! empty( $location['business_address'] ) || ! empty( $location['business_address_2'] ) || ! empty( $location['business_zipcode'] ) || ! empty( $location['business_city'] ) || ! empty( $location['business_state'] ) ) {
-			$format                = new WPSEO_Local_Address_Format();
+			$format                = new Address_Formatter();
 			$address_details       = [
 				'show_logo'          => ( ! empty( $business_location_logo ) ),
 				'hide_business_name' => $atts['hide_name'],
@@ -197,7 +205,7 @@ function wpseo_local_show_address( $atts ) {
 			}
 		}
 
-		$output        .= '</' . ( ( $atts['oneline'] ) ? 'span' : 'div' ) . '>';
+		$output         .= '</' . ( ( $atts['oneline'] ) ? 'span' : 'div' ) . '>';
 		$details_output = '';
 
 		foreach ( $business_contact_details as $order => $details ) {
@@ -253,7 +261,7 @@ function wpseo_local_show_address( $atts ) {
 
 		$output .= $details_output;
 		if ( $atts['show_opening_hours'] ) {
-			$args    = [
+			$args   = [
 				'id'          => ( wpseo_has_multiple_locations() ) ? $atts['id'] : '',
 				'hide_closed' => $atts['hide_closed'],
 			];
@@ -311,9 +319,10 @@ function wpseo_local_show_all_locations( $atts ) {
 		return '';
 	}
 
-	$output      = '';
-	$repo        = new WPSEO_Local_Locations_Repository();
-	$filter_args = [
+	$output                       = '';
+	$locations_repository_builder = new Locations_Repository_Builder();
+	$repo                         = $locations_repository_builder->get_locations_repository();
+	$filter_args                  = [
 		'number'  => $atts['number'],
 		'orderby' => $atts['orderby'],
 		'order'   => $atts['order'],
@@ -445,13 +454,14 @@ function wpseo_local_show_map( $atts ) {
 	}
 
 	// Initiate the Locations repository and get query the locations.
-	$repo        = new WPSEO_Local_Locations_Repository();
-	$filter_args = [
+	$locations_repository_builder = new Locations_Repository_Builder();
+	$repo                         = $locations_repository_builder->get_locations_repository();
+	$filter_args                  = [
 		'id'          => explode( ',', $atts['id'] ),
 		'category_id' => $atts['term_id'],
 		'number'      => ( isset( $atts['max_number'] ) && ! empty( $atts['max_number'] ) ? $atts['max_number'] : -1 ),
 	];
-	$locations   = $repo->get( $filter_args );
+	$locations                    = $repo->get( $filter_args );
 
 	add_action( 'wp_footer', 'wpseo_enqueue_geocoder' );
 	add_action( 'admin_footer', 'wpseo_enqueue_geocoder' );
@@ -459,7 +469,10 @@ function wpseo_local_show_map( $atts ) {
 	$asset_manager = new WPSEO_Local_Admin_Assets();
 	$asset_manager->enqueue_script( 'google-maps' );
 
-	$post_type = PostType::get_instance()->get_post_type();
+	$post_type_instance = new PostType();
+	$post_type_instance->initialize();
+	$post_type = $post_type_instance->get_post_type();
+
 
 	$noscript_output = '<ul>';
 	foreach ( $locations as $location_key => $location ) {
@@ -603,7 +616,7 @@ function wpseo_local_show_map( $atts ) {
 		 */
 		if ( $atts['show_route'] && ( count( $locations ) === 1 || $atts['from_sl'] === true ) ) {
 			$location = reset( $locations );
-			$map     .= '<div id="wpseo-directions-wrapper"' . ( ( $atts['from_sl'] ) ? ' style="display: none;"' : '' ) . '>';
+			$map      .= '<div id="wpseo-directions-wrapper"' . ( ( $atts['from_sl'] ) ? ' style="display: none;"' : '' ) . '>';
 			if ( ! empty( $route_label ) ) {
 				$map .= '<' . esc_html( $route_tag ) . ' id="wpseo-directions" class="wpseo-directions-heading">' . $route_label . '</' . esc_html( $route_tag ) . '>';
 			}
@@ -692,14 +705,15 @@ function wpseo_local_show_opening_hours( $atts, $standalone = true ) {
 	}
 
 	// Initiate the Locations repository and get query the locations.
-	$repo         = new WPSEO_Local_Locations_Repository();
-	$filter_args  = [
+	$locations_repository_builder = new Locations_Repository_Builder();
+	$repo                         = $locations_repository_builder->get_locations_repository();
+	$filter_args                  = [
 		'id'          => explode( ',', $atts['id'] ),
 		'category_id' => $atts['term_id'],
 	];
-	$locations    = $repo->get( $filter_args );
-	$container_id = 'wpseo-opening-hours-' . $atts['id'];
-	$output       = '';
+	$locations                    = $repo->get( $filter_args );
+	$container_id                 = 'wpseo-opening-hours-' . $atts['id'];
+	$output                       = '';
 	foreach ( $locations as $location ) {
 		if ( $location['business_type'] == '' ) {
 			$location['business_type'] = 'LocalBusiness';
@@ -719,9 +733,10 @@ function wpseo_local_show_opening_hours( $atts, $standalone = true ) {
 		else {
 			$days = $opening_hours_repo->get_days();
 
-			$timezone_repository = new WPSEO_Local_Timezone_Repository();
-			$location_datetime   = $timezone_repository->get_location_datetime( $location['post_id'] );
-			$format_24h          = yoast_should_use_24h_format( $location['post_id'], $location['format_24h'] );
+			$timezone_repository = new Timezone_Repository();
+			$timezone_repository->initialize();
+			$location_datetime = $timezone_repository->get_location_datetime( $location['post_id'] );
+			$format_24h        = yoast_should_use_24h_format( $location['post_id'], $location['format_24h'] );
 
 			if ( ! is_array( $atts['show_days'] ) ) {
 				$show_days = explode( ',', $atts['show_days'] );
@@ -868,7 +883,8 @@ function wpseo_may_use_multiple_locations_shared_opening_hours() {
 }
 
 /**
- * Checks whether website uses multiple location (Custom Post Type) or not (info from options) and they're all in the same organization.
+ * Checks whether website uses multiple location (Custom Post Type) or not (info from options) and they're all in the
+ * same organization.
  *
  * @return bool Multiple locations, same organization enabled or not.
  */
@@ -901,8 +917,9 @@ function wpseo_has_usable_primary_location() {
  */
 function wpseo_has_location_acting_as_primary() {
 	if ( wpseo_multiple_location_one_organization() ) {
-		$repo      = new WPSEO_Local_Locations_Repository();
-		$locations = $repo->get( [ 'post_status' => 'publish' ], false );
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$repo                         = $locations_repository_builder->get_locations_repository();
+		$locations                    = $repo->get( [ 'post_status' => 'publish' ], false );
 
 		return ( count( $locations ) === 1 );
 	}
@@ -927,14 +944,16 @@ function wpseo_may_use_current_location() {
  * @return bool Is current page identical to primary location or not.
  */
 function wpseo_is_current_location_identical_to_primary() {
-	$repository = new WPSEO_Local_Locations_Repository();
-	$place_data = $repository->for_current_page();
+	$locations_repository_builder = new Locations_Repository_Builder();
+	$repository                   = $locations_repository_builder->get_locations_repository();
+	$place_data                   = $repository->for_current_page();
 	if ( wpseo_has_primary_location() ) {
 		return WPSEO_Options::get( 'multiple_locations_primary_location' ) == $place_data->post_id;
 	}
 	elseif ( wpseo_has_location_acting_as_primary() ) {
 		$location = $repository->get( [ 'post_status' => 'publish' ], false );
 		$id       = reset( $location );
+
 		return $id == $place_data->post_id;
 	}
 
@@ -949,11 +968,15 @@ function wpseo_is_current_location_identical_to_primary() {
  * @return bool Will schema contain branch organization
  */
 function wpseo_schema_will_have_branch_organization( $is_company = false ) {
-	return ( $is_company && ( is_singular( PostType::get_instance()->get_post_type() ) && ! wpseo_is_current_location_identical_to_primary() ) );
+	$post_type_instance = new PostType();
+	$post_type_instance->initialize();
+
+	return ( $is_company && ( is_singular( $post_type_instance->get_post_type() ) && ! wpseo_is_current_location_identical_to_primary() ) );
 }
 
 /**
- * @param bool   $use_24h  True if time should be displayed in 24 hours. False if time should be displayed in AM/PM mode.
+ * @param bool   $use_24h  True if time should be displayed in 24 hours. False if time should be displayed in AM/PM
+ *                         mode.
  * @param string $selected Optional. Selected time for dropdown.
  *                         Defaults to "09:00".
  *
@@ -962,8 +985,8 @@ function wpseo_schema_will_have_branch_organization( $is_company = false ) {
 function wpseo_show_hour_options( $use_24h = false, $selected = '09:00' ) {
 	$options = get_option( 'wpseo_local' );
 	$output  = '<option value="closed">';
-	$output .= ( ! empty( $options['closed_label'] ) ? esc_html( $options['closed_label'] ) : esc_html__( 'Closed', 'yoast-local-seo' ) );
-	$output .= '</option>';
+	$output  .= ( ! empty( $options['closed_label'] ) ? esc_html( $options['closed_label'] ) : esc_html__( 'Closed', 'yoast-local-seo' ) );
+	$output  .= '</option>';
 
 	/*
 	 * These are hard-coded times not affected by timezone. Using gmdate()
@@ -1099,15 +1122,15 @@ function wpseo_enqueue_geocoder() {
  * @uses wpseo_unicode_to_utf8() to convert the unicode array back to a regular string.
  * @uses wpseo_utf8_to_unicode() to convert string to array of unicode characters.
  *
- * @param string $string String that has to be cleaned.
+ * @param string $input_string String that has to be cleaned.
  *
  * @return string The clean string.
  */
-function wpseo_cleanup_string( $string ) {
-	$string = esc_attr( $string );
+function wpseo_cleanup_string( $input_string ) {
+	$input_string = esc_attr( $input_string );
 
 	// First generate array of all unicodes of this string.
-	$unicode_array = wpseo_utf8_to_unicode( $string );
+	$unicode_array = wpseo_utf8_to_unicode( $input_string );
 	foreach ( $unicode_array as $key => $unicode_item ) {
 		// Remove unwanted unicode characters.
 		if ( in_array( $unicode_item, [ 8232 ], true ) ) {
@@ -1116,9 +1139,9 @@ function wpseo_cleanup_string( $string ) {
 	}
 
 	// Revert back to normal string.
-	$string = wpseo_unicode_to_utf8( $unicode_array );
+	$input_string = wpseo_unicode_to_utf8( $unicode_array );
 
-	return $string;
+	return $input_string;
 }
 
 /**
@@ -1312,8 +1335,16 @@ function wpseo_local_do_upgrade( $options ) {
 		$shutdown_limit = \apply_filters( 'wpseo_shutdown_indexation_limit', 25 );
 
 		$indexables_repository = YoastSEO()->classes->get( Indexable_Repository::class );
-		$indexed_locations     = $indexables_repository->query()->where( 'object_type', 'post' )->where( 'object_sub_type', 'wpseo_locations' )->limit( $shutdown_limit + 1 )->find_many();
-		$indexed_terms         = $indexables_repository->query()->where( 'object_type', 'term' )->where( 'object_sub_type', 'wpseo_locations_category' )->limit( $shutdown_limit + 1 )->find_many();
+		$indexed_locations     = $indexables_repository->query()
+			->where( 'object_type', 'post' )
+			->where( 'object_sub_type', 'wpseo_locations' )
+			->limit( $shutdown_limit + 1 )
+			->find_many();
+		$indexed_terms         = $indexables_repository->query()
+			->where( 'object_type', 'term' )
+			->where( 'object_sub_type', 'wpseo_locations_category' )
+			->limit( $shutdown_limit + 1 )
+			->find_many();
 
 		/**
 		 * Check the locations.
@@ -1349,7 +1380,7 @@ function wpseo_local_do_upgrade( $options ) {
 			/**
 			 * Represents the Indexable_Helper.
 			 *
-			 * @var \Yoast\WP\SEO\Helpers\Indexable_Helper::class $helper
+			 * @var \Yoast\WP\SEO\Helpers\Indexable_Helper $helper
 			 */
 			$helper = YoastSEO()->classes->get( Indexable_Helper::class );
 			$helper->reset_permalink_indexables( 'term', 'wpseo_locations_category' );
@@ -1378,6 +1409,7 @@ function wpseo_local_get_excerpt( $post_id ) {
 	// Set back original $post;.
 	$post = $original_post;
 	wp_reset_postdata();
+
 	// phpcs:enable
 
 	return $output;
@@ -1421,7 +1453,10 @@ function wpseo_local_show_logo( $atts ) {
 	];
 	$atts     = wpseo_check_falses( shortcode_atts( $defaults, $atts ) );
 
-	$post_type = PostType::get_instance()->get_post_type();
+	$post_type_instance = new PostType();
+	$post_type_instance->initialize();
+	$post_type = $post_type_instance->get_post_type();
+
 
 	$output = '';
 
@@ -1465,8 +1500,11 @@ function yoast_wpseo_local_get_attachment_id_from_src( $src ) {
  */
 function yoast_wpseo_local_update_business_type() {
 	if ( wpseo_has_multiple_locations() ) {
+		$post_type_instance = new PostType();
+		$post_type_instance->initialize();
+
 		$locations_args = [
-			'post_type'  => PostType::get_instance()->get_post_type(),
+			'post_type'  => $post_type_instance->get_post_type(),
 			'nopaging'   => true,
 			'meta_query' => [
 				[
@@ -1506,7 +1544,8 @@ function yoast_wpseo_local_update_business_type() {
  * @return bool|WP_Error
  */
 function yoast_seo_local_is_location_open( $post = null ) {
-	$timezone_repository = new WPSEO_Local_Timezone_Repository();
+	$timezone_repository = new Timezone_Repository();
+	$timezone_repository->initialize();
 
 	return $timezone_repository->is_location_open( $post );
 }
@@ -1555,6 +1594,11 @@ function yoast_seo_local_dummy_address() {
  * @return bool Whether to use the 24h format.
  */
 function yoast_should_use_24h_format( $location_id, $format_option_value ) {
+
+	if ( $location_id === '' ) {
+		return ( $format_option_value === 'on' );
+	}
+
 	$use_24h       = \get_post_meta( $location_id, '_wpseo_format_24h', true ) === 'on';
 	$is_overridden = \get_post_meta( $location_id, '_wpseo_format_24h_override', true ) === 'on';
 
@@ -1579,6 +1623,10 @@ function yoast_should_use_24h_format( $location_id, $format_option_value ) {
  * @return bool Whether this location is open 24/7.
  */
 function yoast_is_open_247( $location_id, $open_247_option ) {
+
+	if ( $location_id === '' ) {
+		return $open_247_option;
+	}
 
 	$open_247      = \get_post_meta( $location_id, '_wpseo_open_247', true ) === 'on';
 	$is_overridden = \get_post_meta( $location_id, '_wpseo_open_247_override', true ) === 'on';

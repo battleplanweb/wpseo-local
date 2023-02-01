@@ -30,7 +30,12 @@ class Position_Presenter extends Abstract_Geo_Tag_Presenter {
 		 * There may be some classes that are derived from this class that do not use the $key property
 		 * in their $tag_format string. In that case the key property will simply not be used.
 		 */
-		return \sprintf( $this->tag_format, $this->escape_value( $output ), $this->key );
+		return \sprintf(
+			$this->tag_format,
+			$this->escape_value( $output ),
+			$this->key,
+			\is_admin_bar_showing() ? ' class="yoast-seo-meta-tag"' : ''
+		);
 	}
 
 	/**

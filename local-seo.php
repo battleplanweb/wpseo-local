@@ -6,14 +6,22 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO: Local
- * Version: 14.2
- * Plugin URI: https://yoast.com/wordpress/local-seo/
+ * Version: 14.7
+ * Plugin URI: http://yoa.st/4fj
  * Description: This Local SEO module adds all the needed functionality to get your site ready for Local Search Optimization
- * GitHub Plugin URI: battleplanweb/wpseo-local
+ * Author: Team Yoast and Arjan Snaterse
+ * Author URI: http://yoa.st/1uk
+ * Text Domain: yoast-local-seo
+ * Domain Path: /languages/
+ *
+ * GitHub Plugin URI: battleplanweb/wpseo-local */
+
+/*
+ * All functionality for fetching location data and creating an KML file with it.
  */
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
-	define( 'WPSEO_LOCAL_VERSION', '14.2' );
+	define( 'WPSEO_LOCAL_VERSION', '14.7' );
 }
 
 if ( ! defined( 'WPSEO_LOCAL_PATH' ) ) {
@@ -46,7 +54,7 @@ register_activation_hook( WPSEO_LOCAL_FILE, 'yoast_wpseo_local_deactivate_siblin
  */
 add_action(
 	'plugins_loaded',
-	function () {
+	static function () {
 		if ( ! defined( 'WPSEO_VERSION' ) ) {
 			add_action( 'all_admin_notices', 'wpseo_local_missing_error' );
 
@@ -58,7 +66,7 @@ add_action(
 		}
 
 		// If you change this version, don't forget to upgrade the required version in the composer.json as well.
-		if ( version_compare( WPSEO_VERSION, '16.7-RC0', '<' ) ) {
+		if ( version_compare( WPSEO_VERSION, '19.10-RC0', '<' ) ) {
 			add_action( 'all_admin_notices', 'yoast_wpseo_local_upgrade_error' );
 
 			return;
@@ -105,7 +113,6 @@ if ( ! function_exists( 'wpseo_local_seo_init' ) ) {
 		new WPSEO_Local_Schema();
 		new WPSEO_Local_Storelocator();
 		new WPSEO_Local_Taxonomy();
-		new WPSEO_Local_Api_Keys_Repository();
 		new WPSEO_Local_Admin_Page();
 		new WPSEO_Local_Admin_General_Settings();
 		new WPSEO_Local_Admin_Opening_Hours();

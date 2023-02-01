@@ -6,6 +6,8 @@
  * @since   7.1
  */
 
+use Yoast\WP\Local\PostType\PostType;
+
 if ( ! class_exists( 'WPSEO_Local_Search' ) ) {
 
 	/**
@@ -52,8 +54,9 @@ if ( ! class_exists( 'WPSEO_Local_Search' ) ) {
 		public function run() {
 			add_action( 'pre_get_posts', [ $this, 'enhance_search' ] );
 			add_filter( 'the_excerpt', [ $this, 'enhance_location_search_results' ] );
-
-			$this->local_post_type = PostType::get_instance()->get_post_type();
+			$post_type = new PostType();
+			$post_type->initialize();
+			$this->local_post_type = $post_type->get_post_type();
 		}
 
 		/**
@@ -110,7 +113,7 @@ if ( ! class_exists( 'WPSEO_Local_Search' ) ) {
 		 * @return mixed
 		 */
 		public function groupby( $groupby ) {
-			$groupby .= $this->wpdb->posts . '.ID';
+			$groupby = $this->wpdb->posts . '.ID';
 
 			return $groupby;
 		}

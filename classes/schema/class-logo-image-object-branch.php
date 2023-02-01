@@ -3,6 +3,8 @@
  * @package WPSEO_Local\Frontend\Schema
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+
 /**
  * Class WPSEO_Local_JSON_LD
  *
@@ -28,8 +30,9 @@ class WPSEO_Local_Logo_Image_Object_Branch extends WPSEO_Local_Logo_Image_Object
 	 * @return false|array Array with Image Object schema data. Returns false no valid location is found.
 	 */
 	public function generate() {
-		$repository = new WPSEO_Local_Locations_Repository();
-		$location   = $repository->for_current_page();
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$repository                   = $locations_repository_builder->get_locations_repository();
+		$location                     = $repository->for_current_page();
 
 		// Bail if the $location object is empty.
 		if ( ! $location ) {

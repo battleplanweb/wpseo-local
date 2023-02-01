@@ -5,6 +5,8 @@
  * @package YoastSEO_Local_WooCommerce
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+
 if ( ! function_exists( 'yoast_seo_local_woocommerce_get_address_for_method_id' ) ) {
 
 	function yoast_seo_local_woocommerce_get_address_for_method_id( $method_id ) {
@@ -24,8 +26,9 @@ if ( ! function_exists( 'yoast_seo_local_woocommerce_get_address_for_method_id' 
 
 		$args = [ 'id' => $id ];
 
-		$repository = new WPSEO_Local_Locations_Repository();
-		$locations  = $repository->get( $args );
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$repository                   = $locations_repository_builder->get_locations_repository();
+		$locations                    = $repository->get( $args );
 
 		$location = $locations[ $id ];
 

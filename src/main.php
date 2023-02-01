@@ -3,9 +3,9 @@
 namespace Yoast\WP\Local;
 
 use Yoast\WP\Lib\Abstract_Main;
+use Yoast\WP\SEO\Dependency_Injection\Container_Compiler;
 use Yoast\WP\SEO\Local\Generated\Cached_Container;
 use Yoast\WP\SEO\Surfaces\Classes_Surface;
-use Yoast\WP\SEO\Dependency_Injection\Container_Compiler;
 
 if ( ! \defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	\header( 'Status: 403 Forbidden' );

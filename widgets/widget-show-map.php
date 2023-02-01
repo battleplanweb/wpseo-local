@@ -5,6 +5,9 @@
  * @package WPSEO_Local\Frontend
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\PostType\PostType;
+
 /**
  * Class WPSEO_Show_Map.
  *
@@ -60,8 +63,11 @@ class WPSEO_Show_Map extends WP_Widget {
 			return;
 		}
 
+		$post_type_instance = new PostType();
+		$post_type_instance->initialize();
+
 		if ( ( $location_id === '' && wpseo_has_multiple_locations() && $show_all_locations === false )
-			|| ( $location_id === 'current' && ! is_singular( PostType::get_instance()->get_post_type() ) )
+			|| ( $location_id === 'current' && ! is_singular( $post_type_instance->get_post_type() ) )
 		) {
 			return;
 		}
@@ -196,8 +202,9 @@ class WPSEO_Show_Map extends WP_Widget {
 				esc_html__( 'Use current location', 'yoast-local-seo' )  // 7.
 			);
 
-			$repo      = new WPSEO_Local_Locations_Repository();
-			$locations = $repo->get( [], false );
+			$locations_repository_builder = new Locations_Repository_Builder();
+			$repo                         = $locations_repository_builder->get_locations_repository();
+			$locations                    = $repo->get( [], false );
 
 			foreach ( $locations as $loc_id ) {
 				echo '

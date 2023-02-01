@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129
+class ComposerStaticInit7c752abcf945c8520ee6f99b9efb1d94
 {
     public static $files = array (
         '3c8b39556c5001c1c8eca33d0e219ceb' => __DIR__ . '/../..' . '/includes/ajax-functions.php',
@@ -13,10 +13,8 @@ class ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'PostType' => __DIR__ . '/../..' . '/classes/deprecated/class-post-type.php',
         'WC_Email_ReadyForPickup_Order' => __DIR__ . '/../..' . '/woocommerce/emails/class-wc-email-readyforpickup-order.php',
         'WC_Email_Transporting_Order' => __DIR__ . '/../..' . '/woocommerce/emails/class-wc-email-transporting.php',
-        'WPSEO_Local_Address_Format' => __DIR__ . '/../..' . '/classes/class-address-format.php',
         'WPSEO_Local_Admin' => __DIR__ . '/../..' . '/classes/admin/class-admin.php',
         'WPSEO_Local_Admin_API_Keys' => __DIR__ . '/../..' . '/classes/admin/class-api-settings.php',
         'WPSEO_Local_Admin_Advanced_Settings' => __DIR__ . '/../..' . '/classes/admin/class-advanced-settings.php',
@@ -28,17 +26,10 @@ class ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129
         'WPSEO_Local_Admin_Page' => __DIR__ . '/../..' . '/classes/admin/class-admin-page.php',
         'WPSEO_Local_Admin_Woocommerce_Settings' => __DIR__ . '/../..' . '/woocommerce/admin/class-woocommerce-settings.php',
         'WPSEO_Local_Admin_Wrappers' => __DIR__ . '/../..' . '/classes/admin/class-admin-wrappers.php',
-        'WPSEO_Local_Api_Keys_Repository' => __DIR__ . '/../..' . '/deprecated/class-api-keys-repository.php',
         'WPSEO_Local_Blocks' => __DIR__ . '/../..' . '/classes/class-blocks.php',
-        'WPSEO_Local_Business_Types_Repository' => __DIR__ . '/../..' . '/deprecated/class-business-types-repository.php',
         'WPSEO_Local_Core' => __DIR__ . '/../..' . '/classes/class-core.php',
         'WPSEO_Local_Endpoint_Locations' => __DIR__ . '/../..' . '/classes/admin/endpoints/class-endpoint-locations.php',
-        'WPSEO_Local_Export' => __DIR__ . '/../..' . '/deprecated/class-export.php',
         'WPSEO_Local_Frontend' => __DIR__ . '/../..' . '/classes/class-frontend.php',
-        'WPSEO_Local_Import' => __DIR__ . '/../..' . '/deprecated/class-import.php',
-        'WPSEO_Local_Import_Export' => __DIR__ . '/../..' . '/deprecated/class-import-export.php',
-        'WPSEO_Local_Import_Export_Admin' => __DIR__ . '/../..' . '/deprecated/class-import-export-admin.php',
-        'WPSEO_Local_Locations_Repository' => __DIR__ . '/../..' . '/deprecated/class-locations-repository.php',
         'WPSEO_Local_Logo_Image_Object' => __DIR__ . '/../..' . '/classes/schema/class-logo-image-object.php',
         'WPSEO_Local_Logo_Image_Object_Branch' => __DIR__ . '/../..' . '/classes/schema/class-logo-image-object-branch.php',
         'WPSEO_Local_Metaboxes' => __DIR__ . '/../..' . '/classes/class-metaboxes.php',
@@ -55,7 +46,6 @@ class ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129
         'WPSEO_Local_Search' => __DIR__ . '/../..' . '/classes/class-search.php',
         'WPSEO_Local_Storelocator' => __DIR__ . '/../..' . '/classes/class-storelocator.php',
         'WPSEO_Local_Taxonomy' => __DIR__ . '/../..' . '/classes/class-taxonomy.php',
-        'WPSEO_Local_Timezone_Repository' => __DIR__ . '/../..' . '/deprecated/class-timezone-repository.php',
         'WPSEO_Local_WooCommerce' => __DIR__ . '/../..' . '/classes/class-woocommerce.php',
         'WPSEO_Local_WooCommerce_Email' => __DIR__ . '/../..' . '/woocommerce/emails/abstract-wc-email.php',
         'WPSEO_Show_Address' => __DIR__ . '/../..' . '/widgets/widget-show-address.php',
@@ -64,6 +54,7 @@ class ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129
         'WPSEO_Show_Open_Closed' => __DIR__ . '/../..' . '/widgets/widget-location-open-closed.php',
         'WPSEO_Show_OpeningHours' => __DIR__ . '/../..' . '/widgets/widget-show-openinghours.php',
         'WPSEO_Storelocator_Form' => __DIR__ . '/../..' . '/widgets/widget-storelocator-form.php',
+        'Yoast\\WP\\Local\\Builders\\Locations_Repository_Builder' => __DIR__ . '/../..' . '/src/builders/Locations_Repository_Builder.php',
         'Yoast\\WP\\Local\\Conditionals\\Admin_Conditional' => __DIR__ . '/../..' . '/src/conditionals/admin-conditional.php',
         'Yoast\\WP\\Local\\Conditionals\\Multiple_Locations_Conditional' => __DIR__ . '/../..' . '/src/conditionals/multiple-locations-conditional.php',
         'Yoast\\WP\\Local\\Conditionals\\No_Conditionals' => __DIR__ . '/../..' . '/src/conditionals/no-conditionals-trait.php',
@@ -101,7 +92,7 @@ class ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInitd3100873d7a705be75c0e3ef5ac03129::$classMap;
+            $loader->classMap = ComposerStaticInit7c752abcf945c8520ee6f99b9efb1d94::$classMap;
 
         }, null, ClassLoader::class);
     }

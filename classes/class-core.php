@@ -6,6 +6,10 @@
  * @since   1.0
  */
 
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\Formatters\Address_Formatter;
+
 if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 	/**
@@ -255,6 +259,10 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * @param int $post_id Post ID.
 		 */
 		public function invalidate_sitemap( $post_id ) {
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
+
 			// If this is just a revision, don't invalidate the sitemap cache yet.
 			if ( wp_is_post_revision( $post_id ) ) {
 				return;
@@ -265,7 +273,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 				return;
 			}
 
-			if ( get_post_type( $post_id ) === PostType::get_instance()->get_post_type() && method_exists( 'WPSEO_Sitemaps_Cache', 'invalidate' ) ) {
+			if ( get_post_type( $post_id ) === $post_type && method_exists( 'WPSEO_Sitemaps_Cache', 'invalidate' ) ) {
 				WPSEO_Sitemaps_Cache::invalidate( 'kml' );
 			}
 		}
@@ -275,7 +283,11 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 */
 		public function support_jetpack_omnisearch() {
 			if ( class_exists( 'Jetpack_Omnisearch_Posts' ) ) {
-				new Jetpack_Omnisearch_Posts( PostType::get_instance()->get_post_type() );
+				$post_type_instance = new PostType();
+				$post_type_instance->initialize();
+				$post_type = $post_type_instance->get_post_type();
+
+				new Jetpack_Omnisearch_Posts( $post_type );
 			}
 		}
 
@@ -492,7 +504,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 									'escape_output'      => false,
 									'use_tags'           => false,
 								];
-								$format                   = new WPSEO_Local_Address_Format();
+								$format                   = new Address_Formatter();
 								$business['full_address'] = $format->get_address_format( $address_format, $address_details );
 
 								if ( ! empty( $business['business_country'] ) ) {
@@ -569,9 +581,9 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 			if ( method_exists( 'WPSEO_Sitemaps_Router', 'get_base_url' ) ) {
 				$base_url = WPSEO_Sitemaps_Router::get_base_url( '' );
 			}
-
-			$repo                    = new WPSEO_Local_Locations_Repository();
-			$locations['businesses'] = $repo->get( [ 'id' => $post_id ] );
+			$locations_repository_builder = new Locations_Repository_Builder();
+			$repo                         = $locations_repository_builder->get_locations_repository();
+			$locations['businesses']      = $repo->get( [ 'id' => $post_id ] );
 
 			$base = $GLOBALS['wp_rewrite']->using_index_permalinks() ? 'index.php/' : '';
 
@@ -636,7 +648,9 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Create custom taxonomy for wpseo_locations Custom Post Type
 		 */
 		public function create_taxonomies() {
-			$post_type                = PostType::get_instance()->get_post_type();
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type                = $post_type_instance->get_post_type();
 			$location_post_type       = get_post_type_object( $post_type );
 			$post_type_singular_label = $location_post_type->labels->singular_name;
 
@@ -751,22 +765,6 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 			}
 
 			return $attachment_id;
-		}
-
-		/**
-		 * Returns the valid local business types currently shown on Schema.org
-		 *
-		 * @link http://schema.org/docs/full.html In the bottom of this page is a list of Local Business types.
-		 *
-		 * @deprecated Use \Yoast\WP\Local\Repositories\Business_Types_Repository::get_business_types() instead.
-		 * @codeCoverageIgnore
-		 *
-		 * @return array
-		 */
-		public function get_local_business_types() {
-			$business_types_repo = new WPSEO_Local_Business_Types_Repository();
-
-			return $business_types_repo->get_business_types();
 		}
 	}
 }

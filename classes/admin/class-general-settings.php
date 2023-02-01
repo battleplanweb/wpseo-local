@@ -7,6 +7,10 @@
  */
 
 use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\Repositories\Business_Types_Repository;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -35,7 +39,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 		/**
 		 * Holds the API keys repository.
 		 *
-		 * @var WPSEO_Local_Api_Keys_Repository
+		 * @var Api_Keys_Repository
 		 */
 		private $api_repository;
 
@@ -61,7 +65,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 			add_filter( 'wpseo_local_admin_tabs', [ $this, 'create_tab' ] );
 			add_filter( 'wpseo_local_admin_help_center_video', [ $this, 'set_video' ] );
-			$this->api_repository = new WPSEO_Local_Api_Keys_Repository();
+			$this->api_repository = new Api_Keys_Repository();
+			$this->api_repository->initialize();
 
 			$this->get_api_key();
 
@@ -81,7 +86,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 		 * Fetches data required for multiple locations select to allow user to select a primary location
 		 */
 		public function multiple_locations_location_data() {
-			$repo = new WPSEO_Local_Locations_Repository();
+			$locations_repository_builder = new Locations_Repository_Builder();
+			$repo                         = $locations_repository_builder->get_locations_repository();
 
 			$query = $repo->get_filter_locations( [] );
 			$posts = $query->posts;
@@ -195,7 +201,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 			WPSEO_Local_Admin_Page::section_before( 'business-info-settings', ( $should_hide_form ) ? 'display: none;' : '', ( $should_disable_form ) ? 'wpseo-local-form-elements-disabled' : '' );
 
-			$business_types_repo      = new WPSEO_Local_Business_Types_Repository();
+			$business_types_repo      = new Business_Types_Repository();
 			$flattened_business_types = $business_types_repo->get_business_types();
 			$business_types_help      = new WPSEO_Local_Admin_Help_Panel(
 				'business_types_help',
@@ -440,7 +446,9 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 		 * @return void
 		 */
 		public function multiple_locations_settings() {
-			$post_type = PostType::get_instance()->get_post_type();
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
 
 			WPSEO_Local_Admin_Page::section_before( 'multiple-locations-settings', 'clear: both; ' . ( wpseo_has_multiple_locations() ? '' : 'display: none;' ) );
 
@@ -466,8 +474,9 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 			WPSEO_Local_Admin_Page::section_before( 'multiple-locations-same-organization-settings', 'clear: both; ' . ( wpseo_multiple_location_one_organization() ? '' : 'display: none;' ) );
 
-			$repo      = new WPSEO_Local_Locations_Repository();
-			$locations = $repo->get( [ 'post_status' => 'publish' ], false );
+			$locations_repository_builder = new Locations_Repository_Builder();
+			$repo                         = $locations_repository_builder->get_locations_repository();
+			$locations                    = $repo->get( [ 'post_status' => 'publish' ], false );
 
 			$select_options     = [];
 			$select_options[''] = ''; // Add empty item so first option doesn't get selected automatically and so that select2's clear input works as expected.

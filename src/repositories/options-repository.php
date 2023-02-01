@@ -90,13 +90,13 @@ if ( ! \class_exists( Options_Repository::class ) ) {
 		/**
 		 * Gets an option based on the passed name.
 		 *
-		 * @param string $option  The option name.
-		 * @param string $default The default value to return if the option doesn't exist.
+		 * @param string $option        The option name.
+		 * @param string $default_value The default value to return if the option doesn't exist.
 		 *
 		 * @return mixed The option or default value if none could be found.
 		 */
-		public function get( $option, $default = '' ) {
-			return isset( $this->options[ $option ] ) ? $this->options[ $option ] : $default;
+		public function get( $option, $default_value = '' ) {
+			return isset( $this->options[ $option ] ) ? $this->options[ $option ] : $default_value;
 		}
 
 		/**

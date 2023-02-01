@@ -5,6 +5,8 @@
  * @package WPSEO_Local\Frontend
  */
 
+use Yoast\WP\Local\PostType\PostType;
+
 /**
  * Class WPSEO_Show_Open_Closed.
  *
@@ -21,7 +23,10 @@ class WPSEO_Show_Open_Closed extends WP_Widget {
 	 * WPSEO_Show_Open_Closed constructor.
 	 */
 	public function __construct() {
-		$this->local_post_type = PostType::get_instance()->get_post_type();
+		$post_type = new Yoast\WP\Local\PostType\PostType();
+		$post_type->initialize();
+		$this->local_post_type = $post_type->get_post_type();
+
 		$widget_options        = [
 			'classname'   => 'WPSEO_Show_Open_Closed',
 			'description' => __( 'Display a message when a location is open or closed.', 'yoast-local-seo' ),

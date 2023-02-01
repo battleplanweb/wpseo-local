@@ -5,6 +5,9 @@
 
 use Yoast\WP\SEO\Config\Schema_IDs;
 use Yoast\WP\SEO\Generators\Schema\Abstract_Schema_Piece;
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\Repositories\Business_Types_Repository;
 
 /**
  * Class WPSEO_Local_Organization.
@@ -117,7 +120,7 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 		if ( wpseo_has_multiple_locations() && ! wpseo_multiple_location_one_organization() ) {
 
 			if ( ! $this->will_have_branch_organization() ) {
-				$data['mainEntityOfPage'] = [ '@id' => $this->context->canonical . Schema_IDs::WEBPAGE_HASH ];
+				$data['mainEntityOfPage'] = [ '@id' => $this->context->main_schema_id ];
 			}
 
 			return $data;
@@ -130,6 +133,7 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 			if ( wpseo_may_use_multiple_locations_shared_opening_hours() ) {
 				$data = $this->fill_with_shared_opening_hours( $data );
 			}
+
 			return $data;
 		}
 
@@ -158,9 +162,10 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 			$id = WPSEO_Options::get( 'multiple_locations_primary_location' );
 		}
 		elseif ( wpseo_has_location_acting_as_primary() ) {
-			$repo     = new WPSEO_Local_Locations_Repository();
-			$location = $repo->get( [ 'post_status' => 'publish' ], false );
-			$id       = reset( $location );
+			$locations_repository_builder = new Locations_Repository_Builder();
+			$repo                         = $locations_repository_builder->get_locations_repository();
+			$location                     = $repo->get( [ 'post_status' => 'publish' ], false );
+			$id                           = reset( $location );
 		}
 
 		return $this->get_location_data( $id );
@@ -177,8 +182,9 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 		$args = [];
 		$id   = $post_id;
 
-		$repository = new WPSEO_Local_Locations_Repository();
-		$locations  = $repository->get( $args );
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$repository                   = $locations_repository_builder->get_locations_repository();
+		$locations                    = $repository->get( $args );
 
 		return (object) $locations[ $id ];
 	}
@@ -216,7 +222,7 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 		$data['@id'] = $this->context->site_url . $this->get_schema_id();
 
 		if ( $this->should_output_main_entity_property() ) {
-			$data['mainEntityOfPage'] = [ '@id' => $this->context->canonical . Schema_IDs::WEBPAGE_HASH ];
+			$data['mainEntityOfPage'] = [ '@id' => $this->context->main_schema_id ];
 		}
 
 		$data = $this->add_logo( $data );
@@ -231,7 +237,10 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 	 * @return bool Value indicating whether or not to output the property.
 	 */
 	private function should_output_main_entity_property() {
-		if ( \get_post_type() !== PostType::get_instance()->get_post_type() ) {
+		$post_type_instance = new PostType();
+		$post_type_instance->initialize();
+
+		if ( \get_post_type() !== $post_type_instance->get_post_type() ) {
 			return false;
 		}
 
@@ -329,7 +338,7 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 			'url'        => 'business_url',
 		];
 
-		$business_types = new WPSEO_Local_Business_Types_Repository();
+		$business_types = new Business_Types_Repository();
 
 		if ( $business_types->is_business_type_child_of( 'LocalBusiness', $location->business_type ) ) {
 			$organization_attributes['priceRange']         = 'business_price_range';
@@ -398,7 +407,7 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 		$data['@id'] = $this->context->site_url . $this->get_schema_id();
 
 		if ( $this->should_output_main_entity_property() ) {
-			$data['mainEntityOfPage'] = [ '@id' => $this->context->canonical . Schema_IDs::WEBPAGE_HASH ];
+			$data['mainEntityOfPage'] = [ '@id' => $this->context->main_schema_id ];
 		}
 
 		$organization_attributes = [
@@ -413,7 +422,7 @@ class WPSEO_Local_Organization extends Abstract_Schema_Piece {
 			$organization_attributes['areaServed'] = 'location_area_served';
 		}
 
-		$business_types = new WPSEO_Local_Business_Types_Repository();
+		$business_types = new Business_Types_Repository();
 		if ( $business_types->is_business_type_child_of( 'LocalBusiness', $options['business_type'] ) ) {
 
 			if ( ( ! wpseo_has_multiple_locations() || wpseo_has_primary_location() || wpseo_has_location_acting_as_primary() ) ) {

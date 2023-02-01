@@ -5,6 +5,8 @@
  * @package WPSEO_Local\Frontend
  */
 
+use Yoast\WP\Local\PostType\PostType;
+
 if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 
 	/**
@@ -382,8 +384,11 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 				$replacements[] = $sl_category_term;
 			}
 
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+
 			// Set post type.
-			$replacements[] = PostType::get_instance()->get_post_type();
+			$replacements[] = $post_type_instance->get_post_type();
 
 			/*
 			 * Get all coordinates from posts.

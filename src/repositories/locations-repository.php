@@ -14,7 +14,7 @@ use Yoast\WP\SEO\Initializers\Initializer_Interface;
 use Yoast\WP\SEO\Surfaces\Values\Meta;
 
 /**
- * Class WPSEO_Local_Locations_Repository
+ * Class Locations_Repository
  *
  * This class handles the querying of all locations
  */
@@ -214,7 +214,7 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * The init function for the WPSEO_Local_Locations_Repository class.
+	 * The init function for the Locations_Repository class.
 	 */
 	public function initialize() {
 		$this->local_options = \get_option( 'wpseo_local' );
@@ -314,7 +314,7 @@ class Locations_Repository implements Initializer_Interface {
 		// Loop through location fields and remove empty ones.
 		$location = \array_filter(
 			$location,
-			function ( $value ) {
+			static function ( $value ) {
 				return ! empty( $value );
 			}
 		);
@@ -942,7 +942,7 @@ class Locations_Repository implements Initializer_Interface {
 	 *
 	 * @param Meta_Tags_Context $context The meta tags context.
 	 *
-	 * @return object The location.
+	 * @return object|null The location.
 	 */
 	public function for_context( Meta_Tags_Context $context ) {
 		if ( ! $this->options->use_multiple_locations() ) {

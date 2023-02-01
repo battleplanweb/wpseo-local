@@ -6,6 +6,8 @@
  */
 
 use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
+use Yoast\WP\Local\PostType\PostType;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -37,7 +39,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		/**
 		 * Holds the API key repository class.
 		 *
-		 * @var WPSEO_Local_Api_Keys_Repository
+		 * @var Api_Keys_Repository
 		 */
 		private $api_repository;
 
@@ -101,7 +103,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 			$this->asset_manager = new WPSEO_Local_Admin_Assets();
 			$this->asset_manager->register_assets();
-			$this->api_repository = new WPSEO_Local_Api_Keys_Repository();
+			$this->api_repository = new Api_Keys_Repository();
+			$this->api_repository->initialize();
 
 			add_action( 'admin_notices', [ $this, 'missing_organization_name_logo_notice' ] );
 		}
@@ -186,8 +189,12 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 			global $pagenow;
 			$current_screen = get_current_screen();
 
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
+
 			$this->is_settings_page                = ( $current_screen->id === 'seo_page_wpseo_local' );
-			$this->is_locations_page               = ( $current_screen->base === 'post' && $current_screen->id === PostType::get_instance()->get_post_type() );
+			$this->is_locations_page               = ( $current_screen->base === 'post' && $current_screen->id === $post_type );
 			$this->is_locations_category_term_page = ( $current_screen->base === 'term' && $current_screen->id === 'edit-wpseo_locations_category' );
 			$this->is_edit_page                    = in_array( $pagenow, [ 'post.php', 'post-new.php' ], true );
 			$this->is_yoast_seo_titles_page        = ( $current_screen->id === 'seo_page_wpseo_titles' );
@@ -228,8 +235,9 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 			}
 
 			if ( $this->is_settings_page || $this->is_locations_page ) {
-				$api_repository = new WPSEO_Local_Api_Keys_Repository();
-				$api_key        = $api_repository->get_api_key( 'browser' );
+				$api_repository = new Api_Keys_Repository();
+				$api_repository->initialize();
+				$api_key = $api_repository->get_api_key( 'browser' );
 
 				// Only load the Geocoding scripts if an API key is entered.
 				if ( ! empty( $api_key ) ) {
@@ -267,6 +275,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		 */
 		public function config_page_footer() {
 			if ( $this->is_settings_page || $this->is_locations_page ) {
+				$this->asset_manager->enqueue_script( 'select2' );
+				$this->asset_manager->enqueue_style( 'select2' );
 				?>
 				<script>
 					jQuery( document ).ready( function( $ ) {
@@ -429,21 +439,21 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		}
 
 		/**
-		 * @param string $message The notification message to display.
-		 * @param string $type    The type of notification to display. Can be warning, success or info.
-		 * @param string $class   Optional. CSS class name(s).
-		 * @param bool   $echo    Whether to echo or return the notification.
+		 * @param string $message   The notification message to display.
+		 * @param string $type      The type of notification to display. Can be warning, success or info.
+		 * @param string $css_class Optional. CSS class name(s).
+		 * @param bool   $to_echo   Whether to echo or return the notification.
 		 *
 		 * @return string
 		 */
-		public static function display_notification( $message, $type = 'warning', $class = '', $echo = true ) {
+		public static function display_notification( $message, $type = 'warning', $css_class = '', $to_echo = true ) {
 			$svg = [
 				'warning' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" role="img" aria-hidden="true" focusable="false"><path d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"/></svg>',
 				'success' => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-hidden="true" focusable="false"><path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/></svg>',
 				'info'    => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-hidden="true" focusable="false"><path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 110c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/></svg>',
 			];
 
-			$notification  = '<div class="yoast-seo-local__alert yoast-seo-local__alert--' . esc_attr( $type ) . ' ' . esc_attr( $class ) . ' ">';
+			$notification  = '<div class="yoast-seo-local__alert yoast-seo-local__alert--' . esc_attr( $type ) . ' ' . esc_attr( $css_class ) . ' ">';
 			$notification .= '<span class="alert__icon">';
 			$notification .= $svg[ $type ];
 			$notification .= '</span>';
@@ -452,7 +462,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 			$notification .= '</span>';
 			$notification .= '</div>';
 
-			if ( ! $echo ) {
+			if ( ! $to_echo ) {
 				return $notification;
 			}
 

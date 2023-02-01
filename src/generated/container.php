@@ -25,6 +25,7 @@ class Cached_Container extends Container
     {
         $this->services = [];
         $this->normalizedIds = [
+            'yoast\\wp\\local\\builders\\locations_repository_builder' => 'Yoast\\WP\\Local\\Builders\\Locations_Repository_Builder',
             'yoast\\wp\\local\\conditionals\\admin_conditional' => 'Yoast\\WP\\Local\\Conditionals\\Admin_Conditional',
             'yoast\\wp\\local\\conditionals\\multiple_locations_conditional' => 'Yoast\\WP\\Local\\Conditionals\\Multiple_Locations_Conditional',
             'yoast\\wp\\local\\formatters\\address_formatter' => 'Yoast\\WP\\Local\\Formatters\\Address_Formatter',
@@ -44,6 +45,7 @@ class Cached_Container extends Container
             'yoastseo_vendor\\symfony\\component\\dependencyinjection\\containerinterface' => 'YoastSEO_Vendor\\YoastSEO_Vendor\\Symfony\\Component\\DependencyInjection\\ContainerInterface',
         ];
         $this->methodMap = [
+            'Yoast\\WP\\Local\\Builders\\Locations_Repository_Builder' => 'getLocationsRepositoryBuilderService',
             'Yoast\\WP\\Local\\Conditionals\\Admin_Conditional' => 'getAdminConditionalService',
             'Yoast\\WP\\Local\\Conditionals\\Multiple_Locations_Conditional' => 'getMultipleLocationsConditionalService',
             'Yoast\\WP\\Local\\Formatters\\Address_Formatter' => 'getAddressFormatterService',
@@ -102,6 +104,16 @@ class Cached_Container extends Container
         @trigger_error(sprintf('The %s() method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the isCompiled() method instead.', __METHOD__), E_USER_DEPRECATED);
 
         return true;
+    }
+
+    /**
+     * Gets the public 'Yoast\WP\Local\Builders\Locations_Repository_Builder' shared autowired service.
+     *
+     * @return \Yoast\WP\Local\Builders\Locations_Repository_Builder
+     */
+    protected function getLocationsRepositoryBuilderService()
+    {
+        return $this->services['Yoast\\WP\\Local\\Builders\\Locations_Repository_Builder'] = new \Yoast\WP\Local\Builders\Locations_Repository_Builder();
     }
 
     /**

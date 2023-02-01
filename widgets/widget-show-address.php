@@ -5,6 +5,9 @@
  * @package WPSEO_Local\Frontend
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\PostType\PostType;
+
 /**
  * Class WPSEO_Show_Address.
  *
@@ -67,8 +70,11 @@ class WPSEO_Show_Address extends WP_Widget {
 			return;
 		}
 
+		$post_type_instance = new PostType();
+		$post_type_instance->initialize();
+
 		if ( ( $location_id === '' && wpseo_has_multiple_locations() )
-			|| ( $location_id === 'current' && ! is_singular( PostType::get_instance()->get_post_type() ) )
+			|| ( $location_id === 'current' && ! is_singular( $post_type_instance->get_post_type() ) )
 		) {
 			return;
 		}
@@ -206,8 +212,9 @@ class WPSEO_Show_Address extends WP_Widget {
 				esc_attr( $this->get_field_name( 'location_id' ) )
 			);
 
-			$repo      = new WPSEO_Local_Locations_Repository();
-			$locations = $repo->get( [], false );
+			$locations_repository_builder = new Locations_Repository_Builder();
+			$repo                         = $locations_repository_builder->get_locations_repository();
+			$locations                    = $repo->get( [], false );
 
 			if ( ! empty( $locations ) ) {
 				echo '

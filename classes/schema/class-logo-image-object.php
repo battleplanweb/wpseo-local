@@ -4,6 +4,7 @@
  */
 
 use Yoast\WP\SEO\Generators\Schema\Abstract_Schema_Piece;
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
 
 /**
  * Class WPSEO_Local_JSON_LD
@@ -58,8 +59,8 @@ class WPSEO_Local_Logo_Image_Object extends Abstract_Schema_Piece {
 		$args = [];
 		$id   = 0;
 
-		$repository = new WPSEO_Local_Locations_Repository();
-
+		$locations_repository_builder = new Locations_Repository_Builder();
+		$repository                   = $locations_repository_builder->get_locations_repository();
 		if ( wpseo_has_primary_location() ) {
 			$id   = WPSEO_Options::get( 'multiple_locations_primary_location' );
 			$args = [ 'id' => $id ];

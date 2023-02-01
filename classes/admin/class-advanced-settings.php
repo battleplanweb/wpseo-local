@@ -9,6 +9,7 @@
 
 use Yoast\WP\SEO\Helpers\Indexable_Helper;
 use Yoast\WP\SEO\Integrations\Watchers\Indexable_Permalink_Watcher;
+use Yoast\WP\Local\PostType\PostType;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -38,14 +39,22 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 		 * WPSEO_Local_Admin_API_Settings constructor.
 		 */
 		public function __construct() {
+			$post_type = new Yoast\WP\Local\PostType\PostType();
+			$post_type->initialize();
 			add_filter( 'wpseo_local_admin_tabs', [ $this, 'create_tab' ] );
 			add_filter( 'wpseo_local_admin_help_center_video', [ $this, 'set_video' ] );
 
-			add_action( 'wpseo_local_admin_' . $this->slug . '_content', [ $this, 'maybe_show_multiple_location_notification' ], 10 );
-			if ( PostType::get_instance()->is_post_type_filtered() ) {
-				add_action( 'wpseo_local_admin_' . $this->slug . '_content', [ $this, 'post_type_filtered_notification' ], 10 );
+			add_action( 'wpseo_local_admin_' . $this->slug . '_content', [
+				$this,
+				'maybe_show_multiple_location_notification',
+			], 10 );
+			if ( $post_type->is_post_type_filtered() ) {
+				add_action( 'wpseo_local_admin_' . $this->slug . '_content', [
+					$this,
+					'post_type_filtered_notification',
+				], 10 );
 			}
-			if ( ! PostType::get_instance()->is_post_type_filtered() ) {
+			if ( ! $post_type->is_post_type_filtered() ) {
 				add_action( 'wpseo_local_admin_' . $this->slug . '_content', [ $this, 'permalinks' ], 10 );
 				add_action( 'wpseo_local_admin_' . $this->slug . '_content', [ $this, 'admin_labels' ], 10 );
 			}
@@ -56,11 +65,11 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 		/**
 		 * Resets the permalinks for the indexables.
 		 *
-		 * @param array $old The old option value.
-		 * @param array $new The new option value.
+		 * @param array $old_value The old option value.
+		 * @param array $new_value The new option value.
 		 */
-		public function reset_indexable_permalinks( $old, $new ) {
-			if ( $old['locations_slug'] === $new['locations_slug'] && $old['locations_taxo_slug'] === $new['locations_taxo_slug'] ) {
+		public function reset_indexable_permalinks( $old_value, $new_value ) {
+			if ( $old_value['locations_slug'] === $new_value['locations_slug'] && $old_value['locations_taxo_slug'] === $new_value['locations_taxo_slug'] ) {
 				return;
 			}
 
@@ -72,11 +81,11 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 			$watcher = YoastSEO()->classes->get( Indexable_Permalink_Watcher::class );
 			$helper  = YoastSEO()->classes->get( Indexable_Helper::class );
 
-			if ( $old['locations_slug'] !== $new['locations_slug'] ) {
+			if ( $old_value['locations_slug'] !== $new_value['locations_slug'] ) {
 				$watcher->reset_permalinks_post_type( 'wpseo_locations' );
 			}
 
-			if ( $old['locations_taxo_slug'] !== $new['locations_taxo_slug'] ) {
+			if ( $old_value['locations_taxo_slug'] !== $new_value['locations_taxo_slug'] ) {
 				$helper->reset_permalink_indexables( 'term', 'wpseo_locations_category' );
 			}
 		}
@@ -121,7 +130,10 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 		 * If multiple locations are not enabled, show a notification there are more (advanced) settings available if they are activated.
 		 */
 		public function post_type_filtered_notification() {
-			$post_type        = PostType::get_instance()->get_post_type();
+			$post_type_instance = new PostType();
+			$post_type_instance->initialize();
+			$post_type = $post_type_instance->get_post_type();
+
 			$post_type_object = get_post_type_object( $post_type );
 
 			WPSEO_Local_Admin_Page::section_before( 'wpseo-local-post-type-filtered-notification', 'clear: both; ' . ( wpseo_has_multiple_locations() ? '' : 'display: none;' ) );
