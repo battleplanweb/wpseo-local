@@ -153,7 +153,7 @@ if ( ! \class_exists( Address_Formatter::class ) ) {
 					$output .= ( ( $oneline ) ? ', ' : '' );
 
 					if ( $use_tags ) {
-						$output .= '<' . $tag_name . ' class="street-address">' . $business_address . '</' . $tag_name . '>';
+						$output .= '<' . $tag_name . ' class="street-address">' . \esc_html( $business_address ) . '</' . $tag_name . '>';
 					}
 					else {
 						$output .= \esc_html( $business_address );
@@ -164,7 +164,7 @@ if ( ! \class_exists( Address_Formatter::class ) ) {
 					$output .= ( ( $oneline ) ? ', ' : '' );
 
 					if ( $use_tags ) {
-						$output .= '<' . $tag_name . ' class="street-address">' . $business_address_2 . '</' . $tag_name . '>';
+						$output .= '<' . $tag_name . ' class="street-address">' . \esc_html( $business_address_2 ) . '</' . $tag_name . '>';
 					}
 					else {
 						$output .= \esc_html( $business_address_2 );

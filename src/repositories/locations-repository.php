@@ -11,7 +11,6 @@ use Yoast\WP\Local\Conditionals\No_Conditionals;
 use Yoast\WP\Local\PostType\PostType;
 use Yoast\WP\SEO\Context\Meta_Tags_Context;
 use Yoast\WP\SEO\Initializers\Initializer_Interface;
-use Yoast\WP\SEO\Surfaces\Values\Meta;
 
 /**
  * Class Locations_Repository

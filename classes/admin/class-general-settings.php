@@ -6,11 +6,11 @@
  * @since   4.0
  */
 
-use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
-use Yoast\WP\Local\Repositories\Api_Keys_Repository;
-use Yoast\WP\Local\PostType\PostType;
 use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
 use Yoast\WP\Local\Repositories\Business_Types_Repository;
+use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -419,20 +419,18 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 			if ( ! empty( $company_name ) || ! empty( $company_logo ) ) {
 
 				printf(
-				/* translators: 1: HTML <a> open tag; 2: <a> close tag; 3: "Yoast SEO". */
-					esc_html__( 'You can change your current company name and logo within the general settings of the Search Appearance of %3$s. %1$sGo to the settings%2$s.', 'yoast-local-seo' ),
-					'<a href="' . esc_url( admin_url( 'admin.php?page=wpseo_titles#top#general' ) ) . '">',
-					'</a>',
-					'Yoast SEO'
+				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
+					esc_html__( 'You can change your current Organization name and logo in the %1$sSite representation%2$s settings.', 'yoast-local-seo' ),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=wpseo_page_settings#/site-representation' ) ) . '">',
+					'</a>'
 				);
 			}
 			else {
 				printf(
-				/* translators: 1: HTML <a> open tag; 2: <a> close tag; 3: "Yoast SEO". */
-					esc_html__( 'You can set up your company name and logo within the general settings of the Search Appearance of %3$s. %1$sChange your company settings%2$s.', 'yoast-local-seo' ),
-					'<a href="' . esc_url( admin_url( 'admin.php?page=wpseo_titles#top#general' ) ) . '">',
-					'</a>',
-					'Yoast SEO'
+				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
+					esc_html__( 'You can set up your Organization name and logo in the %1$sSite representation%2$s settings.', 'yoast-local-seo' ),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=wpseo_page_settings#/site-representation' ) ) . '">',
+					'</a>'
 				);
 			}
 			echo '</p>';

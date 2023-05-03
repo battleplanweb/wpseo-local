@@ -50,6 +50,7 @@ class WPSEO_Local_Admin_Assets extends WPSEO_Admin_Asset_Manager {
 			'name'      => 'google-maps',
 			'src'       => $this->get_google_maps_url(),
 			'in_footer' => true,
+			'deps'      => [ 'jquery', self::PREFIX . 'commons-bundle', self::PREFIX . 'frontend' ],
 		];
 		$scripts['seo-locations']        = [
 			'name'      => 'seo-locations',
@@ -162,6 +163,7 @@ class WPSEO_Local_Admin_Assets extends WPSEO_Admin_Asset_Manager {
 		if ( ! empty( $api_key ) ) {
 			$query_args['key'] = $api_key;
 		}
+		$query_args['callback'] = 'wpseo_map_init';
 
 		// Load Maps API script.
 		$locale = get_locale();

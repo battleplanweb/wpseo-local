@@ -30,6 +30,7 @@ class Cached_Container extends Container
             'yoast\\wp\\local\\conditionals\\multiple_locations_conditional' => 'Yoast\\WP\\Local\\Conditionals\\Multiple_Locations_Conditional',
             'yoast\\wp\\local\\formatters\\address_formatter' => 'Yoast\\WP\\Local\\Formatters\\Address_Formatter',
             'yoast\\wp\\local\\integrations\\front_end_integration' => 'Yoast\\WP\\Local\\Integrations\\Front_End_Integration',
+            'yoast\\wp\\local\\integrations\\local_pickup_notification' => 'Yoast\\WP\\Local\\Integrations\\Local_Pickup_Notification',
             'yoast\\wp\\local\\posttype\\posttype' => 'Yoast\\WP\\Local\\PostType\\PostType',
             'yoast\\wp\\local\\repositories\\api_keys_repository' => 'Yoast\\WP\\Local\\Repositories\\Api_Keys_Repository',
             'yoast\\wp\\local\\repositories\\business_types_repository' => 'Yoast\\WP\\Local\\Repositories\\Business_Types_Repository',
@@ -50,6 +51,7 @@ class Cached_Container extends Container
             'Yoast\\WP\\Local\\Conditionals\\Multiple_Locations_Conditional' => 'getMultipleLocationsConditionalService',
             'Yoast\\WP\\Local\\Formatters\\Address_Formatter' => 'getAddressFormatterService',
             'Yoast\\WP\\Local\\Integrations\\Front_End_Integration' => 'getFrontEndIntegrationService',
+            'Yoast\\WP\\Local\\Integrations\\Local_Pickup_Notification' => 'getLocalPickupNotificationService',
             'Yoast\\WP\\Local\\PostType\\PostType' => 'getPostTypeService',
             'Yoast\\WP\\Local\\Repositories\\Api_Keys_Repository' => 'getApiKeysRepositoryService',
             'Yoast\\WP\\Local\\Repositories\\Business_Types_Repository' => 'getBusinessTypesRepositoryService',
@@ -81,6 +83,7 @@ class Cached_Container extends Container
             'Psr\\Container\\ContainerInterface' => true,
             'YoastSEO_Vendor\\Symfony\\Component\\DependencyInjection\\ContainerInterface' => true,
             'YoastSEO_Vendor\\YoastSEO_Vendor\\Symfony\\Component\\DependencyInjection\\ContainerInterface' => true,
+            'autowired.Yoast\\WP\\SEO\\Helpers\\Capability_Helper' => true,
             'autowired.Yoast\\WP\\SEO\\Surfaces\\Open_Graph_Helpers_Surface' => true,
             'autowired.Yoast\\WP\\SEO\\Surfaces\\Schema_Helpers_Surface' => true,
             'autowired.Yoast\\WP\\SEO\\Surfaces\\Twitter_Helpers_Surface' => true,
@@ -154,6 +157,16 @@ class Cached_Container extends Container
     protected function getFrontEndIntegrationService()
     {
         return $this->services['Yoast\\WP\\Local\\Integrations\\Front_End_Integration'] = new \Yoast\WP\Local\Integrations\Front_End_Integration(${($_ = isset($this->services['Yoast\\WP\\Local\\Repositories\\Locations_Repository']) ? $this->services['Yoast\\WP\\Local\\Repositories\\Locations_Repository'] : $this->getLocationsRepositoryService()) && false ?: '_'}, ${($_ = isset($this->services['Yoast\\WP\\Local\\PostType\\PostType']) ? $this->services['Yoast\\WP\\Local\\PostType\\PostType'] : ($this->services['Yoast\\WP\\Local\\PostType\\PostType'] = new \Yoast\WP\Local\PostType\PostType())) && false ?: '_'});
+    }
+
+    /**
+     * Gets the public 'Yoast\WP\Local\Integrations\Local_Pickup_Notification' shared autowired service.
+     *
+     * @return \Yoast\WP\Local\Integrations\Local_Pickup_Notification
+     */
+    protected function getLocalPickupNotificationService()
+    {
+        return $this->services['Yoast\\WP\\Local\\Integrations\\Local_Pickup_Notification'] = new \Yoast\WP\Local\Integrations\Local_Pickup_Notification(new \Yoast\WP\SEO\Helpers\Capability_Helper());
     }
 
     /**
@@ -256,6 +269,7 @@ class Cached_Container extends Container
         $this->services['Yoast\\WP\\SEO\\Loader'] = $instance = new \Yoast\WP\SEO\Loader($this);
 
         $instance->register_integration('Yoast\\WP\\Local\\Integrations\\Front_End_Integration');
+        $instance->register_integration('Yoast\\WP\\Local\\Integrations\\Local_Pickup_Notification');
         $instance->register_initializer('Yoast\\WP\\Local\\PostType\\PostType');
         $instance->register_initializer('Yoast\\WP\\Local\\Repositories\\Api_Keys_Repository');
         $instance->register_initializer('Yoast\\WP\\Local\\Repositories\\Locations_Repository');

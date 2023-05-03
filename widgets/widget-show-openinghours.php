@@ -5,9 +5,9 @@
  * @package WPSEO_Local\Frontend
  */
 
-use Yoast\WP\Local\Repositories\Options_Repository;
 use Yoast\WP\Local\Builders\Locations_Repository_Builder;
 use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Repositories\Options_Repository;
 
 /**
  * Class WPSEO_Show_OpeningHours.

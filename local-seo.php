@@ -6,22 +6,23 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO: Local
- * Version: 14.7
+ * Version: 14.9
  * Plugin URI: http://yoa.st/4fj
  * Description: This Local SEO module adds all the needed functionality to get your site ready for Local Search Optimization
  * Author: Team Yoast and Arjan Snaterse
- * Author URI: http://yoa.st/1uk
+ * Author URI: https://yoa.st/team-yoast-local
  * Text Domain: yoast-local-seo
  * Domain Path: /languages/
+ * Requires at least: 6.0
+ * Requires PHP: 7.2.5
  *
  * GitHub Plugin URI: battleplanweb/wpseo-local */
-
 /*
  * All functionality for fetching location data and creating an KML file with it.
  */
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
-	define( 'WPSEO_LOCAL_VERSION', '14.7' );
+	define( 'WPSEO_LOCAL_VERSION', '14.9' );
 }
 
 if ( ! defined( 'WPSEO_LOCAL_PATH' ) ) {
@@ -66,7 +67,7 @@ add_action(
 		}
 
 		// If you change this version, don't forget to upgrade the required version in the composer.json as well.
-		if ( version_compare( WPSEO_VERSION, '19.10-RC0', '<' ) ) {
+		if ( version_compare( WPSEO_VERSION, '20.5-RC0', '<' ) ) {
 			add_action( 'all_admin_notices', 'yoast_wpseo_local_upgrade_error' );
 
 			return;

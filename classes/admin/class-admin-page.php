@@ -95,7 +95,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Page' ) ) {
 
 				do_action( 'Yoast\WP\Local\before_option_content_' . $slug );
 
-				self::section_before( 'local-' . $slug, null, 'yoastbox paper tab-block search-appearance' );
+				self::section_before( 'local-' . $slug, null, 'yoastbox paper tab-block local-seo-settings' );
 				self::section_before( 'local-' . $slug . '-container', null, 'paper-container' );
 				do_action( 'wpseo_local_admin_' . $slug . '_before_title', $slug );
 				echo '<h2>' . esc_attr( $titles['content_title'] ) . '</h2>';

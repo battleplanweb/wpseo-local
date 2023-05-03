@@ -3,8 +3,8 @@
  * @package WPSEO_Local\Frontend\Schema
  */
 
-use Yoast\WP\SEO\Config\Schema_IDs;
 use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\SEO\Config\Schema_IDs;
 
 /**
  * Class WPSEO_Local_JSON_LD

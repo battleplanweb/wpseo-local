@@ -927,3 +927,9 @@
 .wpseo-local-thickbox-wrapper .wpseo-local-map-style-list li:last-child {
 	margin-right: 0 !important;
 }
+
+.wpseo_content_wrapper .paper.tab-block.local-seo-settings {
+	max-width: 632px;
+	background-color: #fff;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}

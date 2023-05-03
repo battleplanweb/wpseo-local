@@ -7,9 +7,9 @@
  * @todo    CHECK THE @SINCE VERSION NUMBER!!!!!!!!
  */
 
+use Yoast\WP\Local\PostType\PostType;
 use Yoast\WP\SEO\Helpers\Indexable_Helper;
 use Yoast\WP\SEO\Integrations\Watchers\Indexable_Permalink_Watcher;
-use Yoast\WP\Local\PostType\PostType;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -39,20 +39,22 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 		 * WPSEO_Local_Admin_API_Settings constructor.
 		 */
 		public function __construct() {
-			$post_type = new Yoast\WP\Local\PostType\PostType();
+			$post_type = new PostType();
 			$post_type->initialize();
 			add_filter( 'wpseo_local_admin_tabs', [ $this, 'create_tab' ] );
 			add_filter( 'wpseo_local_admin_help_center_video', [ $this, 'set_video' ] );
 
-			add_action( 'wpseo_local_admin_' . $this->slug . '_content', [
-				$this,
-				'maybe_show_multiple_location_notification',
-			], 10 );
+			add_action(
+				'wpseo_local_admin_' . $this->slug . '_content',
+				[ $this, 'maybe_show_multiple_location_notification' ],
+				10
+			);
 			if ( $post_type->is_post_type_filtered() ) {
-				add_action( 'wpseo_local_admin_' . $this->slug . '_content', [
-					$this,
-					'post_type_filtered_notification',
-				], 10 );
+				add_action(
+					'wpseo_local_admin_' . $this->slug . '_content',
+					[ $this, 'post_type_filtered_notification' ],
+					10
+				);
 			}
 			if ( ! $post_type->is_post_type_filtered() ) {
 				add_action( 'wpseo_local_admin_' . $this->slug . '_content', [ $this, 'permalinks' ], 10 );

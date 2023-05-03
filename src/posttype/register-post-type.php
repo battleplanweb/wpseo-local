@@ -6,7 +6,6 @@ use WPSEO_Local_Option;
 use WPSEO_Options;
 use Yoast\WP\Local\Conditionals\Multiple_Locations_Conditional;
 use Yoast\WP\SEO\Initializers\Initializer_Interface;
-use Yoast\WP\SEO\Integrations\Integration_Interface;
 
 if ( \class_exists( PostType::class ) ) {
 	return;

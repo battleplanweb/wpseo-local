@@ -168,11 +168,6 @@ class WPSEO_Local_WooCommerce {
 				$wpseo_local_woocommerce_shipping = new Yoast_WCSEO_Local_Shipping();
 				$wpseo_local_woocommerce_shipping->init();
 
-				require_once WPSEO_LOCAL_PATH . 'woocommerce/admin/class-wc-transport.php';
-				require_once WPSEO_LOCAL_PATH . 'woocommerce/admin/class-wc-transport-list.php';
-				$wpseo_local_woocommerce_transport = new Yoast_WCSEO_Local_Transport();
-				$wpseo_local_woocommerce_transport->init();
-
 				require_once WPSEO_LOCAL_PATH . 'woocommerce/admin/class-admin-columns.php';
 				require_once WPSEO_LOCAL_PATH . 'woocommerce/emails/class-wc-emails.php';
 				require_once WPSEO_LOCAL_PATH . 'woocommerce/includes/wpseo-local-woocommerce-functions.php';

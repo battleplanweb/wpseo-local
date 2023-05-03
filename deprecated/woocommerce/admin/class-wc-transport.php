@@ -7,23 +7,50 @@
 
 /**
  * Class: Yoast_WCSEO_Local_Transport.
+ *
+ * @deprecated 14.9
+ * @codeCoverageIgnore
  */
 class Yoast_WCSEO_Local_Transport {
 
+	/**
+	 * Inits the class.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return void
+	 */
 	public function init() {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		add_action( 'admin_menu', [ $this, 'register_submenu' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_styles' ] );
 	}
 
+	/**
+	 * Registers styles.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return void
+	 */
 	public function admin_styles() {
-
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		if ( get_current_screen()->id === 'woocommerce_page_yoast_wcseo_local_transport' ) {
 			wp_register_style( 'woocommerce_admin_styles', WC()->plugin_url() . '/assets/css/admin.css', [], WC_VERSION );
 			wp_enqueue_style( 'woocommerce_admin_styles' );
 		}
 	}
 
+	/**
+	 * Registers submenu
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
 	public function register_submenu() {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		add_submenu_page(
 			'woocommerce',
 			__( 'Transport', 'yoast-local-seo' ),
@@ -34,7 +61,15 @@ class Yoast_WCSEO_Local_Transport {
 		);
 	}
 
+	/**
+	 * Makes the menu item content.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return void
+	 */
 	public function menu_callback() {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		echo '<h3>' . esc_html__( 'Transport', 'yoast-local-seo' ) . '</h3>';
 		/* translators: transport-page-description-text = a container for placing an explanatory text for the Transport page, it elaborates on what the page is actually for */
 		echo '<p>' . esc_html__( 'transport-page-description-text', 'yoast-local-seo' ) . '</p>';
@@ -46,7 +81,16 @@ class Yoast_WCSEO_Local_Transport {
 		$list->display();
 	}
 
+	/**
+	 * Gets data from the database.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 *
+	 * @return array|object|\stdClass[]|null
+	 */
 	public function get_transport_items() {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		global $wpdb;
 
 		$query = "

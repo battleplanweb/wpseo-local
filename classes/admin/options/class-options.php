@@ -146,6 +146,7 @@ class WPSEO_Local_Option extends WPSEO_Option {
 			'local_enhanced_search'                      => 'no',
 			'local_version'                              => '0',
 			'woocommerce_local_pickup_setting'           => 'no',
+			'dismiss_local_pickup_notice'                => false,
 		];
 	}
 
@@ -286,6 +287,10 @@ class WPSEO_Local_Option extends WPSEO_Option {
 					if ( isset( $dirty[ $key ] ) && $dirty[ $key ] !== '' ) {
 						$clean[ $key ] = filter_var( $dirty[ $key ], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
 					}
+					break;
+				/* Bool values */
+				default:
+					$clean[ $key ] = ( isset( $dirty[ $key ] ) ? WPSEO_Utils::validate_bool( $dirty[ $key ] ) : false );
 					break;
 			}
 		}

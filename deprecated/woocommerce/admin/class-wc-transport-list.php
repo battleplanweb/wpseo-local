@@ -11,10 +11,21 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 /**
  * Class: Yoast_WCSEO_Local_Transport_List.
+ *
+ * @deprecated 14.9
+ * @codeCoverageIgnore
  */
 class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 
+	/**
+	 * Gets column table data.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return array
+	 */
 	public function get_columns() {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		return [
 			'order'       => _x( 'Order', 'noun', 'yoast-local-seo' ),
 			'status'      => __( 'Status', 'yoast-local-seo' ),
@@ -23,8 +34,16 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		];
 	}
 
+	/**
+	 * Emptied to make sure there is no chance of updating order status.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
 	public function process_bulk_action() {
-
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		switch ( $this->current_action() ) {
 			case 'wc-completed':
 			case 'wc-processing':
@@ -45,7 +64,15 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		$order->update_status( $this->current_action() );
 	}
 
+	/**
+	 * Prepares data for a table.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return void
+	 */
 	public function prepare_items() {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 
 		$this->process_bulk_action();
 
@@ -58,13 +85,23 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		$this->_column_headers = [ $columns, $hidden, $sortable ];
 	}
 
+	/**
+	 * Sets the column order for a table.
+	 *
+	 * @param array $item $line for the table.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return string
+	 */
 	public function column_order( $item ) {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		$actions = [
-			'edit'              => sprintf( '<a href="' . admin_url( 'post.php' ) . '?action=%s&post=%s">' . __( 'Edit', 'yoast-local-seo' ) . '</a>', 'edit', $item->ID ),
-			'processing'        => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Processing', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-processing', $item->ID ),
-			'transporting'      => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Transporting', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-transporting', $item->ID ),
-			'ready-for-pickup'  => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Ready for pickup', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-ready-for-pickup', $item->ID ),
-			'completed'         => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Completed', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-completed', $item->ID ),
+			'edit'             => sprintf( '<a href="' . admin_url( 'post.php' ) . '?action=%s&post=%s">' . __( 'Edit', 'yoast-local-seo' ) . '</a>', 'edit', $item->ID ),
+			'processing'       => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Processing', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-processing', $item->ID ),
+			'transporting'     => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Transporting', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-transporting', $item->ID ),
+			'ready-for-pickup' => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Ready for pickup', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-ready-for-pickup', $item->ID ),
+			'completed'        => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Completed', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-completed', $item->ID ),
 		];
 
 		// Switch to just a string instead of a link if the item already has that status.
@@ -128,7 +165,18 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		return $output;
 	}
 
+	/**
+	 * Sets the default for a column.
+	 *
+	 * @param array  $item        Item for the table.
+	 * @param string $column_name The column name.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return string|void|null
+	 */
 	public function column_default( $item, $column_name ) {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		switch ( $column_name ) {
 			case 'status':
 				return $this->get_status_output( $item );
@@ -141,7 +189,18 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		}
 	}
 
+	/**
+	 * Renders a row.
+	 *
+	 * @param array $item A row.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
 	public function single_row( $item ) {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		$active_class = isset( $item->active ) ? 'active' : '';
 
 		echo '<tr class="' . $active_class . '">';
@@ -149,7 +208,18 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		echo "</tr>\n";
 	}
 
+	/**
+	 * Sort function.
+	 *
+	 * @param array $a Sort option 1.
+	 * @param array $b Sort option 2.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return int
+	 */
 	public function usort_reorder( $a, $b ) {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		// If no sort, default to shop_order.
 		$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'ID';
 		// If no order, default to asc.
@@ -157,11 +227,22 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 
 		// Determine sort order.
 		$result = strcmp( $a->{$orderby}, $b->{$orderby} );
+
 		// Send final sort direction to usort.
 		return ( ( $order === 'asc' ) ? $result : -$result );
 	}
 
+	/**
+	 * Gets status string.
+	 *
+	 * @param array $item The line item.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return string|null
+	 */
 	public function get_status_output( $item ) {
+		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 
 		switch ( $item->post_status ) {
 			case 'wc-processing':
@@ -175,6 +256,15 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		}
 	}
 
+	/**
+	 * Gets the output.
+	 *
+	 * @param array $item The line to generate output for.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return string
+	 */
 	public function get_products_output( $item ) {
 		$order    = wc_get_order( $item );
 		$products = $order->get_items();
@@ -189,6 +279,15 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 		return implode( $list_items );
 	}
 
+	/**
+	 * Gets destination output.
+	 *
+	 * @param array $item The line to generate output for.
+	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 * @return mixed
+	 */
 	public function get_destination_output( $item ) {
 		$order = wc_get_order( $item );
 

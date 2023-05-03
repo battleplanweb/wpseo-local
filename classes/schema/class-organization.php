@@ -3,11 +3,11 @@
  * @package WPSEO_Local\Frontend\Schema
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Repositories\Business_Types_Repository;
 use Yoast\WP\SEO\Config\Schema_IDs;
 use Yoast\WP\SEO\Generators\Schema\Abstract_Schema_Piece;
-use Yoast\WP\Local\PostType\PostType;
-use Yoast\WP\Local\Builders\Locations_Repository_Builder;
-use Yoast\WP\Local\Repositories\Business_Types_Repository;
 
 /**
  * Class WPSEO_Local_Organization.

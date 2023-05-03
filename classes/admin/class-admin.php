@@ -5,9 +5,9 @@
  * @package WPSEO_LOCAL\Admin
  */
 
-use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
-use Yoast\WP\Local\Repositories\Api_Keys_Repository;
 use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
+use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -93,12 +93,6 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 			add_action( 'admin_init', [ $this, 'flush_rewrite_rules' ] );
 
 			add_filter( 'wpseo_helpscout_beacon_settings', [ $this, 'filter_helpscout_beacon' ] );
-
-			// Only register the yoast i18n when the page is a Yoast SEO page.
-			if ( $this->is_local_seo_page( filter_input( INPUT_GET, 'page' ) ) ) {
-				$this->register_i18n_promo_class();
-			}
-
 			add_action( 'admin_init', [ $this, 'maps_api_browser_key_notification' ] );
 
 			$this->asset_manager = new WPSEO_Local_Admin_Assets();
@@ -419,26 +413,6 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		}
 
 		/**
-		 * Register the promotion class for our GlotPress instance
-		 *
-		 * @link https://github.com/Yoast/i18n-module
-		 */
-		private function register_i18n_promo_class() {
-			$args = [
-				'textdomain'     => 'yoast-local-seo',
-				'project_slug'   => 'yoast-seo-local',
-				'plugin_name'    => 'Local SEO by Yoast',
-				'hook'           => 'wpseo_admin_promo_footer',
-				'glotpress_url'  => 'http://translate.yoast.com/gp/',
-				'glotpress_name' => 'Yoast Translate',
-				'glotpress_logo' => 'https://translate.yoast.com/gp-templates/images/Yoast_Translate.svg',
-				'register_url'   => 'https://translate.yoast.com/gp/projects#utm_source=plugin&utm_medium=promo-box&utm_campaign=wpseo-i18n-promo',
-			];
-
-			new Yoast_I18n_v3( $args );
-		}
-
-		/**
 		 * @param string $message   The notification message to display.
 		 * @param string $type      The type of notification to display. Can be warning, success or info.
 		 * @param string $css_class Optional. CSS class name(s).
@@ -499,14 +473,14 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 				'<div class="notice notice-warning"><p>%1$s</p><p>%2$s</p></div>',
 				\sprintf(
 					/* translators: 1: Link start tag to a yoast.com page about structured data, 2: Link closing tag. */
-					\esc_html__( 'A company name and logo need to be set for structured data to work properly. %1$sLearn more about the importance of structured data.%2$s', 'yoast-local-seo' ),
+					\esc_html__( 'An Organization name and logo need to be set for structured data to work properly. %1$sLearn more about the importance of structured data.%2$s', 'yoast-local-seo' ),
 					'<a href="' . \esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/4cb' ) ) . '" target="_blank">',
 					WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
 				),
 				\sprintf(
 					/* translators: 1: Link start tag to the Yoast SEO Search Appearance settings page, 2: Link closing tag. */
-					\esc_html__( '%1$sSet your company name and logo%2$s', 'yoast-local-seo' ),
-					'<a href="' . \esc_url( \admin_url( 'admin.php?page=wpseo_titles' ) ) . '" class="button">',
+					\esc_html__( '%1$sSet your Organization name and logo.%2$s', 'yoast-local-seo' ),
+					'<a href="' . \esc_url( \admin_url( 'admin.php?page=wpseo_page_settings#/site-representation' ) ) . '" class="button">',
 					'</a>'
 				)
 			);

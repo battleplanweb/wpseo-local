@@ -6,15 +6,15 @@
  * @since   1.0
  */
 
+use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
+use Yoast\WP\Local\Repositories\Business_Types_Repository;
+use Yoast\WP\Local\Repositories\Locations_Repository;
 use Yoast\WP\Local\Repositories\Options_Repository;
 use Yoast\WP\Local\Repositories\Timezone_Repository;
 use Yoast\WP\SEO\Presenters\Admin\Alert_Presenter;
 use Yoast\WP\SEO\Presenters\Admin\Light_Switch_Presenter;
-use Yoast\WP\Local\Repositories\Api_Keys_Repository;
-use Yoast\WP\Local\PostType\PostType;
-use Yoast\WP\Local\Repositories\Locations_Repository;
-use Yoast\WP\Local\Builders\Locations_Repository_Builder;
-use Yoast\WP\Local\Repositories\Business_Types_Repository;
 
 if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 

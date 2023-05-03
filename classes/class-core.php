@@ -6,9 +6,9 @@
  * @since   1.0
  */
 
-use Yoast\WP\Local\PostType\PostType;
 use Yoast\WP\Local\Builders\Locations_Repository_Builder;
 use Yoast\WP\Local\Formatters\Address_Formatter;
+use Yoast\WP\Local\PostType\PostType;
 
 if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 

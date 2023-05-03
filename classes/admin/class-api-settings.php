@@ -7,8 +7,8 @@
  * @todo    CHECK THE @SINCE VERSION NUMBER!!!!!!!!
  */
 
-use Yoast\WP\Local\Repositories\Api_Keys_Repository;
 use Yoast\WP\Local\PostType\PostType;
+use Yoast\WP\Local\Repositories\Api_Keys_Repository;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
@@ -52,10 +52,10 @@ if ( ! class_exists( 'WPSEO_Local_Admin_API_Keys' ) ) {
 
 			add_action( 'wpseo_local_admin_' . $this->slug . '_content', [ $this, 'tab_content' ], 10 );
 
-			add_action( 'Yoast\WP\Local\before_option_content_' . $this->slug, [
-				$this,
-				'maybe_show_google_maps_api_key_update_notification',
-			] );
+			add_action(
+				'Yoast\WP\Local\before_option_content_' . $this->slug,
+				[ $this, 'maybe_show_google_maps_api_key_update_notification' ]
+			);
 		}
 
 		/**

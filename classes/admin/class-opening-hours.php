@@ -8,8 +8,8 @@
  */
 
 use Yoast\WP\Local\Repositories\Options_Repository;
-use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
 use Yoast\WP\Local\Repositories\Timezone_Repository;
+use Yoast\WP\SEO\Presenters\Admin\Help_Link_Presenter;
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	header( 'Status: 403 Forbidden' );
