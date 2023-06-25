@@ -41,9 +41,7 @@ class Local_Pickup_Notification implements Integration_Interface {
 	 *
 	 * @param Capability_Helper $capability_helper The capability helper.
 	 */
-	public function __construct(
-		Capability_Helper $capability_helper
-	) {
+	public function __construct( Capability_Helper $capability_helper ) {
 		$this->admin_asset_manager = new WPSEO_Admin_Asset_Manager();
 		$this->capability_helper   = $capability_helper;
 	}
@@ -88,7 +86,7 @@ class Local_Pickup_Notification implements Integration_Interface {
 			echo new Notice_Presenter(
 				\sprintf(
 					/* translators: %1$s expands to Yoast Local SEO */
-					__( 'The \'Local Store Pickup\' feature will soon be deprecated from %1$s', 'yoast-local-seo' ),
+					\__( 'The \'Local Store Pickup\' feature will soon be deprecated from %1$s', 'yoast-local-seo' ),
 					'Yoast Local SEO'
 				),
 				$content,

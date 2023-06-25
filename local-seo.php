@@ -6,23 +6,41 @@
  *
  * @wordpress-plugin
  * Plugin Name: Yoast SEO: Local
- * Version: 14.9
+ * Version: 15.0
  * Plugin URI: http://yoa.st/4fj
  * Description: This Local SEO module adds all the needed functionality to get your site ready for Local Search Optimization
  * Author: Team Yoast and Arjan Snaterse
  * Author URI: https://yoa.st/team-yoast-local
  * Text Domain: yoast-local-seo
  * Domain Path: /languages/
- * Requires at least: 6.0
+ * Requires at least: 6.1
  * Requires PHP: 7.2.5
  *
- * GitHub Plugin URI: battleplanweb/wpseo-local */
+ * WC Tested up to: 7.7
+ *
+ * Copyright 2012-2022 Joost de Valk & Arjan Snaterse
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 /*
  * All functionality for fetching location data and creating an KML file with it.
  */
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
-	define( 'WPSEO_LOCAL_VERSION', '14.9' );
+	define( 'WPSEO_LOCAL_VERSION', '15.0' );
 }
 
 if ( ! defined( 'WPSEO_LOCAL_PATH' ) ) {
@@ -66,8 +84,9 @@ add_action(
 			require_once WPSEO_LOCAL_PATH . 'vendor/autoload.php';
 		}
 
-		// If you change this version, don't forget to upgrade the required version in the composer.json as well.
-		if ( version_compare( WPSEO_VERSION, '20.5-RC0', '<' ) ) {
+		// If you change this version, changing the version in composer.json is not necessary
+		// since it will be updated automatically.
+		if ( version_compare( WPSEO_VERSION, '20.8-RC0', '<' ) ) {
 			add_action( 'all_admin_notices', 'yoast_wpseo_local_upgrade_error' );
 
 			return;

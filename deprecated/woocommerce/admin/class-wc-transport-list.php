@@ -22,6 +22,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
+	 *
 	 * @return array
 	 */
 	public function get_columns() {
@@ -69,6 +70,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
+	 *
 	 * @return void
 	 */
 	public function prepare_items() {
@@ -88,10 +90,11 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	/**
 	 * Sets the column order for a table.
 	 *
-	 * @param array $item $line for the table.
-	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
+	 *
+	 * @param array $item $line for the table.
+	 *
 	 * @return string
 	 */
 	public function column_order( $item ) {
@@ -168,11 +171,12 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	/**
 	 * Sets the default for a column.
 	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 *
 	 * @param array  $item        Item for the table.
 	 * @param string $column_name The column name.
 	 *
-	 * @deprecated 14.9
-	 * @codeCoverageIgnore
 	 * @return string|void|null
 	 */
 	public function column_default( $item, $column_name ) {
@@ -192,10 +196,10 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	/**
 	 * Renders a row.
 	 *
-	 * @param array $item A row.
-	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
+	 *
+	 * @param array $item A row.
 	 *
 	 * @return void
 	 */
@@ -211,11 +215,12 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	/**
 	 * Sort function.
 	 *
+	 * @deprecated 14.9
+	 * @codeCoverageIgnore
+	 *
 	 * @param array $a Sort option 1.
 	 * @param array $b Sort option 2.
 	 *
-	 * @deprecated 14.9
-	 * @codeCoverageIgnore
 	 * @return int
 	 */
 	public function usort_reorder( $a, $b ) {
@@ -235,10 +240,11 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	/**
 	 * Gets status string.
 	 *
-	 * @param array $item The line item.
-	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
+	 *
+	 * @param array $item The line item.
+	 *
 	 * @return string|null
 	 */
 	public function get_status_output( $item ) {
@@ -259,10 +265,11 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	/**
 	 * Gets the output.
 	 *
-	 * @param array $item The line to generate output for.
-	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
+	 *
+	 * @param array $item The line to generate output for.
+	 *
 	 * @return string
 	 */
 	public function get_products_output( $item ) {
@@ -282,10 +289,11 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	/**
 	 * Gets destination output.
 	 *
-	 * @param array $item The line to generate output for.
-	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
+	 *
+	 * @param array $item The line to generate output for.
+	 *
 	 * @return mixed
 	 */
 	public function get_destination_output( $item ) {

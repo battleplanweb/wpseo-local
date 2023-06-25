@@ -592,6 +592,8 @@ function wpseo_local_show_map( $atts ) {
 		$atts['zoom'] = 10;
 	}
 
+	$marker_clustering = ( $atts['marker_clustering'] ) ? 1 : '';
+
 	if ( count( $location_array_str ) > 0 ) {
 		if ( $map_counter === 0 ) {
 			$wpseo_map .= '<script type="text/javascript">
@@ -604,16 +606,16 @@ function wpseo_local_show_map( $atts ) {
 				mapVars: [
 					' . WPSEO_Utils::format_json_encode( $center_lat ) . ',
 					' . WPSEO_Utils::format_json_encode( $center_long ) . ',
-					' . $atts['zoom'] . ',
-					"' . $atts['map_style'] . '",
-					"' . $atts['scrollable'] . '",
-					"' . $atts['draggable'] . '",
-					"' . $atts['default_show_infowindow'] . '",
+					' . (int) $atts['zoom'] . ',
+					' . WPSEO_Utils::format_json_encode( $atts['map_style'] ) . ',
+					"' . (int) $atts['scrollable'] . '",
+					"' . (int) $atts['draggable'] . '",
+					"' . (int) $atts['default_show_infowindow'] . '",
 					"' . is_admin() . '",
-					"' . $atts['marker_clustering'] . '",
+					"' . $marker_clustering . '",
 				],
 				directionVars: [
-					"' . $atts['show_route'] . '",
+					"' . (int) $atts['show_route'] . '",
 				],
 			};' . PHP_EOL;
 		foreach ( $location_array_str as $location ) {
