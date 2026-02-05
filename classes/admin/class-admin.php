@@ -105,6 +105,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 		/**
 		 * Register wpeso_local option with Yoast SEO Options framework.
+		 *
+		 * @return void
 		 */
 		public function register_custom_option() {
 			WPSEO_Options::register_option( WPSEO_Local_Option::get_instance() );
@@ -128,6 +130,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		 * Registers the wpseo_local setting for Settings API
 		 *
 		 * @since 1.0
+		 *
+		 * @return void
 		 */
 		public function options_init() {
 			register_setting( 'yoast_wpseo_local_options', 'wpseo_local' );
@@ -135,6 +139,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 		/**
 		 * Adds local page to admin_page variable of wpseo
+		 *
+		 * @return void
 		 */
 		public function register_wpseo() {
 			add_filter( 'wpseo_admin_pages', [ $this, 'register_local_page' ] );
@@ -178,6 +184,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 		/**
 		 * Set true or false values to see what screen we are on.
+		 *
+		 * @return void
 		 */
 		public function set_current_screen() {
 			global $pagenow;
@@ -198,6 +206,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		 * Loads some CSS
 		 *
 		 * @since 1.0
+		 *
+		 * @return void
 		 */
 		public function config_page_styles() {
 			if ( $this->is_locations_page || $this->is_settings_page || $this->is_edit_page || $this->is_locations_category_term_page ) {
@@ -207,6 +217,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 		/**
 		 * Enqueues the (tiny) global JS needed for the plugin.
+		 *
+		 * @return void
 		 */
 		public function config_page_scripts() {
 			if ( $this->is_settings_page || $this->is_locations_page || $this->is_locations_category_term_page ) {
@@ -266,6 +278,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 		/**
 		 * Print the required JavaScript in the footer
+		 *
+		 * @return void
 		 */
 		public function config_page_footer() {
 			if ( $this->is_settings_page || $this->is_locations_page ) {
@@ -319,6 +333,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 		/**
 		 * Generates the import panel for importing locations via CSV
+		 *
+		 * @return void
 		 */
 		public function import_panel() {
 
@@ -335,6 +351,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		 *
 		 * @param mixed $old_option_value Value of the current option.
 		 * @param mixed $new_option_value Value of the new, currently saved option.
+		 *
+		 * @return void
 		 */
 		public function update_multiple_locations( $old_option_value, $new_option_value ) {
 			$old_value_exists = array_key_exists( 'use_multiple_locations', $old_option_value );
@@ -355,6 +373,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		 * Flushes the rewrite rules if multiple locations is turned on or off or the slug is changed.
 		 *
 		 * @since 1.3.1
+		 *
+		 * @return void
 		 */
 		public function flush_rewrite_rules() {
 			if ( get_transient( 'wpseo_local_permalinks_settings_changed' ) == true ) {
@@ -366,6 +386,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 
 		/**
 		 * Registers a notification if the Google Maps API browser key has not yet been set.
+		 *
+		 * @return void
 		 */
 		public function maps_api_browser_key_notification() {
 			if ( ! class_exists( 'Yoast_Notification_Center' ) ) {
@@ -440,6 +462,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 				return $notification;
 			}
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Already escaped.
 			echo $notification;
 		}
 
@@ -451,8 +474,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 		public static function get_missing_zipcode_country_alert() {
 			$message = sprintf(
 				/* translators: 1: expands to a link opening tag; 2: expands to a link closing tag */
-				\esc_html__( 'A zipcode and country need to be set for structured data to work properly. %1$sLearn more about the importance of structured data.%2$s', 'yoast-local-seo' ),
-				'<a href ="' . \esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/4ca' ) ) . '" target="_blank">',
+				esc_html__( 'A zipcode and country need to be set for structured data to work properly. %1$sLearn more about the importance of structured data.%2$s', 'yoast-local-seo' ),
+				'<a href ="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/4ca' ) ) . '" target="_blank">',
 				WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
 			);
 
@@ -469,18 +492,20 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 				return;
 			}
 
-			\printf(
-				'<div class="notice notice-warning"><p>%1$s</p><p>%2$s</p></div>',
-				\sprintf(
+			printf(
+				'<div id="yoast-local-missing-organization-info-notice" class="notice notice-warning yoast-migrated-notice"><h4 class="yoast-notice-migrated-header">%1$s</h4><div class="notice-yoast-content"><p>%2$s</p><p>%3$s</p></div></div>',
+				esc_html__( 'Missing organization name and logo', 'yoast-local-seo' ),
+				sprintf(
 					/* translators: 1: Link start tag to a yoast.com page about structured data, 2: Link closing tag. */
-					\esc_html__( 'An Organization name and logo need to be set for structured data to work properly. %1$sLearn more about the importance of structured data.%2$s', 'yoast-local-seo' ),
-					'<a href="' . \esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/4cb' ) ) . '" target="_blank">',
+					esc_html__( 'An Organization name and logo need to be set for structured data to work properly. %1$sLearn more about the importance of structured data.%2$s', 'yoast-local-seo' ),
+					'<a href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/4cb' ) ) . '" target="_blank">',
+					// phpcs:ignore WordPress.Security.EscapeOutput -- Already escaped.
 					WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
 				),
-				\sprintf(
+				sprintf(
 					/* translators: 1: Link start tag to the Yoast SEO Search Appearance settings page, 2: Link closing tag. */
-					\esc_html__( '%1$sSet your Organization name and logo.%2$s', 'yoast-local-seo' ),
-					'<a href="' . \esc_url( \admin_url( 'admin.php?page=wpseo_page_settings#/site-representation' ) ) . '" class="button">',
+					esc_html__( '%1$sSet your Organization name and logo.%2$s', 'yoast-local-seo' ),
+					'<a href="' . esc_url( admin_url( 'admin.php?page=wpseo_page_settings#/site-representation' ) ) . '" class="button">',
 					'</a>'
 				)
 			);
@@ -502,7 +527,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin' ) ) {
 				&& WPSEO_Capability_Utils::current_user_can( 'wpseo_manage_options' )
 				&& (
 					YoastSEO()->helpers->current_page->is_yoast_seo_page()
-					|| \in_array( YoastSEO()->helpers->current_page->get_current_admin_page(), $relevant_wp_pages, true )
+					|| in_array( YoastSEO()->helpers->current_page->get_current_admin_page(), $relevant_wp_pages, true )
 				)
 			);
 		}

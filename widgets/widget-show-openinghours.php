@@ -50,7 +50,7 @@ class WPSEO_Show_OpeningHours extends WP_Widget {
 	 * @return void
 	 */
 	public function widget( $args, $instance ) {
-		$title              = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
+		$title              = apply_filters( 'widget_title', ( $instance['title'] ?? '' ) );
 		$location_id        = ! empty( $instance['location_id'] ) ? $instance['location_id'] : '';
 		$show_days          = ! empty( $instance['show_days'] ) ? $instance['show_days'] : [];
 		$hide_closed        = ! empty( $instance['hide_closed'] );
@@ -59,7 +59,6 @@ class WPSEO_Show_OpeningHours extends WP_Widget {
 		$post_type_instance = new PostType();
 		$post_type_instance->initialize();
 		$post_type = $post_type_instance->get_post_type();
-
 
 		// Set location ID, since get_post_status() needs an integer as parameter.
 		if ( $location_id === 'current' ) {
@@ -83,11 +82,11 @@ class WPSEO_Show_OpeningHours extends WP_Widget {
 		}
 
 		if ( isset( $args['before_widget'] ) ) {
-			echo $args['before_widget'];
+			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		if ( ! empty( $title ) ) {
-			echo $args['before_title'], esc_html( $title ), $args['after_title'];
+			echo $args['before_title'], esc_html( $title ), $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$shortcode_args = [
@@ -102,7 +101,7 @@ class WPSEO_Show_OpeningHours extends WP_Widget {
 		wpseo_local_show_opening_hours( $shortcode_args );
 
 		if ( isset( $args['after_widget'] ) ) {
-			echo $args['after_widget'];
+			echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 

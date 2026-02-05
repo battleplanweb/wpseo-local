@@ -27,7 +27,8 @@ if ( ! class_exists( 'WPSEO_Local_Taxonomy' ) ) {
 		 * WPSEO_Local_Taxonomy constructor.
 		 */
 		public function __construct() {
-			if ( is_admin() && ( isset( $_GET['taxonomy'] ) && $_GET['taxonomy'] !== '' ) && ( ! isset( $options[ 'hideeditbox-tax-' . $_GET['taxonomy'] ] ) || $options[ 'hideeditbox-tax-' . $_GET['taxonomy'] ] === false ) ) {
+			$taxonomy = isset( $_GET['taxonomy'] ) ? sanitize_text_field( wp_unslash( $_GET['taxonomy'] ) ) : '';
+			if ( is_admin() && $taxonomy !== '' && ( ! isset( $options[ 'hideeditbox-tax-' . $taxonomy ] ) || $options[ 'hideeditbox-tax-' . $taxonomy ] === false ) ) {
 				add_action( 'wpseo_locations_category_edit_form', [ $this, 'term_seo_form' ], 10, 1 );
 			}
 
@@ -38,6 +39,8 @@ if ( ! class_exists( 'WPSEO_Local_Taxonomy' ) ) {
 		 * Show the SEO inputs for term.
 		 *
 		 * @param object $term Term to show the edit boxes for.
+		 *
+		 * @return void
 		 */
 		public function term_seo_form( $term ) {
 

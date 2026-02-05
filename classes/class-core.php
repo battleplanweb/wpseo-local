@@ -102,6 +102,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Add Local SEO to the admin bar menu under SEO Settings
 		 *
 		 * @since 3.4
+		 *
+		 * @return void
 		 */
 		public function admin_bar_menu() {
 			global $wp_admin_bar;
@@ -119,6 +121,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Enforces the publishingEntity to be set to Company
 		 *
 		 * @since 11.0
+		 *
+		 * @return void
 		 */
 		public function enforce_company_settings() {
 			/*
@@ -141,6 +145,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 		/**
 		 * This method will perform some checks before performing plugin upgrade (when needed).
+		 *
+		 * @return void
 		 */
 		public function do_upgrade() {
 			$options    = WPSEO_Options::get_option( 'wpseo_local' );
@@ -205,6 +211,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Adds the rewrite for the Geo sitemap and KML file
 		 *
 		 * @since 1.0
+		 *
+		 * @return void
 		 */
 		public function init_sitemaps() {
 
@@ -212,7 +220,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 				$GLOBALS['wpseo_sitemaps']->register_sitemap( 'geo', [ $this, 'build_local_sitemap' ] );
 				$GLOBALS['wpseo_sitemaps']->register_sitemap( 'locations', [ $this, 'build_kml' ] );
 
-				if ( preg_match( '/(geo-sitemap.xml|locations.kml)(.*?)$/', $_SERVER['REQUEST_URI'], $match ) ) {
+				if ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( '/(geo-sitemap.xml|locations.kml)(.*?)$/', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $match ) ) {
 					if ( in_array( $match[1], [ 'geo-sitemap.xml', 'locations.kml' ], true ) ) {
 						$sitemap = 'geo';
 						if ( $match[1] === 'locations.kml' ) {
@@ -246,7 +254,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * @return mixed
 		 */
 		public function handle_sitemap_headers( $headers ) {
-			if ( preg_match( '/(locations.kml)(.*?)$/', $_SERVER['REQUEST_URI'], $match ) ) {
+			if ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( '/(locations.kml)(.*?)$/', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $match ) ) {
 				unset( $headers['X-Robots-Tag: noindex, follow'] );
 			}
 
@@ -257,6 +265,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Method to invalidate the sitemap
 		 *
 		 * @param int $post_id Post ID.
+		 *
+		 * @return void
 		 */
 		public function invalidate_sitemap( $post_id ) {
 			$post_type_instance = new PostType();
@@ -280,6 +290,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 		/**
 		 * Adds support for Jetpack's Omnisearch
+		 *
+		 * @return void
 		 */
 		public function support_jetpack_omnisearch() {
 			if ( class_exists( 'Jetpack_Omnisearch_Posts' ) ) {
@@ -295,9 +307,11 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Redirects old geo_sitemap.xml to geo-sitemap.xml to be more in line with other XML sitemaps of Yoast SEO plugin.
 		 *
 		 * @since 1.2.2.1
+		 *
+		 * @return void
 		 */
 		public function redirect_old_sitemap() {
-			if ( preg_match( '/(geo_sitemap.xml)(.*?)$/', $_SERVER['REQUEST_URI'], $match ) ) {
+			if ( isset( $_SERVER['REQUEST_URI'] ) && preg_match( '/(geo_sitemap.xml)(.*?)$/', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), $match ) ) {
 
 				if ( $match[1] === 'geo_sitemap.xml' && method_exists( 'WPSEO_Sitemaps_Router', 'get_base_url' ) ) {
 					wp_safe_redirect( trailingslashit( WPSEO_Sitemaps_Router::get_base_url( '' ) ) . 'geo-sitemap.xml', 301 );
@@ -361,6 +375,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Pings Google with the (presumeably updated) Geo Sitemap.
 		 *
 		 * @since 1.0
+		 *
+		 * @return void
 		 */
 		private static function ping() {
 
@@ -374,6 +390,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Updates the last update time transient for the local sitemap and pings Google with the sitemap.
 		 *
 		 * @since 1.0
+		 *
+		 * @return void
 		 */
 		public static function update_sitemap() {
 			// Empty sitemap cache.
@@ -418,10 +436,10 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * This function generates the Geo sitemap's contents.
 		 *
 		 * @since 1.0
+		 *
+		 * @return void
 		 */
 		public function build_local_sitemap() {
-
-
 			// Remark: no transient caching needed here, since the one home_url() request is faster than getting the transient cache.
 			$kml_url = '';
 			if ( method_exists( 'WPSEO_Sitemaps_Router', 'get_base_url' ) ) {
@@ -447,6 +465,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * This function generates the KML file contents.
 		 *
 		 * @since 1.0
+		 *
+		 * @return void
 		 */
 		public function build_kml() {
 
@@ -553,6 +573,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 		/**
 		 * Empties the sitemap cache when saving the options
+		 *
+		 * @return void
 		 */
 		public function save_permalinks_on_option_save() {
 			// Empty sitemap cache.
@@ -600,6 +622,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 		 * Check if the uploaded custom marker does not exceed 100x100px
 		 *
 		 * @param int|string $image The ID of the uploaded custom marker.
+		 *
+		 * @return void
 		 */
 		public function check_custom_marker_size( $image ) {
 			if ( empty( $image ) ) {
@@ -646,6 +670,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 		/**
 		 * Create custom taxonomy for wpseo_locations Custom Post Type
+		 *
+		 * @return void
 		 */
 		public function create_taxonomies() {
 			$post_type_instance = new PostType();
@@ -699,6 +725,8 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 		/**
 		 * Call filter to exclude taxonomies from sitemap
+		 *
+		 * @return void
 		 */
 		public function exclude_taxonomy() {
 			add_filter( 'wpseo_sitemap_exclude_taxonomy', [ $this, 'exclude_taxonomy_for_sitemap' ], 10, 2 );
@@ -746,7 +774,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 			// If error storing temporarily, unlink.
 			if ( is_wp_error( $tmp ) ) {
-				@unlink( $file_array['tmp_name'] );
+				wp_delete_file( $file_array['tmp_name'] );
 				$file_array['tmp_name'] = '';
 			}
 
@@ -755,7 +783,7 @@ if ( ! class_exists( 'WPSEO_Local_Core' ) ) {
 
 			// If error storing permanently, unlink.
 			if ( is_wp_error( $attachment_id ) ) {
-				@unlink( $file_array['tmp_name'] );
+				wp_delete_file( $file_array['tmp_name'] );
 
 				return $attachment_id;
 			}

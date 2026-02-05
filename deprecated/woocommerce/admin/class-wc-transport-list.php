@@ -5,6 +5,7 @@
  * @package YoastSEO_Local_WooCommerce
  */
 
+// phpcs:disable WordPress.Security.ValidatedSanitizedInput,WordPress.Security.EscapeOutput --  Reason: the class is deprecated and not used anymore.
 if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
@@ -22,11 +23,9 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
-	 *
-	 * @return array
 	 */
 	public function get_columns() {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		return [
 			'order'       => _x( 'Order', 'noun', 'yoast-local-seo' ),
 			'status'      => __( 'Status', 'yoast-local-seo' ),
@@ -44,7 +43,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 * @return void
 	 */
 	public function process_bulk_action() {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		switch ( $this->current_action() ) {
 			case 'wc-completed':
 			case 'wc-processing':
@@ -55,6 +54,11 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 			default:
 				$do_post_update = false;
 				break;
+		}
+
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are validating a nonce here.
+		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-orders' ) ) {
+			wp_die();
 		}
 
 		if ( $do_post_update === false || ! isset( $_REQUEST['post'] ) ) {
@@ -74,7 +78,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 * @return void
 	 */
 	public function prepare_items() {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 
 		$this->process_bulk_action();
 
@@ -92,13 +96,9 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 *
 	 * @deprecated 14.9
 	 * @codeCoverageIgnore
-	 *
-	 * @param array $item $line for the table.
-	 *
-	 * @return string
 	 */
 	public function column_order( $item ) {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		$actions = [
 			'edit'             => sprintf( '<a href="' . admin_url( 'post.php' ) . '?action=%s&post=%s">' . __( 'Edit', 'yoast-local-seo' ) . '</a>', 'edit', $item->ID ),
 			'processing'       => sprintf( '<a href="?page=%s&action=%s&post=%s">' . __( 'Processing', 'yoast-local-seo' ) . '</a>', $_REQUEST['page'], 'wc-processing', $item->ID ),
@@ -140,17 +140,15 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 
 			$username .= '</a>';
 		}
+		elseif ( $the_order->billing_first_name || $the_order->billing_last_name ) {
+			/* translators: 1: User first name; 2: User last name. */
+			$username = trim( sprintf( _x( '%1$s %2$s', 'full name', 'yoast-local-seo' ), $the_order->billing_first_name, $the_order->billing_last_name ) );
+		}
+		elseif ( $the_order->billing_company ) {
+			$username = trim( $the_order->billing_company );
+		}
 		else {
-			if ( $the_order->billing_first_name || $the_order->billing_last_name ) {
-				/* translators: 1: User first name; 2: User last name. */
-				$username = trim( sprintf( _x( '%1$s %2$s', 'full name', 'yoast-local-seo' ), $the_order->billing_first_name, $the_order->billing_last_name ) );
-			}
-			elseif ( $the_order->billing_company ) {
-				$username = trim( $the_order->billing_company );
-			}
-			else {
-				$username = __( 'Guest', 'yoast-local-seo' );
-			}
+			$username = __( 'Guest', 'yoast-local-seo' );
 		}
 
 		$output = '';
@@ -180,7 +178,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 * @return string|void|null
 	 */
 	public function column_default( $item, $column_name ) {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		switch ( $column_name ) {
 			case 'status':
 				return $this->get_status_output( $item );
@@ -204,7 +202,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 * @return void
 	 */
 	public function single_row( $item ) {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		$active_class = isset( $item->active ) ? 'active' : '';
 
 		echo '<tr class="' . $active_class . '">';
@@ -224,7 +222,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 * @return int
 	 */
 	public function usort_reorder( $a, $b ) {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 		// If no sort, default to shop_order.
 		$orderby = ( ! empty( $_GET['orderby'] ) ) ? sanitize_text_field( wp_unslash( $_GET['orderby'] ) ) : 'ID';
 		// If no order, default to asc.
@@ -248,7 +246,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 	 * @return string|null
 	 */
 	public function get_status_output( $item ) {
-		deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
+		_deprecated_function( __METHOD__, 'Yoast Local SEO 14.9' );
 
 		switch ( $item->post_status ) {
 			case 'wc-processing':
@@ -283,7 +281,7 @@ class Yoast_WCSEO_Local_Transport_List extends WP_List_Table {
 			$list_items[] = array_pop( $product['item_meta']['_qty'] ) . 'x <a href="' . $url . '">' . $product['name'] . '</a><br />';
 		}
 
-		return implode( $list_items );
+		return implode( '', $list_items );
 	}
 
 	/**

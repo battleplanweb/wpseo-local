@@ -7,6 +7,8 @@
 
 /**
  * Copies location data for further use.
+ *
+ * @return array<string, true|array<mixed>>|void
  */
 function wpseo_copy_location_callback() {
 
@@ -23,8 +25,6 @@ function wpseo_copy_location_callback() {
 		'success'  => true,
 		'location' => [],
 	];
-
-	check_ajax_referer( 'wpseo-local-secnonce', 'security', false );
 
 	if ( empty( $_POST['location_id'] ) ) {
 		return $ret_array;
@@ -43,6 +43,8 @@ function wpseo_copy_location_callback() {
 		'business_phone_2nd'     => get_post_meta( $location_id, '_wpseo_business_phone_2nd', true ),
 		'business_fax'           => get_post_meta( $location_id, '_wpseo_business_fax', true ),
 		'business_email'         => get_post_meta( $location_id, '_wpseo_business_email', true ),
+		'business_contact_email' => get_post_meta( $location_id, '_wpseo_business_contact_email', true ),
+		'business_contact_phone' => get_post_meta( $location_id, '_wpseo_business_contact_phone', true ),
 		'business_vat_id'        => get_post_meta( $location_id, '_wpseo_business_vat_id', true ),
 		'business_tax_id'        => get_post_meta( $location_id, '_wpseo_business_tax_id', true ),
 		'business_coc_id'        => get_post_meta( $location_id, '_wpseo_business_coc_id', true ),
@@ -85,28 +87,30 @@ function wpseo_copy_location_callback() {
 
 /**
  * Callback function to get address data.
+ *
+ * @return void
  */
 function wpseo_local_show_address_ajax_cb() {
 	$atts   = [
-		'id'                 => $_POST['id'],
-		'hide_name'          => $_POST['hideName'],
-		'hide_address'       => $_POST['hideCompanyAddress'],
-		'oneline'            => $_POST['showOnOneLine'],
-		'show_state'         => $_POST['showState'],
-		'show_country'       => $_POST['showCountry'],
-		'show_phone'         => $_POST['showPhone'],
-		'show_phone_2'       => $_POST['showPhone2nd'],
-		'show_fax'           => $_POST['showFax'],
-		'show_email'         => $_POST['showEmail'],
-		'show_url'           => $_POST['showURL'],
-		'show_logo'          => $_POST['showLogo'],
-		'show_vat'           => $_POST['showVatId'],
-		'show_tax'           => $_POST['showTaxId'],
-		'show_coc'           => $_POST['showCocId'],
-		'show_price_range'   => $_POST['showPriceRange'],
-		'show_opening_hours' => $_POST['showOpeningHours'],
-		'hide_closed'        => $_POST['hideClosedDays'],
-		'is_preview'         => $_POST['isPreview'],
+		'id'                 => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
+		'hide_name'          => isset( $_POST['hideName'] ) ? sanitize_text_field( wp_unslash( $_POST['hideName'] ) ) : '',
+		'hide_address'       => isset( $_POST['hideCompanyAddress'] ) ? sanitize_text_field( wp_unslash( $_POST['hideCompanyAddress'] ) ) : '',
+		'oneline'            => isset( $_POST['showOnOneLine'] ) ? sanitize_text_field( wp_unslash( $_POST['showOnOneLine'] ) ) : '',
+		'show_state'         => isset( $_POST['showState'] ) ? sanitize_text_field( wp_unslash( $_POST['showState'] ) ) : '',
+		'show_country'       => isset( $_POST['showCountry'] ) ? sanitize_text_field( wp_unslash( $_POST['showCountry'] ) ) : '',
+		'show_phone'         => isset( $_POST['showPhone'] ) ? sanitize_text_field( wp_unslash( $_POST['showPhone'] ) ) : '',
+		'show_phone_2'       => isset( $_POST['showPhone2nd'] ) ? sanitize_text_field( wp_unslash( $_POST['showPhone2nd'] ) ) : '',
+		'show_fax'           => isset( $_POST['showFax'] ) ? sanitize_text_field( wp_unslash( $_POST['showFax'] ) ) : '',
+		'show_email'         => isset( $_POST['showEmail'] ) ? sanitize_text_field( wp_unslash( $_POST['showEmail'] ) ) : '',
+		'show_url'           => isset( $_POST['showURL'] ) ? sanitize_text_field( wp_unslash( $_POST['showURL'] ) ) : '',
+		'show_logo'          => isset( $_POST['showLogo'] ) ? sanitize_text_field( wp_unslash( $_POST['showLogo'] ) ) : '',
+		'show_vat'           => isset( $_POST['showVatId'] ) ? sanitize_text_field( wp_unslash( $_POST['showVatId'] ) ) : '',
+		'show_tax'           => isset( $_POST['showTaxId'] ) ? sanitize_text_field( wp_unslash( $_POST['showTaxId'] ) ) : '',
+		'show_coc'           => isset( $_POST['showCocId'] ) ? sanitize_text_field( wp_unslash( $_POST['showCocId'] ) ) : '',
+		'show_price_range'   => isset( $_POST['showPriceRange'] ) ? sanitize_text_field( wp_unslash( $_POST['showPriceRange'] ) ) : '',
+		'show_opening_hours' => isset( $_POST['showOpeningHours'] ) ? sanitize_text_field( wp_unslash( $_POST['showOpeningHours'] ) ) : '',
+		'hide_closed'        => isset( $_POST['hideClosedDays'] ) ? sanitize_text_field( wp_unslash( $_POST['hideClosedDays'] ) ) : '',
+		'is_preview'         => isset( $_POST['isPreview'] ) ? sanitize_text_field( wp_unslash( $_POST['isPreview'] ) ) : '',
 		'hide_json_ld'       => true,
 	];
 	$return = wpseo_local_show_address( $atts );
@@ -115,10 +119,12 @@ function wpseo_local_show_address_ajax_cb() {
 
 /**
  * Callback function to get address data.
+ *
+ * @return void
  */
 function wpseo_local_show_map_ajax_cb() {
 	$atts   = [
-		'id'                      => $_POST['id'],
+		'id'                      => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
 		'term_id'                 => '',
 		'center'                  => '',
 		'max_number'              => '',
@@ -126,12 +132,12 @@ function wpseo_local_show_map_ajax_cb() {
 		'height'                  => 300,
 		'zoom'                    => -1,
 		'show_route'              => false,
-		'show_state'              => $_POST['showState'],
-		'show_country'            => $_POST['showCountry'],
-		'show_url'                => $_POST['showURL'],
-		'show_email'              => $_POST['showEmail'],
+		'show_state'              => isset( $_POST['showState'] ) ? sanitize_text_field( wp_unslash( $_POST['showState'] ) ) : '',
+		'show_country'            => isset( $_POST['showCountry'] ) ? sanitize_text_field( wp_unslash( $_POST['showCountry'] ) ) : '',
+		'show_url'                => isset( $_POST['showURL'] ) ? sanitize_text_field( wp_unslash( $_POST['showURL'] ) ) : '',
+		'show_email'              => isset( $_POST['showEmail'] ) ? sanitize_text_field( wp_unslash( $_POST['showEmail'] ) ) : '',
 		'default_show_infowindow' => false,
-		'map_style'               => ( isset( $options['map_view_style'] ) ) ? $options['map_view_style'] : 'ROADMAP',
+		'map_style'               => ( $options['map_view_style'] ?? 'ROADMAP' ),
 		'scrollable'              => true,
 		'draggable'               => true,
 		'marker_clustering'       => false,
@@ -140,9 +146,9 @@ function wpseo_local_show_map_ajax_cb() {
 		'show_category_filter'    => false,
 		'hide_json_ld'            => true,
 		'echo'                    => false,
-		'show_phone'              => $_POST['showPhone'],
-		'show_phone_2'            => $_POST['showPhone2nd'],
-		'show_fax'                => $_POST['showFax'],
+		'show_phone'              => isset( $_POST['showPhone'] ) ? sanitize_text_field( wp_unslash( $_POST['showPhone'] ) ) : '',
+		'show_phone_2'            => isset( $_POST['showPhone2nd'] ) ? sanitize_text_field( wp_unslash( $_POST['showPhone2nd'] ) ) : '',
+		'show_fax'                => isset( $_POST['showFax'] ) ? sanitize_text_field( wp_unslash( $_POST['showFax'] ) ) : '',
 		'show_opening_hours'      => false,
 		'hide_closed'             => false,
 	];
@@ -152,13 +158,15 @@ function wpseo_local_show_map_ajax_cb() {
 
 /**
  * Callback function to get location opening hours data.
+ *
+ * @return void
  */
 function wpseo_local_show_opening_hours_ajax_cb() {
 	$atts = [
-		'id'              => $_POST['id'],
-		'show_days'       => $_POST['showDays'],
-		'show_open_label' => $_POST['showOpenLabel'],
-		'comment'         => $_POST['extraComment'],
+		'id'              => isset( $_POST['id'] ) ? sanitize_text_field( wp_unslash( $_POST['id'] ) ) : '',
+		'show_days'       => isset( $_POST['showDays'] ) ? sanitize_text_field( wp_unslash( $_POST['showDays'] ) ) : '',
+		'show_open_label' => isset( $_POST['showOpenLabel'] ) ? sanitize_text_field( wp_unslash( $_POST['showOpenLabel'] ) ) : '',
+		'comment'         => isset( $_POST['extraComment'] ) ? sanitize_text_field( wp_unslash( $_POST['extraComment'] ) ) : '',
 		'hide_json_ld'    => true,
 	];
 

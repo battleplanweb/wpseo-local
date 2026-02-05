@@ -28,14 +28,14 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Stores the options for this plugin.
 		 *
-		 * @var array
+		 * @var array<string|int|bool>
 		 */
 		public $options;
 
 		/**
 		 * Days used for opening hours.
 		 *
-		 * @var array
+		 * @var array<string>
 		 */
 		public $days = [];
 
@@ -77,21 +77,21 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Contains the current location meta data
 		 *
-		 * @var array
+		 * @var array<string|int|array<float|string>>
 		 */
 		private $location_meta;
 
 		/**
 		 * Contains array of all WPSEO Local single locations.
 		 *
-		 * @var array
+		 * @var array<array<string|int|array<float|string>>>
 		 */
 		private $locations;
 
 		/**
 		 * Contains the select options for the various <select> dropdowns.
 		 *
-		 * @var array
+		 * @var array<string>
 		 */
 		private $locations_select_options;
 
@@ -103,7 +103,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		private $api_repository;
 
 		/**
-		 * @var array
+		 * @var array<array<string>>
 		 */
 		private $tabs;
 
@@ -188,6 +188,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Set all location ID's to the $locations property.
+		 *
+		 * @return void
 		 */
 		public function set_locations() {
 			$this->locations = $this->locations_repository->get( [], false );
@@ -195,6 +197,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Set current location ID and meta data local properties.
+		 *
+		 * @return void
 		 */
 		public function set_current_location() {
 			$this->location_id = get_the_ID();
@@ -212,6 +216,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				'business_phone_2nd',
 				'business_fax',
 				'business_email',
+				'business_contact_email',
+				'business_contact_phone',
 				'business_url',
 				'business_vat',
 				'business_tax',
@@ -225,6 +231,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				'is_overridden_business_phone_2nd',
 				'is_overridden_business_fax',
 				'is_overridden_business_email',
+				'is_overridden_business_contact_email',
+				'is_overridden_business_contact_phone',
 				'is_overridden_business_url',
 				'is_overridden_business_vat',
 				'is_overridden_business_tax',
@@ -264,6 +272,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Set all <options> for the location <select> dropdowns in an array.
+		 *
+		 * @return void
 		 */
 		public function set_location_select_options() {
 			$this->locations_select_options[] = '<option value="">' . esc_html__( 'Select a location', 'yoast-local-seo' ) . '--</option>';
@@ -279,6 +289,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Set tabs to $tabs property. These tabs can be filtered using wpseo-local-location-meta-tabs.
+		 *
+		 * @return void
 		 */
 		public function set_tabs() {
 			$tabs = [
@@ -321,8 +333,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			}
 
 			if ( ! $include_current_location ) {
-				$current_location_id = \get_the_ID();
-				if ( $current_location_id && \array_key_exists( $current_location_id, $select_options ) ) {
+				$current_location_id = get_the_ID();
+				if ( $current_location_id && array_key_exists( $current_location_id, $select_options ) ) {
 					unset( $select_options[ $current_location_id ] );
 				}
 			}
@@ -332,6 +344,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Adds metabox for editing screen of the wpseo_locations Custom Post Type.
+		 *
+		 * @return void
 		 */
 		public function add_location_metaboxes() {
 			$post_type_instance = new PostType();
@@ -349,6 +363,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Add tabs for navigation Location Meta.
+		 *
+		 * @return void
 		 */
 		private function tab_navigation() {
 			echo '<div class="wpseo-local-metabox-menu">';
@@ -362,9 +378,9 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				}
 
 				echo '<li role="presentation" ' . ( ( $active ) ? 'class="active"' : '' ) . '>';
-				echo '<a role="tab" href="#wpseo-local-tab-' . $tab['id'] . '"  class="' . implode( ' ', $link_class ) . '" id="wpseo-local-tab-' . $tab['id'] . '-content">';
-				echo '<span class="dashicons dashicons-' . $tab['icon'] . '"></span>';
-				echo $tab['title'];
+				echo '<a role="tab" href="#wpseo-local-tab-' . esc_attr( $tab['id'] ) . '"  class="' . esc_attr( implode( ' ', $link_class ) ) . '" id="wpseo-local-tab-' . esc_attr( $tab['id'] ) . '-content">';
+				echo '<span class="dashicons dashicons-' . esc_attr( $tab['icon'] ) . '"></span>';
+				echo esc_html( $tab['title'] );
 				echo '</a>';
 				echo '</li>';
 			}
@@ -374,6 +390,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Add a panel for each tab.
+		 *
+		 * @return void
 		 */
 		private function tabs_panels() {
 			foreach ( $this->tabs as $key => $tab ) {
@@ -384,7 +402,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 					$panel_class[] = 'active';
 				}
 
-				echo '<div role="tabpanel" id="wpseo-local-tab-' . $tab['id'] . '" class="' . implode( ' ', $panel_class ) . '">';
+				echo '<div role="tabpanel" id="wpseo-local-tab-' . esc_attr( $tab['id'] ) . '" class="' . esc_attr( implode( ' ', $panel_class ) ) . '">';
 				echo '<div class="wpseo-local-metabox-content">';
 				do_action( 'wpseo-local-panel-content-' . $tab['id'] );
 				echo '</div>';
@@ -394,16 +412,19 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * The content for the business info tab.
+		 *
+		 * @return void
 		 */
 		public function business_info_panel_content() {
 			$business_types_repo      = new Business_Types_Repository();
 			$flattened_business_types = $business_types_repo->get_business_types();
 			$business_types_help      = new WPSEO_Local_Admin_Help_Panel(
 				'business_types_help',
+				/* translators: Hidden accessibility text. */
 				__( 'Help with: Business types', 'yoast-local-seo' ),
 				sprintf(
 				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
-					__( 'If your business type is not listed, please read %1$sthe FAQ entry%2$s.', 'yoast-local-seo' ),
+					esc_html__( 'If your business type is not listed, please read %1$sthe FAQ entry%2$s.', 'yoast-local-seo' ),
 					'<a href="' . WPSEO_Shortlinker::get( 'https://yoa.st/business-listing' ) . '" target="_blank">',
 					'</a>'
 				),
@@ -412,13 +433,31 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			$price_indication_help = new WPSEO_Local_Admin_Help_Panel(
 				'price_indication_help',
+				/* translators: Hidden accessibility text. */
 				__( 'Help with: Price indication', 'yoast-local-seo' ),
 				esc_html__( 'Select the price indication of your business, where $ is cheap and $$$$$ is expensive.', 'yoast-local-seo' ),
 				'has-wrapper'
 			);
 
+			$contact_phone_help = new WPSEO_Local_Admin_Help_Panel(
+				'contact_phone_help',
+				/* translators: Hidden accessibility text. */
+				__( 'Help with: Contact phone', 'yoast-local-seo' ),
+				esc_html__( 'Enter the phone number for customers to reach your business, providing an alternative means of communication. Include the country code and area code. Fill in only if different from the business phone number.', 'yoast-local-seo' ),
+				'has-wrapper'
+			);
+
+			$contact_email_help = new WPSEO_Local_Admin_Help_Panel(
+				'contact_email_help',
+				/* translators: Hidden accessibility text. */
+				__( 'Help with: Contact email', 'yoast-local-seo' ),
+				esc_html__( 'Enter the email address for customers to reach your business, providing an alternative means of communication. Fill in only if different from the business email address.', 'yoast-local-seo' ),
+				'has-wrapper'
+			);
+
 			$area_served_help = new WPSEO_Local_Admin_Help_Panel(
 				'area_served_help',
+				/* translators: Hidden accessibility text. */
 				__( 'Help with: Area served', 'yoast-local-seo' ),
 				esc_html__( 'The geographic area where a service or offered item is provided.', 'yoast-local-seo' ),
 				'has-wrapper'
@@ -430,6 +469,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 				echo '<label for="wpseo_copy_from_location" class="textinput">' . esc_html__( 'Copy data from another location:', 'yoast-local-seo' ) . '</label>';
 				echo '<select class="select2-select" name="_wpseo_copy_from_location" id="wpseo_copy_from_location" style="width: 400px;" data-placeholder="' . esc_attr__( 'Choose your location', 'yoast-local-seo' ) . '">';
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in get_location_select_options().
 				echo $this->get_location_select_options( false, false );
 				echo '</select>';
 
@@ -438,6 +478,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			}
 
 			if ( $this->use_shared_business_information ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in Alert_Presenter.
 				echo new Alert_Presenter(
 					esc_html__( 'Some fields in this form contain shared business info. You can override these fields by checking the \'Override\' checkbox.', 'yoast-local-seo' ),
 					'info'
@@ -446,7 +487,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			$options = '';
 			foreach ( $flattened_business_types as $bt_option => $bt_label ) {
-				$options .= '<option ' . selected( $this->location_meta['business_type'], $bt_option, false ) . ' value="' . $bt_option . '">' . $bt_label . '</option>';
+				$options .= '<option ' . selected( $this->location_meta['business_type'], $bt_option, false ) . ' value="' . esc_attr( $bt_option ) . '">' . esc_html( $bt_label ) . '</option>';
 			}
 
 			$business_type = $this->wpseo_local_input_select(
@@ -462,8 +503,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_type, $this->use_shared_business_information );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $business_types_help->get_panel_html();
 
 			echo '<p class="wpseo-local-input-wrap"><label class="textinput" for="wpseo_business_address">' . esc_html__( 'Business address', 'yoast-local-seo' ) . '</label>';
@@ -476,7 +519,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			echo '<input type="text" name="_wpseo_business_state" id="wpseo_business_state" value="' . esc_attr( $this->location_meta['business_state'] ) . '" class="wpseo_local_state_input" /></p>';
 
 			$display = ( empty( trim( $this->location_meta['business_zipcode'] ) ) || empty( trim( $this->location_meta['business_country'] ) ) ) ? 'flex' : 'none';
-			echo '<div id="wpseo-local-missing-zipcode-country-alert" class="yoast-local-seo-field-desc" style="display:' . $display . ';">';
+			echo '<div id="wpseo-local-missing-zipcode-country-alert" class="yoast-local-seo-field-desc" style="display:' . esc_attr( $display ) . ';">';
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo WPSEO_Local_Admin::get_missing_zipcode_country_alert();
 			echo '</div>';
 
@@ -487,7 +531,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			echo '<option></option>';
 			$countries = WPSEO_Local_Frontend::get_country_array();
 			foreach ( $countries as $key => $val ) {
-				echo '<option value="' . $key . '"' . ( ( $this->location_meta['business_country'] == $key ) ? ' selected="selected"' : '' ) . '>' . $countries[ $key ] . '</option>';
+				echo '<option value="' . esc_attr( $key ) . '"' . ( ( $this->location_meta['business_country'] == $key ) ? ' selected="selected"' : '' ) . '>' . esc_html( $countries[ $key ] ) . '</option>';
 			}
 			echo '</select></p>';
 
@@ -533,6 +577,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_phone, $this->use_shared_business_information );
 
 			$business_phone_second = $this->wpseo_local_input_text(
@@ -546,6 +591,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_phone_second, $this->use_shared_business_information );
 
 			$business_fax = $this->wpseo_local_input_text(
@@ -559,6 +605,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_fax, $this->use_shared_business_information );
 
 			$business_email = $this->wpseo_local_input_text(
@@ -572,7 +619,42 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_email, $this->use_shared_business_information );
+
+			$business_contact_phone = $this->wpseo_local_input_text(
+				'_wpseo_business_contact_phone',
+				'wpseo_business_contact_phone',
+				'',
+				esc_html__( 'Contact phone', 'yoast-local-seo' ) . $contact_phone_help->get_button_html(),
+				$this->location_meta['business_contact_phone'],
+				$this->use_shared_business_information,
+				$this->location_meta['is_overridden_business_contact_phone'],
+				[ 'disabled' => $this->use_shared_business_information ]
+			);
+
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
+			echo $this->wrap_with_disabled_class( $business_contact_phone, $this->use_shared_business_information );
+
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
+			echo $contact_phone_help->get_panel_html();
+
+			$business_contact_email = $this->wpseo_local_input_text(
+				'_wpseo_business_contact_email',
+				'wpseo_business_contact_email',
+				'',
+				esc_html__( 'Contact email', 'yoast-local-seo' ) . $contact_email_help->get_button_html(),
+				$this->location_meta['business_contact_email'],
+				$this->use_shared_business_information,
+				$this->location_meta['is_overridden_business_contact_email'],
+				[ 'disabled' => $this->use_shared_business_information ]
+			);
+
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
+			echo $this->wrap_with_disabled_class( $business_contact_email, $this->use_shared_business_information );
+
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
+			echo $contact_email_help->get_panel_html();
 
 			$business_url = $this->wpseo_local_input_text(
 				'_wpseo_business_url',
@@ -585,6 +667,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_url, $this->use_shared_business_information );
 
 			$business_vat_id = $this->wpseo_local_input_text(
@@ -598,6 +681,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_vat_id, $this->use_shared_business_information );
 
 			$business_tax_id = $this->wpseo_local_input_text(
@@ -611,6 +695,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_tax_id, $this->use_shared_business_information );
 
 			$business_coc_id = $this->wpseo_local_input_text(
@@ -624,6 +709,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_coc_id, $this->use_shared_business_information );
 
 			$options    = '';
@@ -645,8 +731,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $price_range_select, $this->use_shared_business_information );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $price_indication_help->get_panel_html();
 
 			$business_currencies = $this->wpseo_local_input_text(
@@ -660,6 +748,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $business_currencies, $this->use_shared_business_information );
 
 			$payment_accepted = $this->wpseo_local_input_text(
@@ -673,6 +762,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_business_information ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $payment_accepted, $this->use_shared_business_information );
 
 			$area_served  = $this->wpseo_local_input_text(
@@ -687,10 +777,12 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			);
 			$area_served .= $area_served_help->get_panel_html();
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $area_served, $this->use_shared_business_information );
 
 			$is_postal_address = $this->get_location_post_meta( '_wpseo_is_postal_address' );
 			$is_postal_address = wpseo_check_falses( $is_postal_address );
+			// phpcs:disable WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo '<p>'
 				. $this->wpseo_local_checkbox(
 					__( 'This address is a postal address (not a physical location)', 'yoast-local-seo' ),
@@ -700,6 +792,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 					false
 				)
 				. '</p>';
+			// phpcs:enable WordPress.Security.EscapeOutput
 
 			if ( ! empty( $api_key ) && ( $this->location_meta['coords']['lat'] !== '' && $this->location_meta['coords']['long'] !== '' ) ) {
 
@@ -718,7 +811,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			echo '<br class="clear">';
 			echo '<p class="wpseo-local-input-wrap">';
 			echo '<div id="wpseo_business_location_logo_imageSelect" class="yoast"></div>';
-			echo '<input class="hidden" id="wpseo_business_location_logo" type="text" size="36" name="_wpseo_business_location_logo" value="' . wp_get_attachment_image_url( $this->location_meta['business_logo'], 'full' ) . '">';
+			echo '<input class="hidden" id="wpseo_business_location_logo" type="text" size="36" name="_wpseo_business_location_logo" value="' . esc_url( wp_get_attachment_image_url( $this->location_meta['business_logo'], 'full' ) ) . '">';
 			echo '<br class="clear">';
 			echo esc_html__( 'This logo will override the logo set in the Yoast SEO Company Info tab', 'yoast-local-seo' );
 			echo '</p>';
@@ -727,14 +820,14 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Build a text input for meta post data with override capabilities
 		 *
-		 * @param string $name           The name attribute of the input element.
-		 * @param string $id             The id attribute of the input element.
-		 * @param string $class_attr     The class attribute of the input element.
-		 * @param string $label          The label of the input element.
-		 * @param string $value          The stored value of the current location.
-		 * @param bool   $may_override   Determine whether the input should show the overide UI.
-		 * @param bool   $has_overridden The stored value that indicates that the override toggle is enabled for this field.
-		 * @param array  $attr           The set of additional attributes to use. Optional.
+		 * @param string                 $name           The name attribute of the input element.
+		 * @param string                 $id             The id attribute of the input element.
+		 * @param string                 $class_attr     The class attribute of the input element.
+		 * @param string                 $label          The label of the input element.
+		 * @param string                 $value          The stored value of the current location.
+		 * @param bool                   $may_override   Determine whether the input should show the overide UI.
+		 * @param bool                   $has_overridden The stored value that indicates that the override toggle is enabled for this field.
+		 * @param array<string|bool|int> $attr           The set of additional attributes to use. Optional.
 		 *
 		 * @return string The text input.
 		 */
@@ -752,7 +845,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			$output  = '<p class="wpseo-local-input-wrap has-override-checkbox">';
 			$output .= '<label class="textinput" for="' . $id . '">' . $label . '</label>';
-			$output .= '<input type="text" name="' . $name . '" id="' . $id . '" value="' . esc_attr( $value ) . '" data-entered-value="' . esc_attr( $value ) . '" class=" ' . $class_attr . ' "' . $disabled_attribute . ' />';
+			$output .= '<input type="text" name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" value="' . esc_attr( $value ) . '" data-entered-value="' . esc_attr( $value ) . '" class=" ' . esc_attr( $class_attr ) . ' "' . $disabled_attribute . ' />';
 
 			if ( $may_override ) {
 				$output .= $this->wpseo_local_checkbox(
@@ -774,16 +867,18 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Build a select dropdown for meta post data with override capabilities
 		 *
-		 * @param string $name           The name attribute of the input element.
-		 * @param string $id             The id attribute of the input element.
-		 * @param string $class_attr     The class attribute of the input element.
-		 * @param string $label          The label of the input element.
-		 * @param string $placeholder    The placeholder for the select dropdown.
-		 * @param array  $options        The options that should be available within the select dropdown.
-		 * @param string $value          The selected value to use in the dropdown.
-		 * @param bool   $may_override   Determine whether the input should show the overide UI.
-		 * @param bool   $has_overridden The stored value that indicates that the override toggle is enabled for this field.
-		 * @param array  $attr           Extra attributes to add to the select.
+		 * @param string                 $name           The name attribute of the input element.
+		 * @param string                 $id             The id attribute of the input element.
+		 * @param string                 $class_attr     The class attribute of the input element.
+		 * @param string                 $label          The label of the input element.
+		 * @param string                 $placeholder    The placeholder for the select dropdown.
+		 * @param array<string>          $options        The options that should be available within the select dropdown.
+		 * @param string                 $value          The selected value to use in the dropdown.
+		 * @param bool                   $may_override   Determine whether the input should show the overide UI.
+		 * @param bool                   $has_overridden The stored value that indicates that the override toggle is enabled for this field.
+		 * @param array<string|bool|int> $attr           Extra attributes to add to the select.
+		 *
+		 * @return string
 		 */
 		private function wpseo_local_input_select( $name, $id, $class_attr, $label, $placeholder, $options, $value, $may_override, $has_overridden, $attr = [] ) {
 			$defaults = [
@@ -831,6 +926,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * The content for the opening hours tab.
+		 *
+		 * @return void
 		 */
 		public function opening_hours_panel_content() {
 			$opening_hours_repo = new WPSEO_Local_Opening_Hours_Repository( $this->options_repository );
@@ -849,24 +946,26 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 			$format_24h = wpseo_check_falses( $format_24h );
 
 			if ( $hide_opening_hours ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 				echo $this->create_hidden_opening_hours_message();
 
 				return;
 			}
 
 			if ( $this->use_shared_opening_hours ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 				echo new Alert_Presenter(
 					esc_html__( 'This location contains shared opening hours. You can override each setting after checking the \'Override\' checkbox.', 'yoast-local-seo' ),
 					'info'
 				);
 			}
 
-			$timezone = \get_post_meta( $this->location_id, '_wpseo_business_timezone', true );
+			$timezone = get_post_meta( $this->location_id, '_wpseo_business_timezone', true );
 
 			// Get timezone value.
 			if ( $this->use_shared_opening_hours ) {
 				// Get shared value and do the merging stuff.
-				$is_overridden = \get_post_meta( $this->location_id, '_wpseo_is_overridden_business_timezone', true );
+				$is_overridden = get_post_meta( $this->location_id, '_wpseo_is_overridden_business_timezone', true );
 
 				if ( empty( $is_overridden ) || ! wpseo_check_falses( $is_overridden ) ) {
 					// For some reason the property is named differently in the options.
@@ -881,6 +980,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			echo '<div id="opening-hours-multiple">';
 
+			// phpcs:disable WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wpseo_local_overridable_light_switch(
 				'_wpseo_format_24h',
 				__( 'Use 24h format', 'yoast-local-seo' ),
@@ -891,7 +991,9 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				$format_24h,
 				[ 'disabled' => $this->use_shared_opening_hours ]
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput
 
+			// phpcs:disable WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wpseo_local_overridable_light_switch(
 				'_wpseo_open_247',
 				__( 'Open 24/7', 'yoast-local-seo' ),
@@ -902,11 +1004,13 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				$open_247,
 				[ 'disabled' => $this->use_shared_opening_hours ]
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput
 
 			echo '</div>'; // End opening-hours-multiple section.
 
 			echo '<div id="opening-hours-time-specification-wrap" style="display:' . ( ( $open_247 === 'on' ) ? 'none' : 'block' ) . '">';
 
+			// phpcs:disable WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wpseo_local_overridable_light_switch(
 				'_wpseo_multiple_opening_hours',
 				__( 'I have two sets of opening hours per day', 'yoast-local-seo' ),
@@ -917,6 +1021,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				$multiple_opening_hours,
 				[ 'disabled' => $this->use_shared_opening_hours ]
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput
 
 			echo '<p class="opening-hours-second-description" style="display:' . ( ( $multiple_opening_hours !== 'on' ) ? 'none' : 'block' ) . ';">';
 			printf(
@@ -948,6 +1053,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			$timezone_help = new WPSEO_Local_Admin_Help_Panel(
 				'timezone_help',
+				/* translators: Hidden accessibility text. */
 				__( 'Help with: Timezone', 'yoast-local-seo' ),
 				esc_html__( 'The timezone is used to calculate the “Open now” functionality which can be shown together with your opening hours.', 'yoast-local-seo' ),
 				'has-wrapper'
@@ -957,8 +1063,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				'_wpseo_business_timezone',
 				'wpseo_business_timezone',
 				'wpseo-local-toggleable-enabled-state',
-				\esc_html__( 'Timezone', 'yoast-local-seo' ) . $timezone_help->get_button_html(),
-				\esc_attr__( 'Choose a time zone', 'yoast-local-seo' ),
+				esc_html__( 'Timezone', 'yoast-local-seo' ) . $timezone_help->get_button_html(),
+				esc_attr__( 'Choose a time zone', 'yoast-local-seo' ),
 				$options,
 				$timezone,
 				$this->use_shared_opening_hours,
@@ -966,8 +1072,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				[ 'disabled' => $this->use_shared_opening_hours ]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $timezone_help->get_panel_html();
 
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wrap_with_disabled_class( $timezone_select, $this->use_shared_opening_hours );
 
 			echo '</div>'; // End opening-hours-time-specification-wrap section.
@@ -978,10 +1086,12 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Build a opening hour form fragment with override capabilities
 		 *
-		 * @param array $data                   Array with opening hours data.
-		 * @param bool  $use_24_hours           Whether to use the 24h format.
-		 * @param bool  $multiple_opening_hours Whether to use multiple opening hours.
-		 * @param bool  $is_disabled            Whether the form elements are disabled.
+		 * @param array<string> $data                   Array with opening hours data.
+		 * @param bool          $use_24_hours           Whether to use the 24h format.
+		 * @param bool          $multiple_opening_hours Whether to use multiple opening hours.
+		 * @param bool          $is_disabled            Whether the form elements are disabled.
+		 *
+		 * @return void
 		 */
 		private function wpseo_local_input_opening_hours( $data, $use_24_hours, $multiple_opening_hours, $is_disabled ) {
 			$day_label         = $data['day_label'];
@@ -1020,8 +1130,9 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				'<select class="openinghours_from wpseo-local-toggleable-enabled-state" style="width: 100px;" id="%1$s" name="%1$s" data-entered-value="%2$s"%3$s>',
 				esc_attr( $field_name . '_from' ),
 				esc_attr( $value_from ),
-				$disabled_attribute
+				$disabled_attribute // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: literal string.
 			);
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo wpseo_show_hour_options( $use_24_hours, $value_from );
 			echo '</select>';
 
@@ -1032,23 +1143,25 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				'<select class="openinghours_to wpseo-local-toggleable-enabled-state" style="width: 100px;" id="%1$s" name="%1$s" data-entered-value="%2$s"%3$s>',
 				esc_attr( $field_name . '_to' ),
 				esc_attr( $value_to ),
-				$disabled_attribute
+				$disabled_attribute // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: literal string.
 			);
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo wpseo_show_hour_options( $use_24_hours, $value_to );
 			echo '</select>';
 
 			// Second time settings.
 			echo '<div class="opening-hours-second ' . ( ( ! $multiple_opening_hours ) ? 'hidden' : '' ) . '" ' . ( ( $value_24h === 'on' ) ? 'disabled="disabled"' : '' ) . '>';
 
-			echo '<div id="' . $field_name . '_second">';
+			echo '<div id="' . esc_attr( $field_name ) . '_second">';
 
 			// Second from.
 			printf(
 				'<select class="openinghours_from_second wpseo-local-toggleable-enabled-state" style="width: 100px;" id="%1$s" name="%1$s" data-entered-value="%2$s"%3$s>',
 				esc_attr( $field_name . '_second_from' ),
 				esc_attr( $value_second_from ),
-				$disabled_attribute
+				$disabled_attribute // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: literal string.
 			);
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo wpseo_show_hour_options( $use_24_hours, $value_second_from );
 			echo '</select>';
 
@@ -1059,8 +1172,9 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				'<select class="openinghours_to_second wpseo-local-toggleable-enabled-state" style="width: 100px;" id="%1$s" name="%1$s" data-entered-value="%2$s"%3$s>',
 				esc_attr( $field_name . '_second_to' ),
 				esc_attr( $value_second_to ),
-				$disabled_attribute
+				$disabled_attribute // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: literal string.
 			);
+			// phpcs:ignore WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo wpseo_show_hour_options( $use_24_hours, $value_second_to );
 			echo '</select>';
 
@@ -1069,6 +1183,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 			echo '</div>'; // End openinghours-wrapper section.
 
+			// phpcs:disable WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			echo $this->wpseo_local_checkbox(
 				__( 'Open 24 hours', 'yoast-local-seo' ),
 				$field_name . '_24h',
@@ -1079,7 +1194,9 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 					'input_class' => 'wpseo-local-toggleable-enabled-state',
 				]
 			);
+			// phpcs:enable WordPress.Security.EscapeOutput
 
+			// phpcs:disable WordPress.Security.EscapeOutput -- Reason: the content is already escaped.
 			if ( $this->use_shared_opening_hours ) {
 				echo $this->wpseo_local_checkbox(
 					__( 'Override', 'yoast-local-seo' ),
@@ -1091,16 +1208,21 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 					]
 				);
 			}
+			// phpcs:enable WordPress.Security.EscapeOutput
 
 			echo '</div>'; // End opening-hours section.
 		}
 
 		/**
 		 * The content for the map settings tab.
+		 *
+		 * @return void
 		 */
 		public function maps_settings_panel_content() {
 			/**
-			 * @var \WPSEO_Local_Core $wpseo_local_core ;
+			 * WPSEO_Local_Core class.
+			 *
+			 * @var WPSEO_Local_Core $wpseo_local_core
 			 */
 			global $wpseo_local_core;
 			$api_key = $this->api_repository->get_api_key( 'browser' );
@@ -1145,6 +1267,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Builds the metabox for editing screen of the wpseo_locations Custom Post Type
+		 *
+		 * @return void
 		 */
 		public function metabox_locations() {
 			if ( empty( $this->tabs ) ) {
@@ -1189,7 +1313,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 				// Verify this came from the our screen and with proper authorization,
 				// because save_post can be triggered at other times.
-				if ( isset( $_POST['locationsmeta_noncename'] ) === false || ( isset( $_POST['locationsmeta_noncename'] ) && ! wp_verify_nonce( $_POST['locationsmeta_noncename'], plugin_basename( __FILE__ ) ) ) ) {
+				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Reason: We are validating a nonce here.
+				if ( ! isset( $_POST['locationsmeta_noncename'] ) || ! wp_verify_nonce( $_POST['locationsmeta_noncename'], plugin_basename( __FILE__ ) ) ) {
 					return $post_id;
 				}
 
@@ -1201,70 +1326,74 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				$custom_marker = '';
 				if ( ! empty( $_POST['_wpseo_business_location_custom_marker'] ) ) {
 					if ( is_numeric( $_POST['_wpseo_business_location_custom_marker'] ) ) {
-						$custom_marker = wp_get_attachment_image_url( $_POST['_wpseo_business_location_custom_marker'], 'full' );
-					}
+						$custom_marker = wp_get_attachment_image_url( sanitize_text_field( wp_unslash( $_POST['_wpseo_business_location_custom_marker'] ) ), 'full' );                  }
 
 					if ( ! is_numeric( $_POST['_wpseo_business_location_custom_marker'] ) ) {
-						$custom_marker = esc_url_raw( $_POST['_wpseo_business_location_custom_marker'] );
+						$custom_marker = esc_url_raw( wp_unslash( $_POST['_wpseo_business_location_custom_marker'] ) );
 					}
 				}
 
 				// OK, we're authenticated: we need to find and save the data
 				// We'll put it into an array to make it easier to loop though.
-				$locations_meta['_wpseo_business_type']                              = isset( $_POST['_wpseo_business_type'] ) ? sanitize_text_field( $_POST['_wpseo_business_type'] ) : '';
-				$locations_meta['_wpseo_business_type_override']                     = isset( $_POST['_wpseo_business_type_override'] ) ? sanitize_text_field( $_POST['_wpseo_business_type_override'] ) : '';
-				$locations_meta['_wpseo_business_address']                           = isset( $_POST['_wpseo_business_address'] ) ? sanitize_text_field( $_POST['_wpseo_business_address'] ) : '';
-				$locations_meta['_wpseo_business_address_2']                         = isset( $_POST['_wpseo_business_address_2'] ) ? sanitize_text_field( $_POST['_wpseo_business_address_2'] ) : '';
-				$locations_meta['_wpseo_business_city']                              = isset( $_POST['_wpseo_business_city'] ) ? sanitize_text_field( $_POST['_wpseo_business_city'] ) : '';
-				$locations_meta['_wpseo_business_state']                             = isset( $_POST['_wpseo_business_state'] ) ? sanitize_text_field( $_POST['_wpseo_business_state'] ) : '';
-				$locations_meta['_wpseo_business_zipcode']                           = isset( $_POST['_wpseo_business_zipcode'] ) ? sanitize_text_field( $_POST['_wpseo_business_zipcode'] ) : '';
-				$locations_meta['_wpseo_business_country']                           = isset( $_POST['_wpseo_business_country'] ) ? sanitize_text_field( $_POST['_wpseo_business_country'] ) : '';
-				$locations_meta['_wpseo_business_phone']                             = isset( $_POST['_wpseo_business_phone'] ) ? sanitize_text_field( $_POST['_wpseo_business_phone'] ) : '';
-				$locations_meta['_wpseo_business_phone_2nd']                         = isset( $_POST['_wpseo_business_phone_2nd'] ) ? sanitize_text_field( $_POST['_wpseo_business_phone_2nd'] ) : '';
-				$locations_meta['_wpseo_business_fax']                               = isset( $_POST['_wpseo_business_fax'] ) ? sanitize_text_field( $_POST['_wpseo_business_fax'] ) : '';
-				$locations_meta['_wpseo_business_email']                             = isset( $_POST['_wpseo_business_email'] ) ? sanitize_email( $_POST['_wpseo_business_email'] ) : '';
-				$locations_meta['_wpseo_business_location_logo']                     = isset( $_POST['_wpseo_business_location_logo'] ) ? sanitize_text_field( $_POST['_wpseo_business_location_logo'] ) : '';
+				$locations_meta                                  = [];
+				$locations_meta['_wpseo_business_type']          = isset( $_POST['_wpseo_business_type'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_type'] ) ) : '';
+				$locations_meta['_wpseo_business_type_override'] = isset( $_POST['_wpseo_business_type_override'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_type_override'] ) ) : '';
+				$locations_meta['_wpseo_business_address']       = isset( $_POST['_wpseo_business_address'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_address'] ) ) : '';
+				$locations_meta['_wpseo_business_address_2']     = isset( $_POST['_wpseo_business_address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_address_2'] ) ) : '';
+				$locations_meta['_wpseo_business_city']          = isset( $_POST['_wpseo_business_city'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_city'] ) ) : '';
+				$locations_meta['_wpseo_business_state']         = isset( $_POST['_wpseo_business_state'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_state'] ) ) : '';
+				$locations_meta['_wpseo_business_zipcode']       = isset( $_POST['_wpseo_business_zipcode'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_zipcode'] ) ) : '';
+				$locations_meta['_wpseo_business_country']       = isset( $_POST['_wpseo_business_country'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_country'] ) ) : '';
+				$locations_meta['_wpseo_business_phone']         = isset( $_POST['_wpseo_business_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_phone'] ) ) : '';
+				$locations_meta['_wpseo_business_phone_2nd']     = isset( $_POST['_wpseo_business_phone_2nd'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_phone_2nd'] ) ) : '';
+				$locations_meta['_wpseo_business_fax']           = isset( $_POST['_wpseo_business_fax'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_fax'] ) ) : '';
+				$locations_meta['_wpseo_business_email']         = isset( $_POST['_wpseo_business_email'] ) ? sanitize_email( wp_unslash( $_POST['_wpseo_business_email'] ) ) : '';
+				$locations_meta['_wpseo_business_contact_email'] = isset( $_POST['_wpseo_business_contact_email'] ) ? sanitize_email( wp_unslash( $_POST['_wpseo_business_contact_email'] ) ) : '';
+				$locations_meta['_wpseo_business_contact_phone'] = isset( $_POST['_wpseo_business_contact_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_contact_phone'] ) ) : '';
+				$locations_meta['_wpseo_business_location_logo'] = isset( $_POST['_wpseo_business_location_logo'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_location_logo'] ) ) : '';
 				$locations_meta['_wpseo_business_location_custom_marker']            = $custom_marker;
-				$locations_meta['_wpseo_business_vat_id']                            = isset( $_POST['_wpseo_business_vat_id'] ) ? sanitize_text_field( $_POST['_wpseo_business_vat_id'] ) : '';
-				$locations_meta['_wpseo_business_tax_id']                            = isset( $_POST['_wpseo_business_tax_id'] ) ? sanitize_text_field( $_POST['_wpseo_business_tax_id'] ) : '';
-				$locations_meta['_wpseo_business_coc_id']                            = isset( $_POST['_wpseo_business_coc_id'] ) ? sanitize_text_field( $_POST['_wpseo_business_coc_id'] ) : '';
-				$locations_meta['_wpseo_business_price_range']                       = isset( $_POST['_wpseo_business_price_range'] ) ? sanitize_text_field( $_POST['_wpseo_business_price_range'] ) : '';
-				$locations_meta['_wpseo_business_currencies_accepted']               = isset( $_POST['_wpseo_business_currencies_accepted'] ) ? sanitize_text_field( $_POST['_wpseo_business_currencies_accepted'] ) : '';
-				$locations_meta['_wpseo_business_payment_accepted']                  = isset( $_POST['_wpseo_business_payment_accepted'] ) ? sanitize_text_field( $_POST['_wpseo_business_payment_accepted'] ) : '';
-				$locations_meta['_wpseo_business_area_served']                       = isset( $_POST['_wpseo_business_area_served'] ) ? sanitize_text_field( $_POST['_wpseo_business_area_served'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_type']                = isset( $_POST['_wpseo_is_overridden_business_type'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_type'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_phone']               = isset( $_POST['_wpseo_is_overridden_business_phone'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_phone'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_phone_2nd']           = isset( $_POST['_wpseo_is_overridden_business_phone_2nd'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_phone_2nd'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_fax']                 = isset( $_POST['_wpseo_is_overridden_business_fax'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_fax'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_email']               = isset( $_POST['_wpseo_is_overridden_business_email'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_email'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_url']                 = isset( $_POST['_wpseo_is_overridden_business_url'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_url'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_vat_id']              = isset( $_POST['_wpseo_is_overridden_business_vat_id'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_vat_id'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_tax_id']              = isset( $_POST['_wpseo_is_overridden_business_tax_id'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_tax_id'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_coc_id']              = isset( $_POST['_wpseo_is_overridden_business_coc_id'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_coc_id'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_price_range']         = isset( $_POST['_wpseo_is_overridden_business_price_range'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_price_range'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_currencies_accepted'] = isset( $_POST['_wpseo_is_overridden_business_currencies_accepted'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_currencies_accepted'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_payment_accepted']    = isset( $_POST['_wpseo_is_overridden_business_payment_accepted'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_payment_accepted'] ) : '';
-				$locations_meta['_wpseo_is_overridden_business_area_served']         = isset( $_POST['_wpseo_is_overridden_business_area_served'] ) ? sanitize_text_field( $_POST['_wpseo_is_overridden_business_area_served'] ) : '';
-				$locations_meta['_wpseo_is_postal_address']                          = isset( $_POST['_wpseo_is_postal_address'] ) ? sanitize_text_field( $_POST['_wpseo_is_postal_address'] ) : '';
-				$locations_meta['_wpseo_multiple_opening_hours']                     = isset( $_POST['_wpseo_multiple_opening_hours'] ) ? $_POST['_wpseo_multiple_opening_hours'] : '';
-				$locations_meta['_wpseo_multiple_opening_hours_override']            = isset( $_POST['_wpseo_multiple_opening_hours_override'] ) ? $_POST['_wpseo_multiple_opening_hours_override'] : '';
-				$locations_meta['_wpseo_open_247']                                   = isset( $_POST['_wpseo_open_247'] ) ? $_POST['_wpseo_open_247'] : '';
-				$locations_meta['_wpseo_open_247_override']                          = isset( $_POST['_wpseo_open_247_override'] ) ? $_POST['_wpseo_open_247_override'] : '';
-				$locations_meta['_wpseo_format_24h']                                 = isset( $_POST['_wpseo_format_24h'] ) ? $_POST['_wpseo_format_24h'] : 'off';
-				$locations_meta['_wpseo_format_24h_override']                        = isset( $_POST['_wpseo_format_24h_override'] ) ? $_POST['_wpseo_format_24h_override'] : '';
-				$locations_meta['_wpseo_coordinates_lat']                            = isset( $_POST['_wpseo_coordinates_lat'] ) ? $_POST['_wpseo_coordinates_lat'] : '';
-				$locations_meta['_wpseo_coordinates_long']                           = isset( $_POST['_wpseo_coordinates_long'] ) ? $_POST['_wpseo_coordinates_long'] : '';
-				$locations_meta['_wpseo_business_timezone']                          = isset( $_POST['_wpseo_business_timezone'] ) ? $_POST['_wpseo_business_timezone'] : '';
-				$locations_meta['_wpseo_is_overridden_business_timezone']            = isset( $_POST['_wpseo_is_overridden_business_timezone'] ) ? $_POST['_wpseo_is_overridden_business_timezone'] : '';
+				$locations_meta['_wpseo_business_vat_id']                            = isset( $_POST['_wpseo_business_vat_id'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_vat_id'] ) ) : '';
+				$locations_meta['_wpseo_business_tax_id']                            = isset( $_POST['_wpseo_business_tax_id'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_tax_id'] ) ) : '';
+				$locations_meta['_wpseo_business_coc_id']                            = isset( $_POST['_wpseo_business_coc_id'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_coc_id'] ) ) : '';
+				$locations_meta['_wpseo_business_price_range']                       = isset( $_POST['_wpseo_business_price_range'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_price_range'] ) ) : '';
+				$locations_meta['_wpseo_business_currencies_accepted']               = isset( $_POST['_wpseo_business_currencies_accepted'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_currencies_accepted'] ) ) : '';
+				$locations_meta['_wpseo_business_payment_accepted']                  = isset( $_POST['_wpseo_business_payment_accepted'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_payment_accepted'] ) ) : '';
+				$locations_meta['_wpseo_business_area_served']                       = isset( $_POST['_wpseo_business_area_served'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_area_served'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_type']                = isset( $_POST['_wpseo_is_overridden_business_type'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_type'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_phone']               = isset( $_POST['_wpseo_is_overridden_business_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_phone'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_phone_2nd']           = isset( $_POST['_wpseo_is_overridden_business_phone_2nd'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_phone_2nd'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_fax']                 = isset( $_POST['_wpseo_is_overridden_business_fax'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_fax'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_email']               = isset( $_POST['_wpseo_is_overridden_business_email'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_email'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_contact_email']       = isset( $_POST['_wpseo_is_overridden_business_contact_email'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_contact_email'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_contact_phone']       = isset( $_POST['_wpseo_is_overridden_business_contact_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_contact_phone'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_url']                 = isset( $_POST['_wpseo_is_overridden_business_url'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_url'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_vat_id']              = isset( $_POST['_wpseo_is_overridden_business_vat_id'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_vat_id'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_tax_id']              = isset( $_POST['_wpseo_is_overridden_business_tax_id'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_tax_id'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_coc_id']              = isset( $_POST['_wpseo_is_overridden_business_coc_id'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_coc_id'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_price_range']         = isset( $_POST['_wpseo_is_overridden_business_price_range'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_price_range'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_currencies_accepted'] = isset( $_POST['_wpseo_is_overridden_business_currencies_accepted'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_currencies_accepted'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_payment_accepted']    = isset( $_POST['_wpseo_is_overridden_business_payment_accepted'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_payment_accepted'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_area_served']         = isset( $_POST['_wpseo_is_overridden_business_area_served'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_area_served'] ) ) : '';
+				$locations_meta['_wpseo_is_postal_address']                          = isset( $_POST['_wpseo_is_postal_address'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_postal_address'] ) ) : '';
+				$locations_meta['_wpseo_multiple_opening_hours']                     = isset( $_POST['_wpseo_multiple_opening_hours'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_multiple_opening_hours'] ) ) : '';
+				$locations_meta['_wpseo_multiple_opening_hours_override']            = isset( $_POST['_wpseo_multiple_opening_hours_override'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_multiple_opening_hours_override'] ) ) : '';
+				$locations_meta['_wpseo_open_247']                                   = isset( $_POST['_wpseo_open_247'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_open_247'] ) ) : '';
+				$locations_meta['_wpseo_open_247_override']                          = isset( $_POST['_wpseo_open_247_override'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_open_247_override'] ) ) : '';
+				$locations_meta['_wpseo_format_24h']                                 = isset( $_POST['_wpseo_format_24h'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_format_24h'] ) ) : 'off';
+				$locations_meta['_wpseo_format_24h_override']                        = isset( $_POST['_wpseo_format_24h_override'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_format_24h_override'] ) ) : '';
+				$locations_meta['_wpseo_coordinates_lat']                            = isset( $_POST['_wpseo_coordinates_lat'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_coordinates_lat'] ) ) : '';
+				$locations_meta['_wpseo_coordinates_long']                           = isset( $_POST['_wpseo_coordinates_long'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_coordinates_long'] ) ) : '';
+				$locations_meta['_wpseo_business_timezone']                          = isset( $_POST['_wpseo_business_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_timezone'] ) ) : '';
+				$locations_meta['_wpseo_is_overridden_business_timezone']            = isset( $_POST['_wpseo_is_overridden_business_timezone'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_is_overridden_business_timezone'] ) ) : '';
 
 				foreach ( $wpseo_local_core->days as $key => $day ) {
 					$field_name                                     = '_wpseo_opening_hours_' . $key;
-					$locations_meta[ $field_name . '_from' ]        = ( isset( $_POST[ $field_name . '_from' ] ) ) ? sanitize_text_field( $_POST[ $field_name . '_from' ] ) : '';
-					$locations_meta[ $field_name . '_to' ]          = ( isset( $_POST[ $field_name . '_to' ] ) ) ? sanitize_text_field( $_POST[ $field_name . '_to' ] ) : '';
-					$locations_meta[ $field_name . '_second_from' ] = ( isset( $_POST[ $field_name . '_second_from' ] ) ) ? sanitize_text_field( $_POST[ $field_name . '_second_from' ] ) : '';
-					$locations_meta[ $field_name . '_second_to' ]   = ( isset( $_POST[ $field_name . '_second_to' ] ) ) ? sanitize_text_field( $_POST[ $field_name . '_second_to' ] ) : '';
-					$locations_meta[ $field_name . '_24h' ]         = ( isset( $_POST[ $field_name . '_24h' ] ) ) ? sanitize_text_field( $_POST[ $field_name . '_24h' ] ) : '';
-					$locations_meta[ $field_name . '_override' ]    = ( isset( $_POST[ $field_name . '_override' ] ) ) ? sanitize_text_field( $_POST[ $field_name . '_override' ] ) : '';
+					$locations_meta[ $field_name . '_from' ]        = ( isset( $_POST[ $field_name . '_from' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $field_name . '_from' ] ) ) : '';
+					$locations_meta[ $field_name . '_to' ]          = ( isset( $_POST[ $field_name . '_to' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $field_name . '_to' ] ) ) : '';
+					$locations_meta[ $field_name . '_second_from' ] = ( isset( $_POST[ $field_name . '_second_from' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $field_name . '_second_from' ] ) ) : '';
+					$locations_meta[ $field_name . '_second_to' ]   = ( isset( $_POST[ $field_name . '_second_to' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $field_name . '_second_to' ] ) ) : '';
+					$locations_meta[ $field_name . '_24h' ]         = ( isset( $_POST[ $field_name . '_24h' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $field_name . '_24h' ] ) ) : '';
+					$locations_meta[ $field_name . '_override' ]    = ( isset( $_POST[ $field_name . '_override' ] ) ) ? sanitize_text_field( wp_unslash( $_POST[ $field_name . '_override' ] ) ) : '';
 
 					if ( $locations_meta[ $field_name . '_from' ] === 'closed' ) {
 						$locations_meta[ $field_name . '_to' ] = $locations_meta[ $field_name . '_from' ];
@@ -1275,7 +1404,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 					}
 				}
 
-				$locations_meta['_wpseo_business_url'] = ( isset( $_POST['_wpseo_business_url'] ) && $_POST['_wpseo_business_url'] !== '' ) ? sanitize_text_field( $_POST['_wpseo_business_url'] ) : \get_permalink( $post_id );
+				$locations_meta['_wpseo_business_url'] = ( isset( $_POST['_wpseo_business_url'] ) && $_POST['_wpseo_business_url'] !== '' ) ? sanitize_text_field( wp_unslash( $_POST['_wpseo_business_url'] ) ) : get_permalink( $post_id );
 
 				// Put http:// in front of the URL, if it's not there yet.
 				if ( ! preg_match( '~^(?:f|ht)tps?://~i', $locations_meta['_wpseo_business_url'] ) ) {
@@ -1307,6 +1436,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Register actions for adding media buttons in the editor.
+		 *
+		 * @return void
 		 */
 		public function register_media_buttons() {
 			$current_screen = get_current_screen();
@@ -1319,7 +1450,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Retrieves array of the 5 pricerange steps.
 		 *
-		 * @return array Array of pricerange.
+		 * @return array<string> Array of pricerange.
 		 */
 		private function get_pricerange_array() {
 			$pricerange = [
@@ -1337,11 +1468,11 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Creates a checkbox input.
 		 *
-		 * @param string $label      Is the translatable string in front of the check.
-		 * @param string $name       This is the ID which is saved by the database.
-		 * @param string $class_name The class name which can be used to change css or js.
-		 * @param bool   $value      Checking if the checkbox is checked and returns true or false.
-		 * @param array  $attr       Extra attributes to add to the checkbox.
+		 * @param string                 $label      Is the translatable string in front of the check.
+		 * @param string                 $name       This is the ID which is saved by the database.
+		 * @param string                 $class_name The class name which can be used to change css or js.
+		 * @param bool                   $value      Checking if the checkbox is checked and returns true or false.
+		 * @param array<string|bool|int> $attr       Extra attributes to add to the checkbox.
 		 *
 		 * @return string
 		 */
@@ -1360,7 +1491,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 				$input_class        = ( isset( $attr['input_class'] ) && $attr['input_class'] ) ? ' ' . $attr['input_class'] : '';
 				$label_class        = ( isset( $attr['label_class'] ) && $attr['label_class'] ) ? $attr['label_class'] : '';
 
-				$wpseo_local_checkbox  = '<p class="' . $class_name . '">';
+				$wpseo_local_checkbox  = '<p class="' . esc_attr( $class_name ) . '">';
 				$wpseo_local_checkbox .= sprintf(
 					'<input type="checkbox" class="%1$s%2$s" id="%3$s" name="%3$s" value="on" data-entered-value="%4$s"%5$s%6$s>',
 					esc_attr( $class_name ),
@@ -1386,11 +1517,11 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		/**
 		 * Renders a switch toggle based on a checkbox input that can be disabled/enabled via an additional checkbox.
 		 *
-		 * @param string      $target_var The variable to create the checkbox for.
-		 * @param string      $label      The visual label text for the toggle.
-		 * @param array       $buttons    Array of two visual labels for the buttons (defaults Disabled/Enabled).
-		 * @param string|bool $value      The variable current value, to determine the checked attribute.
-		 * @param array       $attr       Extra attributes to add to the light switch.
+		 * @param string                 $target_var The variable to create the checkbox for.
+		 * @param string                 $label      The visual label text for the toggle.
+		 * @param array<string>          $buttons    Array of two visual labels for the buttons (defaults Disabled/Enabled).
+		 * @param string|bool            $value      The variable current value, to determine the checked attribute.
+		 * @param array<string|bool|int> $attr       Extra attributes to add to the light switch.
 		 *
 		 * @return string The switch toggle HTML.
 		 */
@@ -1445,6 +1576,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Add buttons to editor to add the shortcodes via a ppup UI.
+		 *
+		 * @return void
 		 */
 		public function add_media_buttons() {
 			// Make sure to don't output white space between these buttons.
@@ -1461,6 +1594,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Creates the popup HTML for adding the shortcodes.
+		 *
+		 * @return void
 		 */
 		public function add_mce_popup() {
 			// An exception for Beaver Builder.
@@ -1520,7 +1655,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 					<?php if ( wpseo_has_multiple_locations() ) { ?>
 					if ( location_id == "" ) {
-						alert( "<?php _e( 'Please select a location', 'yoast-local-seo' ); ?>" );
+						alert( "<?php esc_html_e( 'Please select a location', 'yoast-local-seo' ); ?>" );
 						return;
 					}
 					<?php } ?>
@@ -1596,7 +1731,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 					<?php if ( wpseo_has_multiple_locations() ) { ?>
 					if ( location_id == "" ) {
-						alert( "<?php _e( 'Please select a location', 'yoast-local-seo' ); ?>" );
+						alert( "<?php esc_html_e( 'Please select a location', 'yoast-local-seo' ); ?>" );
 						return;
 					}
 					<?php } ?>
@@ -1670,7 +1805,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 					var location_id = jQuery( "#wpseo_oh_location_id" ).val();
 					if ( location_id == "" ) {
-						alert( "<?php _e( 'Please select a location', 'yoast-local-seo' ); ?>" );
+						alert( "<?php esc_html_e( 'Please select a location', 'yoast-local-seo' ); ?>" );
 						return;
 					}
 
@@ -1839,7 +1974,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 								<label for="wpseo_map_location_id"
 									class="screen-reader-text"><?php esc_html_e( 'Location:', 'yoast-local-seo' ); ?></label>
 								<select id="wpseo_map_location_id" onchange="WPSEO_Map_Change_Location( this )">
-									<?php echo $this->get_location_select_options(); ?>
+									<?php
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in the function.
+									echo $this->get_location_select_options();
+									?>
 								</select>
 								<label for="wpseo_map_term_id"
 									class="screen-reader-text"><?php esc_html_e( 'Category:', 'yoast-local-seo' ); ?></label>
@@ -1850,8 +1988,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 									</option>
 									<?php
 									$categories = get_terms(
-										'wpseo_locations_category',
-										[ 'hide_empty' => false ]
+										[
+											'taxonomy'   => 'wpseo_locations_category',
+											'hide_empty' => false,
+										]
 									);
 
 									foreach ( $categories as $category ) {
@@ -1869,7 +2009,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 									for="wpseo_map_center_location_id"><?php esc_html_e( 'Center map on this location:', 'yoast-local-seo' ); ?></label><br>
 								<select
 									id="wpseo_map_center_location_id" <?php echo ( in_array( get_the_ID(), $this->locations ) ? 'disabled' : '' ); ?>>
-									<?php echo $this->get_location_select_options(); ?>
+									<?php
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in the function.
+									echo $this->get_location_select_options();
+									?>
 								</select>
 							</div>
 						<?php } ?>
@@ -1889,12 +2032,12 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 										?>
 										<li class="wpseo_map_style"
 											style="display: inline-block; width: 120px; height: 150px; margin-right: 10px;text-align: center;">
-											<label for="wpseo_map_style-<?php echo strtolower( $key ); ?>">
-												<img src="<?php echo esc_url( plugins_url( '/images/map-' . strtolower( $key ) . '.png', WPSEO_LOCAL_FILE ) ); ?>"
+											<label for="wpseo_map_style-<?php echo esc_attr( strtolower( $key ) ); ?>">
+												<img src="<?php echo esc_url( plugins_url( '/images/map-' . esc_attr( strtolower( $key ) ) . '.png', WPSEO_LOCAL_FILE ) ); ?>"
 													alt=""><br>
 												<?php echo esc_html( $label ); ?><br>
 												<input type="radio" name="wpseo_map_style"
-													id="wpseo_map_style-<?php echo strtolower( $key ); ?>"
+													id="wpseo_map_style-<?php echo esc_attr( strtolower( $key ) ); ?>"
 													value="<?php echo esc_attr( strtolower( $key ) ); ?>" <?php checked( 'ROADMAP', $key ); ?>>
 											</label>
 										</li>
@@ -1984,7 +2127,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 							</div>
 							<div style="padding:15px;">
 								<input type="button" class="button button-primary"
-									value="<?php esc_html_e( 'Insert map', 'yoast-local-seo' ); ?>"
+									value="<?php esc_attr_e( 'Insert map', 'yoast-local-seo' ); ?>"
 									onclick="WPSEO_InsertMap();" />&nbsp;&nbsp;&nbsp;
 								<a class="button" href="#"
 									onclick="tb_remove(); return false;"><?php esc_html_e( 'Cancel', 'yoast-local-seo' ); ?></a>
@@ -2018,12 +2161,17 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 								<label for="wpseo_address_location_id"
 									class="screen-reader-text"><?php esc_html_e( 'Location:', 'yoast-local-seo' ); ?></label>
 								<select id="wpseo_address_location_id" onchange="WPSEO_Address_Change_Order( this );">
-									<?php echo $this->get_location_select_options(); ?>
+									<?php
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in the function.
+									echo $this->get_location_select_options();
+									?>
 								</select>
 								<?php
 								$categories = get_terms(
-									'wpseo_locations_category',
-									[ 'hide_empty' => false ]
+									[
+										'taxonomy'   => 'wpseo_locations_category',
+										'hide_empty' => false,
+									]
 								);
 								if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
 									?>
@@ -2168,7 +2316,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 								<label for="wpseo_oh_location_id"
 									class="screen-reader-text"><?php esc_html_e( 'Location:', 'yoast-local-seo' ); ?></label>
 								<select id="wpseo_oh_location_id">
-									<?php echo $this->get_location_select_options(); ?>
+									<?php
+									// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in the function.
+									echo $this->get_location_select_options();
+									?>
 								</select> <br />
 
 							</div>
@@ -2188,8 +2339,7 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 								];
 								foreach ( $days as $key => $day ) {
 									/* translators: %s extends to weekdays */
-									echo '<label for="wpseo_oh_show_' . $key . '"><input type="checkbox" id="wpseo_oh_show_' . $key . '" value="' . $key . '" checked />' . sprintf( esc_html__( 'Show %s', 'yoast-local-seo' ), $day ) . '</label><br>';
-								}
+									echo '<label for="wpseo_oh_show_' . esc_attr( $key ) . '"><input type="checkbox" id="wpseo_oh_show_' . esc_attr( $key ) . '" value="' . esc_attr( $key ) . '" checked />' . sprintf( esc_html__( 'Show %s', 'yoast-local-seo' ), esc_html( $day ) ) . '</label><br>';                               }
 								?>
 							</div>
 							<div style="padding:15px 15px 0 15px;">
@@ -2287,13 +2437,13 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 										?>
 										<li class="wpseo_map_style"
 											style="display: inline-block; width: 120px; height: 150px; margin-right: 10px;text-align: center;">
-											<label for="wpseo_sl_map_style-<?php echo strtolower( $key ); ?>">
+											<label for="wpseo_sl_map_style-<?php echo esc_attr( strtolower( $key ) ); ?>">
 												<img
-													src="<?php echo esc_url( plugins_url( '/images/map-' . strtolower( $key ) . '.png', WPSEO_LOCAL_FILE ) ); ?>"
+													src="<?php echo esc_url( plugins_url( '/images/map-' . esc_attr( strtolower( $key ) ) . '.png', WPSEO_LOCAL_FILE ) ); ?>"
 													alt=""><br>
 												<?php echo esc_html( $label ); ?><br>
 												<input type="radio" name="wpseo_sl_map_style"
-													id="wpseo_sl_map_style-<?php echo strtolower( $key ); ?>"
+													id="wpseo_sl_map_style-<?php echo esc_attr( strtolower( $key ) ); ?>"
 													value="<?php echo esc_attr( strtolower( $key ) ); ?>" <?php checked( 'ROADMAP', $key ); ?>>
 											</label>
 										</li>
@@ -2373,11 +2523,11 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 *
 		 * @since 0.2
 		 *
-		 * @param array  $results The results array to filter and update.
-		 * @param array  $job     The current jobs variables.
-		 * @param object $post    The post object for the current page.
+		 * @param array<string, array<string|int>> $results The results array to filter and update.
+		 * @param array<string>                    $job     The current jobs variables.
+		 * @param object                           $post    The post object for the current page.
 		 *
-		 * @return array
+		 * @return array<string, array<string|int>>
 		 */
 		public function filter_linkdex_results( $results, $job, $post ) {
 
@@ -2421,6 +2571,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Enqueues the pluginstyles.
+		 *
+		 * @return void
 		 */
 		public function enqueue_styles() {
 			$post_type_instance = new PostType();
@@ -2434,6 +2586,8 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 		/**
 		 * Enqueues the pluginscripts.
+		 *
+		 * @return void
 		 */
 		public function enqueue_scripts() {
 			$post_type_instance = new PostType();
@@ -2446,17 +2600,12 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 
 				wp_localize_script( WPSEO_Local_Admin_Assets::PREFIX . 'seo-locations', 'wpseoLocalL10n', $this->localize_script_locations() );
 			}
-			elseif ( in_array( get_post_type(), [ 'post', 'page' ], true ) ) {
-				$this->asset_manager->enqueue_script( 'seo-pages' );
-
-				wp_localize_script( WPSEO_Local_Admin_Assets::PREFIX . 'seo-pages', 'wpseoLocalL10n', $this->localize_script_pages() );
-			}
 		}
 
 		/**
 		 * Localizes scripts for the local plugin.
 		 *
-		 * @return array
+		 * @return array<string>
 		 */
 		public function localize_script_locations() {
 			$custom        = get_post_custom();
@@ -2488,28 +2637,14 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		}
 
 		/**
-		 * Localizes scripts for the local plugin.
-		 *
-		 * @return array
-		 */
-		public function localize_script_pages() {
-			$asset_manager = new WPSEO_Local_Admin_Assets();
-
-			return [
-				'pages_script_url'     => plugins_url( 'js/dist/wp-seo-local-worker-pages-' . $asset_manager->flatten_version( WPSEO_LOCAL_VERSION ) . '.js', WPSEO_LOCAL_FILE ),
-				'storelocator_content' => __( 'Your content contains a store locator shortcode, but not much more content. Please add content to make your page more useful for your visitors.', 'yoast-local-seo' ),
-			];
-		}
-
-		/**
 		 * Gets the location meta data based on the specified meta dataset, location and key.
 		 *
-		 * @param array  $meta_data    The meta data to search in.
-		 * @param int    $location_id  The location ID to search for the specified key.
-		 * @param string $meta_key     The key to search for.
-		 * @param mixed  $default_meta The default to return if the key doesn't exist.
+		 * @param array<string, string|int|bool|array<string, string|array<string, string>>|array<string>|null> $meta_data    The meta data to search in.
+		 * @param int                                                                                           $location_id  The location ID to search for the specified key.
+		 * @param string                                                                                        $meta_key     The key to search for.
+		 * @param array<string, string|int|bool|array<string, string|array<string, string>>|array<string>|null> $default_meta The default to return if the key doesn't exist.
 		 *
-		 * @return mixed The meta data or the default value if the passed key doesn't exist.
+		 * @return array<string, string|int|bool|array<string, string|array<string, string>>|array<string>|null> The meta data or the default value if the passed key doesn't exist.
 		 */
 		protected function get_location_meta_by_key( $meta_data, $location_id, $meta_key, $default_meta = '' ) {
 			return ( ! empty( $meta_data[ $location_id ][ $meta_key ] ) ? $meta_data[ $location_id ][ $meta_key ] : $default_meta );
@@ -2520,10 +2655,10 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		 *
 		 * @param string $meta_key The meta key to search for.
 		 *
-		 * @return mixed The post meta.
+		 * @return string|int|float|bool The post meta.
 		 */
 		protected function get_location_post_meta( $meta_key ) {
-			return \get_post_meta( $this->location_id, $meta_key, true );
+			return get_post_meta( $this->location_id, $meta_key, true );
 		}
 
 		/**
@@ -2552,9 +2687,9 @@ if ( ! class_exists( 'WPSEO_Local_Metaboxes' ) ) {
 		protected function create_hidden_opening_hours_message() {
 			$content = sprintf(
 			/* translators: %1$s expands to Local SEO, %2$s is a link start tag to the Opening hours tab, %3$s is the link closing tag. */
-				\esc_html__( 'You\'ve chosen to hide opening hours for your locations. You can change this on the %2$sOpening hours tab%3$s of the %1$s settings.', 'yoast-local-seo' ),
+				esc_html__( 'You\'ve chosen to hide opening hours for your locations. You can change this on the %2$sOpening hours tab%3$s of the %1$s settings.', 'yoast-local-seo' ),
 				'Local SEO',
-				'<a href="' . \esc_url( \admin_url( 'admin.php?page=wpseo_local#top#opening_hours' ) ) . '">',
+				'<a href="' . esc_url( admin_url( 'admin.php?page=wpseo_local#top#opening_hours' ) ) . '">',
 				'</a>'
 			);
 

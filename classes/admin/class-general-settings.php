@@ -53,7 +53,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 		/**
 		 * Stores the options for this plugin.
 		 *
-		 * @var mixed
+		 * @var array<string|int|bool>
 		 */
 		private $options;
 
@@ -84,6 +84,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 		/**
 		 * Fetches data required for multiple locations select to allow user to select a primary location
+		 *
+		 * @return void
 		 */
 		public function multiple_locations_location_data() {
 			$locations_repository_builder = new Locations_Repository_Builder();
@@ -106,6 +108,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 		/**
 		 * Get wpseo_local options.
+		 *
+		 * @return void
 		 */
 		private function get_options() {
 			$this->options = get_option( 'wpseo_local' );
@@ -113,15 +117,19 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 		/**
 		 * Get the API key set in Local SEO Options.
+		 *
+		 * @return void
 		 */
 		private function get_api_key() {
 			$this->api_key = $this->api_repository->get_api_key( 'browser' );
 		}
 
 		/**
-		 * @param array $tabs Array holding the tabs.
+		 * Creates the Business info tab.
 		 *
-		 * @return mixed
+		 * @param array<array<string> $tabs Array holding the tabs.
+		 *
+		 * @return array<array<string>
 		 */
 		public function create_tab( $tabs ) {
 			$tabs[ $this->slug ] = [
@@ -133,9 +141,11 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 		}
 
 		/**
-		 * @param array $videos Array holding the videos for the help center.
+		 * Adds the URL to the training video about Local SEO General settings.
 		 *
-		 * @return mixed
+		 * @param array<string> $videos Array holding the videos for the help center.
+		 *
+		 * @return array<string>
 		 */
 		public function set_video( $videos ) {
 			$videos[ $this->slug ] = 'https://yoa.st/screencast-local-settings';
@@ -145,6 +155,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 		/**
 		 * Add local config action.
+		 *
+		 * @return void
 		 */
 		public function local_config() {
 			do_action( 'wpseo_local_config' );
@@ -152,6 +164,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 		/**
 		 * Introductory copy before starting about the multiple locations settings.
+		 *
+		 * @return void
 		 */
 		public function introductory_copy() {
 			WPSEO_Local_Admin_Page::section_before( 'introductory-copy' );
@@ -162,7 +176,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 			printf(
 			/* translators: 1: link open tag; 2: link close tag. %3$s expands to Yoast SEO */
 				esc_html__( 'If you have multiple locations, %3$s will create a new Custom Post Type where you can manage your locations. %1$sRead more about managing multiple locations with CPTs%2$s.', 'yoast-local-seo' ),
-				'<a href="' . WPSEO_Shortlinker::get( 'https://yoa.st/4fi' ) . '" target="_blank">',
+				'<a href="' . esc_url( WPSEO_Shortlinker::get( 'https://yoa.st/4fi' ) ) . '" target="_blank">',
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
 				WPSEO_Admin_Utils::get_new_tab_message() . '</a>',
 				'Yoast SEO'
 			);
@@ -172,10 +187,11 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 		/**
 		 * Multiple locations checkbox.
+		 *
+		 * @return void
 		 */
 		public function multiple_locations() {
 			WPSEO_Local_Admin_Page::section_before( 'select-multiple-locations' );
-			//WPSEO_Local_Admin_Wrappers::checkbox( 'use_multiple_locations', '', __( 'Use multiple locations', 'yoast-local-seo' ) );
 
 			Yoast_Form::get_instance()->light_switch(
 				'use_multiple_locations',
@@ -205,10 +221,11 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 			$flattened_business_types = $business_types_repo->get_business_types();
 			$business_types_help      = new WPSEO_Local_Admin_Help_Panel(
 				'business_types_help',
+				/* translators: Hidden accessibility text. */
 				__( 'Help with: Business types', 'yoast-local-seo' ),
 				sprintf(
 				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
-					__( 'If your business type is not listed, please read %1$sthe FAQ entry%2$s.', 'yoast-local-seo' ),
+					esc_html__( 'If your business type is not listed, please read %1$sthe FAQ entry%2$s.', 'yoast-local-seo' ),
 					'<a href="' . WPSEO_Shortlinker::get( 'https://yoa.st/business-listing' ) . '" target="_blank">',
 					WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
 				),
@@ -217,21 +234,53 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 			$price_indication_help = new WPSEO_Local_Admin_Help_Panel(
 				'price_indication_help',
+				/* translators: Hidden accessibility text. */
 				__( 'Help with: Price indication', 'yoast-local-seo' ),
 				esc_html__( 'Select the price indication of your business, where $ is cheap and $$$$$ is expensive.', 'yoast-local-seo' ),
 				'has-wrapper'
 			);
 
+			$contact_phone_help = new WPSEO_Local_Admin_Help_Panel(
+				'contact_phone_help',
+				/* translators: Hidden accessibility text. */
+				__( 'Help with: Contact phone', 'yoast-local-seo' ),
+				esc_html__( 'Enter the phone number for customers to reach your business, providing an alternative means of communication. Include the country code and area code. Fill in only if different from the business phone number.', 'yoast-local-seo' ),
+				''
+			);
+
+			$contact_email_help = new WPSEO_Local_Admin_Help_Panel(
+				'contact_email_help',
+				/* translators: Hidden accessibility text. */
+				__( 'Help with: Contact email', 'yoast-local-seo' ),
+				esc_html__( 'Enter the email address for customers to reach your business, providing an alternative means of communication. Fill in only if different from the business email address.', 'yoast-local-seo' ),
+				''
+			);
+
 			$area_served_help = new WPSEO_Local_Admin_Help_Panel(
 				'area_served_help',
+				/* translators: Hidden accessibility text. */
 				__( 'Help with: Area served', 'yoast-local-seo' ),
 				esc_html__( 'The geographic area where a service or offered item is provided.', 'yoast-local-seo' ),
 				'has-wrapper'
 			);
 
+			$global_location_number_help = new WPSEO_Local_Admin_Help_Panel(
+				'global_location_number_help',
+				/* translators: Hidden accessibility text. */
+				__( 'Help with: Global Location Number', 'yoast-local-seo' ),
+				sprintf(
+				/* translators: 1: HTML <a> open tag; 2: <a> close tag. */
+					esc_html__( 'You can enter a %1$sGlobal Location Number%2$s to identify your location. If you don\'t have a Global Location Number, you can skip this.', 'yoast-local-seo' ),
+					'<a href="https://www.gs1.org/standards/id-keys/gln" target="_blank">',
+					WPSEO_Admin_Utils::get_new_tab_message() . '</a>'
+				),
+				''
+			);
+
 			echo '<div class="wpseo-local-help-wrapper">';
 			WPSEO_Local_Admin_Wrappers::select( 'business_type', apply_filters( 'yoast-local-seo-admin-label-business-type', __( 'Business type', 'yoast-local-seo' ) . $business_types_help->get_button_html() ), $flattened_business_types, '', [ 'disabled' => $should_disable_form ] );
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
 			echo $business_types_help->get_panel_html();
 			echo '</div> <!-- .wpseo-local-help-wrapper -->';
 
@@ -272,6 +321,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 			);
 
 			if ( empty( trim( $this->options['location_zipcode'] ) ) || empty( trim( $this->options['location_country'] ) ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
 				echo WPSEO_Local_Admin::get_missing_zipcode_country_alert();
 			}
 			WPSEO_Local_Admin_Wrappers::textinput(
@@ -291,6 +341,18 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 				[ 'disabled' => $should_not_use_address_fields ]
 			);
 
+			WPSEO_Local_Admin_Wrappers::textinput(
+				'global_location_number',
+				apply_filters( 'yoast-local-seo-admin-label-global-location-number', __( 'Global Location Number', 'yoast-local-seo' ) . $global_location_number_help->get_button_html() ),
+				'',
+				[
+					'class'    => 'wpseo_global_location_number_input',
+					'disabled' => $should_not_use_address_fields,
+				]
+			);
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
+			echo $global_location_number_help->get_panel_html();
+
 			// Lat/Lng section.
 			WPSEO_Local_Admin_Page::section_before( 'location-coordinates-settings-wrapper', 'clear: both;' );
 			if ( $this->api_key !== '' && empty( $this->options['location_coords_lat'] ) && empty( $this->options['location_coords_long'] ) ) {
@@ -302,6 +364,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 				/* translators: 1: HTML <a> open tag; 2: <a> close tag; 3: HTML <a> open tag; 4: <a> close tag. */
 					esc_html__( 'To determine the exact location of your business, search engines need to know its latitude and longitude coordinates. You can %1$smanually enter%2$s these coordinates below. If you\'ve entered a %3$sGoogle Maps API Key%4$s the coordinates will automatically be calculated.', 'yoast-local-seo' ),
 					'<a href="https://support.google.com/maps/answer/18539?co=GENIE.Platform%3DDesktop&hl=en" target="_blank">',
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
 					WPSEO_Admin_Utils::get_new_tab_message() . '</a>',
 					'<a href="' . esc_url( admin_url( 'admin.php?page=wpseo_local#top#api_keys' ) ) . '" data-action="link-to-tab" data-tab-id="api_keys">',
 					'</a>'
@@ -359,6 +422,26 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 				'',
 				[ 'disabled' => $should_disable_form ]
 			);
+
+			WPSEO_Local_Admin_Wrappers::textinput(
+				'location_contact_phone',
+				apply_filters( 'yoast-local-seo-admin-label-business-contact-phone', __( 'Contact phone', 'yoast-local-seo' ) ) . $contact_phone_help->get_button_html(),
+				'',
+				[ 'disabled' => $should_disable_form ]
+			);
+
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
+			echo $contact_phone_help->get_panel_html();
+			WPSEO_Local_Admin_Wrappers::textinput(
+				'location_contact_email',
+				apply_filters( 'yoast-local-seo-admin-label-business-contact-email', __( 'Contact email', 'yoast-local-seo' ) ) . $contact_email_help->get_button_html(),
+				'',
+				[ 'disabled' => $should_disable_form ]
+			);
+
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
+			echo $contact_email_help->get_panel_html();
+
 			WPSEO_Local_Admin_Wrappers::textinput(
 				'location_url',
 				apply_filters( 'yoast-local-seo-admin-label-business-url', __( 'URL', 'yoast-local-seo' ) ),
@@ -389,6 +472,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 			echo '<div class="wpseo-local-help-wrapper">';
 			WPSEO_Local_Admin_Wrappers::select( 'location_price_range', apply_filters( 'yoast-local-seo-admin-label-business-price-range', __( 'Price indication', 'yoast-local-seo' ) . $price_indication_help->get_button_html() ), $this->get_pricerange_array(), '', [ 'disabled' => $should_disable_form ] );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
 			echo $price_indication_help->get_panel_html();
 			echo '</div>';
 
@@ -397,6 +481,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 			echo '<div class="wpseo-local-help-wrapper">';
 			WPSEO_Local_Admin_Wrappers::textinput( 'location_area_served', apply_filters( 'yoast-local-seo-admin-label-business-area-served', __( 'Area served', 'yoast-local-seo' ) . $area_served_help->get_button_html() ), '', [ 'disabled' => $should_disable_form ] );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
 			echo $area_served_help->get_panel_html();
 			echo '</div>';
 
@@ -524,7 +609,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 		/**
 		 * Retrieves array of the 5 pricerange steps.
 		 *
-		 * @return array Array of pricerange.
+		 * @return array<string> Array of pricerange.
 		 */
 		private function get_pricerange_array() {
 			return [
@@ -539,6 +624,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 
 		/**
 		 * Show the dropdown to select an address format.
+		 *
+		 * @return void
 		 */
 		public function address_format() {
 			WPSEO_Local_Admin_Page::section_before( 'wpseo-local-address-format' );
@@ -559,13 +646,15 @@ if ( ! class_exists( 'WPSEO_Local_Admin_General_Settings' ) ) {
 				$select_options
 			);
 
-			/* translators: %s extends to <a href="mailto:pluginsupport@yoast.com">pluginsupport@yoast.com</a> */
-			echo '<p style="border:none;">' . sprintf( esc_html__( 'A lot of countries have their own address format. Please choose one that matches yours. If you have something completely different, please let us know via %s.', 'yoast-local-seo' ), '<a href="mailto:pluginsupport@yoast.com">pluginsupport@yoast.com</a>' ) . '</p>';
+			/* translators: %s extends to <a href="mailto:support@yoast.com">support@yoast.com</a> */
+			echo '<p style="border:none;">' . sprintf( esc_html__( 'A lot of countries have their own address format. Please choose one that matches yours. If you have something completely different, please let us know via %s.', 'yoast-local-seo' ), '<a href="mailto:support@yoast.com">support@yoast.com</a>' ) . '</p>';
 			WPSEO_Local_Admin_Page::section_after(); // End wpseo-local-address-format section.
 		}
 
 		/**
 		 * Add a hidden input field to save the local pickup setting in.
+		 *
+		 * @return void
 		 */
 		public function woocommerce_setting() {
 			WPSEO_Local_Admin_Wrappers::hidden( 'woocommerce_local_pickup_setting' );

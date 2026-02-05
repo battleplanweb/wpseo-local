@@ -53,6 +53,8 @@ class Import extends Import_Export {
 
 	/**
 	 * Register hooks and filters
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		parent::register_hooks();
@@ -62,6 +64,8 @@ class Import extends Import_Export {
 
 	/**
 	 * Handle the import of the uploaded .csv file.
+	 *
+	 * @return void
 	 */
 	public function handle_csv_import() {
 		if ( ! isset( $_POST['csv-import'] )
@@ -87,9 +91,8 @@ class Import extends Import_Export {
 		$count = 0;
 
 		$file_name     = \sanitize_file_name( \wp_unslash( $_FILES['wpseo']['name']['csvuploadlocations'] ) );
-		$tmp_file_name = \wp_unslash( $_FILES['wpseo']['tmp_name']['csvuploadlocations'] );
-
-		$csv_path = $this->wpseo_upload_dir . \basename( $file_name );
+		$tmp_file_name = \sanitize_text_field( \wp_unslash( $_FILES['wpseo']['tmp_name']['csvuploadlocations'] ) );
+		$csv_path      = $this->wpseo_upload_dir . \basename( $file_name );
 
 		if ( ! empty( $_FILES['wpseo'] ) && ! \move_uploaded_file( $tmp_file_name, $csv_path ) ) {
 			$this->messages[] = [
@@ -198,8 +201,8 @@ class Import extends Import_Export {
 			// Create standard post data.
 			$current_post                 = [];
 			$current_post['ID']           = '';
-			$current_post['post_title']   = isset( $location['name'] ) ? $location['name'] : '';
-			$current_post['post_content'] = isset( $location['description'] ) ? $location['description'] : '';
+			$current_post['post_title']   = ( $location['name'] ?? '' );
+			$current_post['post_content'] = ( $location['description'] ?? '' );
 			$current_post['post_status']  = 'publish';
 			$current_post['post_type']    = $this->post_type->get_post_type();
 
@@ -218,6 +221,8 @@ class Import extends Import_Export {
 					\add_post_meta( $post_id, '_wpseo_business_phone', isset( $location['phone'] ) ? \sanitize_text_field( $location['phone'] ) : '', true );
 					\add_post_meta( $post_id, '_wpseo_business_fax', isset( $location['fax'] ) ? \sanitize_text_field( $location['fax'] ) : '', true );
 					\add_post_meta( $post_id, '_wpseo_business_email', isset( $location['email'] ) ? \sanitize_email( $location['email'] ) : '', true );
+					\add_post_meta( $post_id, '_wpseo_business_contact_email', isset( $location['contact_email'] ) ? \sanitize_email( \wp_unslash( $location['contact_email'] ) ) : '', true );
+					\add_post_meta( $post_id, '_wpseo_business_contact_phone', isset( $location['contact_phone'] ) ? \sanitize_text_field( \wp_unslash( $location['contact_phone'] ) ) : '', true );
 					\add_post_meta( $post_id, '_wpseo_business_vat_id', isset( $location['vat_id'] ) ? \sanitize_text_field( $location['vat_id'] ) : '', true );
 					\add_post_meta( $post_id, '_wpseo_business_tax_id', isset( $location['tax_id'] ) ? \sanitize_text_field( $location['tax_id'] ) : '', true );
 					\add_post_meta( $post_id, '_wpseo_business_coc_id', isset( $location['coc_id'] ) ? \sanitize_text_field( $location['coc_id'] ) : '', true );
@@ -301,8 +306,8 @@ class Import extends Import_Export {
 											'type'    => 'error',
 											'content' => \sprintf(
 												/* translators: %s extends to Location opening hours from per week day */
-												\__( '%s is not a valid time notation', 'yoast-local-seo' ),
-												$location[ 'opening_hours_' . $key . '_from' ]
+												\esc_html__( '%s is not a valid time notation', 'yoast-local-seo' ),
+												\esc_html( ( $location[ 'opening_hours_' . $key . '_from' ] ?? '' ) )
 											),
 										];
 									}
@@ -311,8 +316,8 @@ class Import extends Import_Export {
 											'type'    => 'error',
 											'content' => \sprintf(
 												/* translators: %s extends to Location opening hours to per week day */
-												\__( '%s is not a valid time notation', 'yoast-local-seo' ),
-												$location[ 'opening_hours_' . $key . '_to' ]
+												\esc_html__( '%s is not a valid time notation', 'yoast-local-seo' ),
+												\esc_html( ( $location[ 'opening_hours_' . $key . '_to' ] ?? '' ) )
 											),
 										];
 									}
@@ -344,8 +349,8 @@ class Import extends Import_Export {
 													'type'    => 'error',
 													'content' => \sprintf(
 														/* translators: %s extends to Location second from opening hours per week day */
-														\__( '%s is not a valid time notation', 'yoast-local-seo' ),
-														$location[ 'opening_hours_' . $key . '_second_from' ]
+														\esc_html__( '%s is not a valid time notation', 'yoast-local-seo' ),
+														\esc_html( ( $location[ 'opening_hours_' . $key . '_second_from' ] ?? '' ) )
 													),
 												];
 											}
@@ -354,8 +359,8 @@ class Import extends Import_Export {
 													'type'    => 'error',
 													'content' => \sprintf(
 														/* translators: %s extends to Location second to opening hours per week day */
-														\__( '%s is not a valid time notation', 'yoast-local-seo' ),
-														$location[ 'opening_hours_' . $key . '_second_to' ]
+														\esc_html__( '%s is not a valid time notation', 'yoast-local-seo' ),
+														\esc_html( ( $location[ 'opening_hours_' . $key . '_second_to' ] ?? '' ) )
 													),
 												];
 											}
@@ -383,8 +388,8 @@ class Import extends Import_Export {
 				'type'    => 'success',
 				'content' => \sprintf(
 					/* translators: 1: nr of locations found; 2: link to post type overview; 3: link close tag. */
-					\__( '%1$d locations found and successfully imported %2$shere%3$s', 'yoast-local-seo' ),
-					$count,
+					\esc_html__( '%1$d locations found and successfully imported %2$shere%3$s', 'yoast-local-seo' ),
+					\esc_html( $count ),
 					'<a href="' . \esc_url( \get_admin_url( null, 'edit.php?post_type=' . $this->post_type->get_post_type() ) ) . '">',
 					'</a>'
 				),
@@ -394,6 +399,8 @@ class Import extends Import_Export {
 
 	/**
 	 * Builds the HTML for the import form.
+	 *
+	 * @return void
 	 */
 	public function import_html() {
 		echo '<h2>' . \esc_html__( 'Import', 'yoast-local-seo' ) . '</h2>';

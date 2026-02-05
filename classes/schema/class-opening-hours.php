@@ -73,19 +73,27 @@ class WPSEO_Local_Opening_Hours {
 	/**
 	 * Function to determine whether a location is open 24/7 or not.
 	 *
-	 * @return bool False when location is not open 24/7, true when it is.
+	 * @return bool False when a location is not open 24/7, true when it is.
 	 */
 	private function is_open_247() {
-		$is_overridden = get_post_meta( $this->location_id, '_wpseo_open_247_override', true ) === 'on';
-		if ( wpseo_has_multiple_locations() && $this->location_id && $is_overridden ) {
-			$open_247 = get_post_meta( $this->location_id, '_wpseo_open_247', true );
+		// Global (settings) fallback.
+		$open_247_option = ( ( $this->options['open_247'] ?? '' ) === 'on' );
 
-			return ( $open_247 === 'on' );
+		// Without a location context or when multiple locations option is disabled, return the global option.
+		if ( ! $this->location_id || ! wpseo_has_multiple_locations() ) {
+			return $open_247_option;
 		}
 
-		$open_247 = isset( $this->options['open_247'] ) ? $this->options['open_247'] : '';
+		// Location-specific override.
+		$is_overridden = get_post_meta( $this->location_id, '_wpseo_open_247_override', true ) === 'on';
+		// Check if multiple locations share opening hours.
+		$locations_sharing_opening_hours = wpseo_may_use_multiple_locations_shared_opening_hours();
+		// Return the location-specific setting when location sharing is disabled or when overridden.
+		if ( ! $locations_sharing_opening_hours || $is_overridden ) {
+			return ( get_post_meta( $this->location_id, '_wpseo_open_247', true ) === 'on' );
+		}
 
-		return ( $open_247 === 'on' );
+		return $open_247_option;
 	}
 
 	/**

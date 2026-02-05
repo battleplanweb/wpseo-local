@@ -34,7 +34,7 @@ abstract class Abstract_Geo_Tag_Presenter extends Abstract_Indexable_Tag_Present
 			\_deprecated_argument(
 				__FUNCTION__,
 				'14.0',
-				\__( 'The Locations_Repository argument has been deprecated, please provide a location object instead.', 'yoast-local-seo' )
+				\esc_html__( 'The Locations_Repository argument has been deprecated, please provide a location object instead.', 'yoast-local-seo' )
 			);
 			$this->location = $location->for_current_page();
 		}

@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$formatted_destination    = isset( $formatted_destination ) ? $formatted_destination : WC()->countries->get_formatted_address( $package['destination'], ', ' );
+$formatted_destination    = ( $formatted_destination ?? WC()->countries->get_formatted_address( $package['destination'], ', ' ) );
 $has_calculated_shipping  = ! empty( $has_calculated_shipping );
 $show_shipping_calculator = ! empty( $show_shipping_calculator );
 $calculator_text          = '';
@@ -69,23 +69,19 @@ $radiobuttons             = [];
 						$yoast_seo_subset_ended   = false;
 					}
 				}
-				else {
-
-					// If this is not a local pickup store we may need to end our subset-loop.
-					if ( $yoast_seo_subset_started && ( ! $yoast_seo_subset_ended ) ) {
-
-						// Close the radio-list or the checkbox.
-						if ( $settings['checkout_mode'] !== 'radio' ) {
-							echo '</select><!-- .shipping_method_subset -->';
-						}
-
-						// Close the paren toggler.
-						echo '</li><!-- .parent-toggler -->';
-
-						// Flag that we have ended our subset, and we have not started a new one.
-						$yoast_seo_subset_started = false;
-						$yoast_seo_subset_ended   = true;
+				// If this is not a local pickup store we may need to end our subset-loop.
+				elseif ( $yoast_seo_subset_started && ( ! $yoast_seo_subset_ended ) ) {
+					// Close the radio-list or the checkbox.
+					if ( $settings['checkout_mode'] !== 'radio' ) {
+						echo '</select><!-- .shipping_method_subset -->';
 					}
+
+					// Close the paren toggler.
+					echo '</li><!-- .parent-toggler -->';
+
+					// Flag that we have ended our subset, and we have not started a new one.
+					$yoast_seo_subset_started = false;
+					$yoast_seo_subset_ended   = true;
 				}
 
 				// Show a Local pickup store in a different way then other shipping methods.
@@ -94,12 +90,12 @@ $radiobuttons             = [];
 					// Output radio with some extra address data.
 					$radiobuttons[] = sprintf(
 						'<li><input type="radio" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d_%2$s" value="%3$s" class="shipping_method" %4$s /><label for="shipping_method_%1$d_%2$s">%5$s <small class="shipping_method_address">%6$s</small></label></li>',
-						$index,
-						sanitize_title( $method->id ),
+						esc_attr( $index ),
+						esc_attr( sanitize_title( $method->id ) ),
 						esc_attr( $method->id ),
 						checked( $method->id, $chosen_method, false ),
-						wc_cart_totals_shipping_method_label( $method ),
-						yoast_seo_local_woocommerce_get_address_for_method_id( $method->id )
+						wc_cart_totals_shipping_method_label( $method ), // phpcs:ignore WordPress.Security.EscapeOutput -- WooCommerce function.
+						esc_html( yoast_seo_local_woocommerce_get_address_for_method_id( $method->id ) )
 					);
 
 					// Or do we desire options inside a dropdown?
@@ -108,12 +104,12 @@ $radiobuttons             = [];
 						// Output option with some extra address data.
 						printf(
 							'<option value="%3$s" class="shipping_method_option" %4$s >%5$s - %6$s</option>',
-							$index,
-							sanitize_title( $method->id ),
+							esc_attr( $index ),
+							esc_attr( sanitize_title( $method->id ) ),
 							esc_attr( $method->id ),
 							selected( $method->id, $chosen_method, false ),
-							wc_cart_totals_shipping_method_label( $method ),
-							yoast_seo_local_woocommerce_get_address_for_method_id( $method->id )
+							wc_cart_totals_shipping_method_label( $method ), // phpcs:ignore WordPress.Security.EscapeOutput -- WooCommerce function.
+							esc_html( yoast_seo_local_woocommerce_get_address_for_method_id( $method->id ) )
 						);
 					}
 
@@ -124,11 +120,11 @@ $radiobuttons             = [];
 					// Regular radio button.
 					printf(
 						'<li><input type="radio" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d_%2$s" value="%3$s" class="shipping_method" %4$s /><label for="shipping_method_%1$d_%2$s">%5$s</label></li>',
-						$index,
-						sanitize_title( $method->id ),
+						esc_attr( $index ),
+						esc_attr( sanitize_title( $method->id ) ),
 						esc_attr( $method->id ),
 						checked( $method->id, $chosen_method, false ),
-						wc_cart_totals_shipping_method_label( $method )
+						wc_cart_totals_shipping_method_label( $method ) // phpcs:ignore WordPress.Security.EscapeOutput -- WooCommerce function.
 					);
 				}
 
@@ -152,7 +148,7 @@ $radiobuttons             = [];
 				if ( ! empty( $radiobuttons ) ) {
 					echo '<ul class="shipping_method_subset" ' . ( ( $settings['checkout_mode'] !== 'radio' ) ? 'style="display:none;"' : '' ) . '>';
 					foreach ( $radiobuttons as $radiobutton ) {
-						echo $radiobutton;
+						echo $radiobutton; // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: already escaped.
 					}
 					echo '</div>';
 				}
@@ -188,10 +184,21 @@ $radiobuttons             = [];
 				<?php
 				$method = current( $available_methods );
 				if ( $method->method_id === 'yoast_wcseo_local_pickup' ) {
-					printf( '%3$s <small class="shipping_method_address">%4$s</small> <input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d" value="%2$s" class="shipping_method" />', $index, esc_attr( $method->id ), wc_cart_totals_shipping_method_label( $method ), yoast_seo_local_woocommerce_get_address_for_method_id( $method->id ) );
+					printf(
+						'%3$s <small class="shipping_method_address">%4$s</small> <input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d" value="%2$s" class="shipping_method" />',
+						esc_attr( $index ),
+						esc_attr( $method->id ),
+						wc_cart_totals_shipping_method_label( $method ), // phpcs:ignore WordPress.Security.EscapeOutput -- WooCommerce function.
+						esc_html( yoast_seo_local_woocommerce_get_address_for_method_id( $method->id ) )
+					);
 				}
 				else {
-					printf( '%3$s <input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d" value="%2$s" class="shipping_method" />', $index, esc_attr( $method->id ), wc_cart_totals_shipping_method_label( $method ) );
+					printf(
+						'%3$s <input type="hidden" name="shipping_method[%1$d]" data-index="%1$d" id="shipping_method_%1$d" value="%2$s" class="shipping_method" />',
+						esc_attr( $index ),
+						esc_attr( $method->id ),
+						wc_cart_totals_shipping_method_label( $method ) // phpcs:ignore WordPress.Security.EscapeOutput -- WooCommerce function.
+					);
 				}
 				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
 				do_action( 'woocommerce_after_shipping_rate', $method, $index );

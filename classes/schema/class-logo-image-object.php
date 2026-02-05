@@ -4,6 +4,7 @@
  */
 
 use Yoast\WP\Local\Builders\Locations_Repository_Builder;
+use Yoast\WP\SEO\Context\Meta_Tags_Context;
 use Yoast\WP\SEO\Generators\Schema\Abstract_Schema_Piece;
 
 /**
@@ -11,8 +12,8 @@ use Yoast\WP\SEO\Generators\Schema\Abstract_Schema_Piece;
  *
  * Manages the Schema for a Logo Image Object.
  *
- * @property WPSEO_Schema_Context $context A value object with context variables.
- * @property array                $options Local SEO options.
+ * @property Meta_Tags_Context $context A value object with context variables.
+ * @property array             $options Local SEO options.
  */
 class WPSEO_Local_Logo_Image_Object extends Abstract_Schema_Piece {
 
@@ -26,16 +27,16 @@ class WPSEO_Local_Logo_Image_Object extends Abstract_Schema_Piece {
 	/**
 	 * A value object with context variables.
 	 *
-	 * @var WPSEO_Schema_Context
+	 * @var Meta_Tags_Context
 	 */
 	public $context;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param WPSEO_Schema_Context $context A value object with context variables.
+	 * @param Meta_Tags_Context $context A value object with context variables.
 	 */
-	public function __construct( WPSEO_Schema_Context $context ) {
+	public function __construct( Meta_Tags_Context $context ) {
 		$this->context = $context;
 		$this->options = get_option( 'wpseo_local' );
 	}
@@ -52,7 +53,7 @@ class WPSEO_Local_Logo_Image_Object extends Abstract_Schema_Piece {
 	/**
 	 * Generates JSON+LD output for locations.
 	 *
-	 * @return false|array Array with Image Object schema data. Returns false no valid location is found.
+	 * @return array|false Array with Image Object schema data. Returns false no valid location is found.
 	 */
 	public function generate() {
 

@@ -6,16 +6,6 @@
  * @since   12.3
  */
 
-if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
-	exit();
-}
-
-if ( ! class_exists( 'WPSEO_Option' ) ) {
-	return;
-}
-
 /**
  * Overall option management class for Yoast SEO: Local.
  *
@@ -56,6 +46,8 @@ class WPSEO_Local_Option extends WPSEO_Option {
 
 	/**
 	 * Set Yoast SEO: Local default option values.
+	 *
+	 * @return void
 	 */
 	private function set_defaults() {
 		$this->defaults = [
@@ -72,10 +64,13 @@ class WPSEO_Local_Option extends WPSEO_Option {
 			'location_state'                             => '',
 			'location_zipcode'                           => '',
 			'location_country'                           => '',
+			'global_location_number'                     => '',
 			'location_phone'                             => '',
 			'location_phone_2nd'                         => '',
 			'location_fax'                               => '',
 			'location_email'                             => '',
+			'location_contact_email'                     => '',
+			'location_contact_phone'                     => '',
 			'location_url'                               => ( class_exists( 'WPSEO_Sitemaps_Router' ) ? WPSEO_Sitemaps_Router::get_base_url( '' ) : '' ),
 			'location_vat_id'                            => '',
 			'location_tax_id'                            => '',
@@ -170,9 +165,11 @@ class WPSEO_Local_Option extends WPSEO_Option {
 				case 'location_state':
 				case 'location_zipcode':
 				case 'location_country':
+				case 'global_location_number':
 				case 'location_phone':
 				case 'location_phone_2nd':
 				case 'location_fax':
+				case 'location_contact_phone':
 				case 'location_vat_id':
 				case 'location_tax_id':
 				case 'location_coc_id':
@@ -240,6 +237,7 @@ class WPSEO_Local_Option extends WPSEO_Option {
 					}
 					break;
 				/* E-mail address */
+				case 'location_contact_email':
 				case 'location_email':
 					if ( isset( $dirty[ $key ] ) && $dirty[ $key ] !== '' ) {
 						$clean[ $key ] = sanitize_email( $dirty[ $key ] );
@@ -285,7 +283,13 @@ class WPSEO_Local_Option extends WPSEO_Option {
 				case 'location_coords_lat':
 				case 'location_coords_long':
 					if ( isset( $dirty[ $key ] ) && $dirty[ $key ] !== '' ) {
-						$clean[ $key ] = filter_var( $dirty[ $key ], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION );
+						$value = $dirty[ $key ];
+						// Remove all characters except digits, minus, plus, and point.
+						$clean_value = preg_replace( '/[^0-9\.\-\+]/', '', $value );
+
+						if ( is_numeric( $clean_value ) ) {
+							$clean[ $key ] = $clean_value;
+						}
 					}
 					break;
 				/* Bool values */

@@ -35,7 +35,7 @@ class WPSEO_Storelocator_Form extends WP_Widget {
 	 * @return void
 	 */
 	public function widget( $args, $instance ) {
-		$title        = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
+		$title        = apply_filters( 'widget_title', ( $instance['title'] ?? '' ) );
 		$search_label = ( ! empty( $instance['search_label'] ) ) ? $instance['search_label'] : apply_filters( 'yoast-local-seo-search-label', __( 'Enter your postal code, city and / or state', 'yoast-local-seo' ) );
 		$radius       = ( ! empty( $instance['radius'] ) ) ? $instance['radius'] : 10;
 		$page_id      = ( ! empty( $instance['page_id'] ) ) ? (int) $instance['page_id'] : 0;
@@ -45,11 +45,11 @@ class WPSEO_Storelocator_Form extends WP_Widget {
 		}
 
 		if ( isset( $args['before_widget'] ) ) {
-			echo $args['before_widget'];
+			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		if ( ! empty( $title ) ) {
-			echo $args['before_title'], esc_html( $title ), $args['after_title'];
+			echo $args['before_title'], esc_html( $title ), $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$asset_manager = new WPSEO_Local_Admin_Assets();
@@ -93,7 +93,7 @@ class WPSEO_Storelocator_Form extends WP_Widget {
 		);
 
 		if ( isset( $args['after_widget'] ) ) {
-			echo $args['after_widget'];
+			echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
@@ -193,6 +193,7 @@ class WPSEO_Storelocator_Form extends WP_Widget {
 			'selected'         => (int) $page_id,
 			'show_option_none' => esc_html__( 'Select a page', 'yoast-local-seo' ),
 		];
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped.
 		wp_dropdown_pages( $args );
 
 		echo '

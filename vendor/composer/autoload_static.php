@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitde4ab76c11468ab28e4704f189890013
+class ComposerStaticInitacdb550ddcbed498a5bff3609373635a
 {
     public static $files = array (
         '3c8b39556c5001c1c8eca33d0e219ceb' => __DIR__ . '/../..' . '/includes/ajax-functions.php',
@@ -28,13 +28,14 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Installers\\AglInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AglInstaller.php',
-        'Composer\\Installers\\AimeosInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AimeosInstaller.php',
+        'Composer\\Installers\\AkauntingInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AkauntingInstaller.php',
         'Composer\\Installers\\AnnotateCmsInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AnnotateCmsInstaller.php',
         'Composer\\Installers\\AsgardInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AsgardInstaller.php',
         'Composer\\Installers\\AttogramInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AttogramInstaller.php',
         'Composer\\Installers\\BaseInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/BaseInstaller.php',
         'Composer\\Installers\\BitrixInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/BitrixInstaller.php',
         'Composer\\Installers\\BonefishInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/BonefishInstaller.php',
+        'Composer\\Installers\\BotbleInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/BotbleInstaller.php',
         'Composer\\Installers\\CakePHPInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/CakePHPInstaller.php',
         'Composer\\Installers\\ChefInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ChefInstaller.php',
         'Composer\\Installers\\CiviCrmInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/CiviCrmInstaller.php',
@@ -42,7 +43,7 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Composer\\Installers\\CockpitInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/CockpitInstaller.php',
         'Composer\\Installers\\CodeIgniterInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/CodeIgniterInstaller.php',
         'Composer\\Installers\\Concrete5Installer' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/Concrete5Installer.php',
-        'Composer\\Installers\\CraftInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/CraftInstaller.php',
+        'Composer\\Installers\\ConcreteCMSInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ConcreteCMSInstaller.php',
         'Composer\\Installers\\CroogoInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/CroogoInstaller.php',
         'Composer\\Installers\\DecibelInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/DecibelInstaller.php',
         'Composer\\Installers\\DframeInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/DframeInstaller.php',
@@ -53,6 +54,7 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Composer\\Installers\\EliasisInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/EliasisInstaller.php',
         'Composer\\Installers\\ExpressionEngineInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ExpressionEngineInstaller.php',
         'Composer\\Installers\\EzPlatformInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/EzPlatformInstaller.php',
+        'Composer\\Installers\\ForkCMSInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ForkCMSInstaller.php',
         'Composer\\Installers\\FuelInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/FuelInstaller.php',
         'Composer\\Installers\\FuelphpInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/FuelphpInstaller.php',
         'Composer\\Installers\\GravInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/GravInstaller.php',
@@ -60,9 +62,7 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Composer\\Installers\\ImageCMSInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ImageCMSInstaller.php',
         'Composer\\Installers\\Installer' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/Installer.php',
         'Composer\\Installers\\ItopInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ItopInstaller.php',
-        'Composer\\Installers\\JoomlaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/JoomlaInstaller.php',
         'Composer\\Installers\\KanboardInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/KanboardInstaller.php',
-        'Composer\\Installers\\KirbyInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/KirbyInstaller.php',
         'Composer\\Installers\\KnownInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/KnownInstaller.php',
         'Composer\\Installers\\KodiCMSInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/KodiCMSInstaller.php',
         'Composer\\Installers\\KohanaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/KohanaInstaller.php',
@@ -76,6 +76,7 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Composer\\Installers\\MajimaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MajimaInstaller.php',
         'Composer\\Installers\\MakoInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MakoInstaller.php',
         'Composer\\Installers\\MantisBTInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MantisBTInstaller.php',
+        'Composer\\Installers\\MatomoInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MatomoInstaller.php',
         'Composer\\Installers\\MauticInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MauticInstaller.php',
         'Composer\\Installers\\MayaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MayaInstaller.php',
         'Composer\\Installers\\MediaWikiInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/MediaWikiInstaller.php',
@@ -91,7 +92,6 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Composer\\Installers\\PantheonInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PantheonInstaller.php',
         'Composer\\Installers\\PhiftyInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PhiftyInstaller.php',
         'Composer\\Installers\\PhpBBInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PhpBBInstaller.php',
-        'Composer\\Installers\\PimcoreInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PimcoreInstaller.php',
         'Composer\\Installers\\PiwikInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PiwikInstaller.php',
         'Composer\\Installers\\PlentymarketsInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/PlentymarketsInstaller.php',
         'Composer\\Installers\\Plugin' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/Plugin.php',
@@ -112,9 +112,6 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Composer\\Installers\\StarbugInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/StarbugInstaller.php',
         'Composer\\Installers\\SyDESInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/SyDESInstaller.php',
         'Composer\\Installers\\SyliusInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/SyliusInstaller.php',
-        'Composer\\Installers\\Symfony1Installer' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/Symfony1Installer.php',
-        'Composer\\Installers\\TYPO3CmsInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/TYPO3CmsInstaller.php',
-        'Composer\\Installers\\TYPO3FlowInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/TYPO3FlowInstaller.php',
         'Composer\\Installers\\TaoInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/TaoInstaller.php',
         'Composer\\Installers\\TastyIgniterInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/TastyIgniterInstaller.php',
         'Composer\\Installers\\TheliaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/TheliaInstaller.php',
@@ -129,8 +126,8 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Composer\\Installers\\YawikInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/YawikInstaller.php',
         'Composer\\Installers\\ZendInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ZendInstaller.php',
         'Composer\\Installers\\ZikulaInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/ZikulaInstaller.php',
-        'WC_Email_ReadyForPickup_Order' => __DIR__ . '/../..' . '/woocommerce/emails/class-wc-email-readyforpickup-order.php',
-        'WC_Email_Transporting_Order' => __DIR__ . '/../..' . '/woocommerce/emails/class-wc-email-transporting.php',
+        'WC_Email_ReadyForPickup_Order' => __DIR__ . '/../..' . '/deprecated/woocommerce/emails/class-wc-email-readyforpickup-order.php',
+        'WC_Email_Transporting_Order' => __DIR__ . '/../..' . '/deprecated/woocommerce/emails/class-wc-email-transporting.php',
         'WPSEO_Local_Admin' => __DIR__ . '/../..' . '/classes/admin/class-admin.php',
         'WPSEO_Local_Admin_API_Keys' => __DIR__ . '/../..' . '/classes/admin/class-api-settings.php',
         'WPSEO_Local_Admin_Advanced_Settings' => __DIR__ . '/../..' . '/classes/admin/class-advanced-settings.php',
@@ -140,7 +137,7 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'WPSEO_Local_Admin_Map_Settings' => __DIR__ . '/../..' . '/classes/admin/class-map-settings.php',
         'WPSEO_Local_Admin_Opening_Hours' => __DIR__ . '/../..' . '/classes/admin/class-opening-hours.php',
         'WPSEO_Local_Admin_Page' => __DIR__ . '/../..' . '/classes/admin/class-admin-page.php',
-        'WPSEO_Local_Admin_Woocommerce_Settings' => __DIR__ . '/../..' . '/woocommerce/admin/class-woocommerce-settings.php',
+        'WPSEO_Local_Admin_Woocommerce_Settings' => __DIR__ . '/../..' . '/deprecated/woocommerce/admin/class-woocommerce-settings.php',
         'WPSEO_Local_Admin_Wrappers' => __DIR__ . '/../..' . '/classes/admin/class-admin-wrappers.php',
         'WPSEO_Local_Blocks' => __DIR__ . '/../..' . '/classes/class-blocks.php',
         'WPSEO_Local_Core' => __DIR__ . '/../..' . '/classes/class-core.php',
@@ -162,8 +159,8 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'WPSEO_Local_Search' => __DIR__ . '/../..' . '/classes/class-search.php',
         'WPSEO_Local_Storelocator' => __DIR__ . '/../..' . '/classes/class-storelocator.php',
         'WPSEO_Local_Taxonomy' => __DIR__ . '/../..' . '/classes/class-taxonomy.php',
-        'WPSEO_Local_WooCommerce' => __DIR__ . '/../..' . '/classes/class-woocommerce.php',
-        'WPSEO_Local_WooCommerce_Email' => __DIR__ . '/../..' . '/woocommerce/emails/abstract-wc-email.php',
+        'WPSEO_Local_WooCommerce' => __DIR__ . '/../..' . '/deprecated/classes/class-woocommerce.php',
+        'WPSEO_Local_WooCommerce_Email' => __DIR__ . '/../..' . '/deprecated/woocommerce/emails/abstract-wc-email.php',
         'WPSEO_Show_Address' => __DIR__ . '/../..' . '/widgets/widget-show-address.php',
         'WPSEO_Show_Locations_By_Category' => __DIR__ . '/../..' . '/widgets/widget-show-locations-by-category.php',
         'WPSEO_Show_Map' => __DIR__ . '/../..' . '/widgets/widget-show-map.php',
@@ -174,9 +171,13 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Yoast\\WP\\Local\\Conditionals\\Admin_Conditional' => __DIR__ . '/../..' . '/src/conditionals/admin-conditional.php',
         'Yoast\\WP\\Local\\Conditionals\\Multiple_Locations_Conditional' => __DIR__ . '/../..' . '/src/conditionals/multiple-locations-conditional.php',
         'Yoast\\WP\\Local\\Conditionals\\No_Conditionals' => __DIR__ . '/../..' . '/src/conditionals/no-conditionals-trait.php',
+        'Yoast\\WP\\Local\\Conditionals\\WooCommerce_Conditional' => __DIR__ . '/../..' . '/src/conditionals/woocommerce-conditional.php',
         'Yoast\\WP\\Local\\Formatters\\Address_Formatter' => __DIR__ . '/../..' . '/src/formatters/address-formatter.php',
         'Yoast\\WP\\Local\\Integrations\\Front_End_Integration' => __DIR__ . '/../..' . '/src/integrations/front-end-integration.php',
-        'Yoast\\WP\\Local\\Integrations\\Local_Pickup_Notification' => __DIR__ . '/../..' . '/src/integrations/local-pickup-notification.php',
+        'Yoast\\WP\\Local\\Integrations\\Local_Pickup_Notification' => __DIR__ . '/../..' . '/deprecated/src/integrations/local-pickup-notification.php',
+        'Yoast\\WP\\Local\\Integrations\\Multiple_Locations_Watcher' => __DIR__ . '/../..' . '/src/integrations/multiple-locations-watcher.php',
+        'Yoast\\WP\\Local\\Integrations\\TranslationsPress' => __DIR__ . '/../..' . '/src/integrations/translationspress.php',
+        'Yoast\\WP\\Local\\Integrations\\Woocommerce_Integration' => __DIR__ . '/../..' . '/src/integrations/woocommerce-integration.php',
         'Yoast\\WP\\Local\\Main' => __DIR__ . '/../..' . '/src/main.php',
         'Yoast\\WP\\Local\\PostType\\PostType' => __DIR__ . '/../..' . '/src/posttype/register-post-type.php',
         'Yoast\\WP\\Local\\Presenters\\Geo\\Abstract_Geo_Tag_Presenter' => __DIR__ . '/../..' . '/src/presenters/geo/abstract-geo-tag-presenter.php',
@@ -194,12 +195,12 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
         'Yoast\\WP\\Local\\Tools\\Import_Export_Admin' => __DIR__ . '/../..' . '/src/tools/import-export-admin.php',
         'Yoast\\WP\\Local\\WordPress\\Wrapper' => __DIR__ . '/../..' . '/src/wordpress/wrapper.php',
         'Yoast\\WP\\SEO\\Local\\Generated\\Cached_Container' => __DIR__ . '/../..' . '/src/generated/container.php',
-        'Yoast_WCSEO_Local_Admin_Columns' => __DIR__ . '/../..' . '/woocommerce/admin/class-admin-columns.php',
-        'Yoast_WCSEO_Local_Core' => __DIR__ . '/../..' . '/woocommerce/class-wc-core.php',
-        'Yoast_WCSEO_Local_Emails' => __DIR__ . '/../..' . '/woocommerce/emails/class-wc-emails.php',
-        'Yoast_WCSEO_Local_Post_Types' => __DIR__ . '/../..' . '/woocommerce/includes/class-wc-post-types.php',
-        'Yoast_WCSEO_Local_Shipping' => __DIR__ . '/../..' . '/woocommerce/shipping/class-wc-shipping.php',
-        'Yoast_WCSEO_Local_Shipping_Method' => __DIR__ . '/../..' . '/woocommerce/shipping/class-wc-shipping-method.php',
+        'Yoast_WCSEO_Local_Admin_Columns' => __DIR__ . '/../..' . '/deprecated/woocommerce/admin/class-admin-columns.php',
+        'Yoast_WCSEO_Local_Core' => __DIR__ . '/../..' . '/deprecated/woocommerce/class-wc-core.php',
+        'Yoast_WCSEO_Local_Emails' => __DIR__ . '/../..' . '/deprecated/woocommerce/emails/class-wc-emails.php',
+        'Yoast_WCSEO_Local_Post_Types' => __DIR__ . '/../..' . '/deprecated/woocommerce/includes/class-wc-post-types.php',
+        'Yoast_WCSEO_Local_Shipping' => __DIR__ . '/../..' . '/deprecated/woocommerce/shipping/class-wc-shipping.php',
+        'Yoast_WCSEO_Local_Shipping_Method' => __DIR__ . '/../..' . '/deprecated/woocommerce/shipping/class-wc-shipping-method.php',
         'Yoast_WCSEO_Local_Transport' => __DIR__ . '/../..' . '/deprecated/woocommerce/admin/class-wc-transport.php',
         'Yoast_WCSEO_Local_Transport_List' => __DIR__ . '/../..' . '/deprecated/woocommerce/admin/class-wc-transport-list.php',
     );
@@ -207,9 +208,9 @@ class ComposerStaticInitde4ab76c11468ab28e4704f189890013
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitde4ab76c11468ab28e4704f189890013::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitde4ab76c11468ab28e4704f189890013::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitde4ab76c11468ab28e4704f189890013::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitacdb550ddcbed498a5bff3609373635a::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitacdb550ddcbed498a5bff3609373635a::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitacdb550ddcbed498a5bff3609373635a::$classMap;
 
         }, null, ClassLoader::class);
     }

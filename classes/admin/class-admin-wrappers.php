@@ -39,7 +39,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 
 				return;
 			}
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: Reason: code is never reached.
 			echo self::admin_pages()->admin_header( true, 'yoast_wpseo_local_options', 'wpseo_local' );
 		}
 
@@ -58,7 +58,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 
 				return;
 			}
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: Reason: code is never reached.
 			echo self::admin_pages()->admin_footer( $submit, $show_sidebar );
 		}
 
@@ -82,7 +82,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 
 				return;
 			}
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: code is never reached.
 			echo self::admin_pages()->textinput( $variable, $label, $option );
 		}
 
@@ -107,7 +107,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 
 				return;
 			}
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: code is never reached.
 			echo self::admin_pages()->select( $variable, $label, $values, $option );
 		}
 
@@ -131,7 +131,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 
 				return;
 			}
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: code is never reached.
 			echo self::admin_pages()->checkbox( $variable, $label, $label_left, $option );
 		}
 
@@ -153,7 +153,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 
 				return;
 			}
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: code is never reached.
 			echo self::admin_pages()->hidden( $variable, $option );
 		}
 
@@ -176,7 +176,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Wrappers' ) ) {
 
 				return;
 			}
-
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: code is never reached.
 			echo self::admin_pages()->file_upload( $variable, $label );
 		}
 

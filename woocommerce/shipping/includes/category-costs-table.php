@@ -9,7 +9,7 @@ $cost_desc = __( 'Enter a cost (excl. tax) or sum, e.g. 10.00 * [qty].', 'yoast-
 ?>
 <tr valign="top" class="wpseo_local_shipping_costs">
 	<th scope="row" class="titledesc"><?php esc_html_e( 'Cost per category', 'yoast-local-seo' ); ?></th>
-	<td class="forminp" id="<?php echo $this->id; ?>_locations">
+	<td class="forminp" id="<?php echo esc_attr( $this->id ); ?>_locations">
 		<table class="shippingrows widefat" cellspacing="0">
 			<caption class="screen-reader-text"><?php esc_html_e( 'Cost per category', 'yoast-local-seo' ); ?></caption>
 			<thead>

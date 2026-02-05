@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-echo '= ' . $email_heading . " =\n\n";
+echo '= ' . esc_html( wp_strip_all_tags( $email_heading ) ) . " =\n\n";
 
 echo esc_html__( 'Your order is ready for pickup at local pickup store of your choosing', 'yoast-local-seo' ) . "\n\n";
 
@@ -38,4 +38,4 @@ do_action( 'woocommerce_email_customer_details', $order, $sent_to_admin, $plain_
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
-echo apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) );
+echo wp_kses_post( apply_filters( 'woocommerce_email_footer_text', get_option( 'woocommerce_email_footer_text' ) ) );

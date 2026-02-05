@@ -39,7 +39,7 @@ class Locations_Repository implements Initializer_Interface {
 	 * for a single location, the `option` value is used to get a value
 	 * from the options table with that key.
 	 *
-	 * @var array
+	 * @var array<array<string, string>>
 	 */
 	public $map = [
 		'business_type'                => [
@@ -70,6 +70,10 @@ class Locations_Repository implements Initializer_Interface {
 			'postmeta' => '_wpseo_business_country',
 			'option'   => 'location_country',
 		],
+		'global_location_number'       => [
+			'postmeta' => '_wpseo_global_location_number',
+			'option'   => 'global_location_number',
+		],
 		'business_phone'               => [
 			'postmeta' => '_wpseo_business_phone',
 			'option'   => 'location_phone',
@@ -85,6 +89,14 @@ class Locations_Repository implements Initializer_Interface {
 		'business_email'               => [
 			'postmeta' => '_wpseo_business_email',
 			'option'   => 'location_email',
+		],
+		'business_contact_email' => [
+			'postmeta' => '_wpseo_business_contact_email',
+			'option'   => 'location_contact_email',
+		],
+		'business_contact_phone' => [
+			'postmeta' => '_wpseo_business_contact_phone',
+			'option'   => 'location_contact_phone',
 		],
 		'business_price_range'         => [
 			'postmeta' => '_wpseo_business_price_range',
@@ -124,7 +136,7 @@ class Locations_Repository implements Initializer_Interface {
 	 * passed to this repository when querying locations. If the key isn't passed
 	 * to that array, the callback should not be called.
 	 *
-	 * @var array
+	 * @var array<array<string>>
 	 */
 	protected $custom_map = [
 		'business_name'        => [
@@ -178,6 +190,8 @@ class Locations_Repository implements Initializer_Interface {
 	];
 
 	/**
+	 * Stores the options repository.
+	 *
 	 * @var Options_Repository
 	 */
 	protected $options;
@@ -185,18 +199,20 @@ class Locations_Repository implements Initializer_Interface {
 	/**
 	 * Stores the options from WPSEO Local.
 	 *
-	 * @var array
+	 * @var array<string|int|bool>
 	 */
 	private $local_options;
 
 	/**
 	 * Stores the options from WPSEO.
 	 *
-	 * @var array
+	 * @var array<int|bool|string|array<string|bool|array<array<array<string>>>>>
 	 */
 	private $wpseo_options;
 
 	/**
+	 * Stores the post type object.
+	 *
 	 * @var PostType
 	 */
 	private $post_type;
@@ -214,6 +230,8 @@ class Locations_Repository implements Initializer_Interface {
 
 	/**
 	 * The init function for the Locations_Repository class.
+	 *
+	 * @return void
 	 */
 	public function initialize() {
 		$this->local_options = \get_option( 'wpseo_local' );
@@ -225,11 +243,11 @@ class Locations_Repository implements Initializer_Interface {
 	 * Get the location details, automatically populated with meta fields
 	 * Can be loaded from post meta or options table, based on multiple location setting
 	 *
-	 * @param array $arguments   Arguments to filter the query.
-	 * @param bool  $load_meta   Automatically load all meta fields after querying.
-	 * @param array $meta_fields Specify what meta fields need to be loaded.
+	 * @param array<string> $arguments   Arguments to filter the query.
+	 * @param bool          $load_meta   Automatically load all meta fields after querying.
+	 * @param array<string> $meta_fields Specify what meta fields need to be loaded.
 	 *
-	 * @return array containing the queried locations
+	 * @return array<array<string|int|array<float|string>>> containing the queried locations
 	 */
 	public function get( $arguments = [], $load_meta = true, $meta_fields = [] ) {
 		global $pagenow;
@@ -291,9 +309,9 @@ class Locations_Repository implements Initializer_Interface {
 	/**
 	 * Applies shared properties to the passed location data.
 	 *
-	 * @param array $location The location data to apply the shared properties to.
+	 * @param array<string|int|array<float|string>> $location The location data to apply the shared properties to.
 	 *
-	 * @return array The new location data.
+	 * @return array<string|int|array<float|string>> The new location data.
 	 */
 	protected function apply_shared_properties( $location ) {
 		// Get shared business information.
@@ -301,14 +319,15 @@ class Locations_Repository implements Initializer_Interface {
 		$data_from_options = $this->load_meta_from_options( $meta_fields );
 
 		// Business address data needs to be excluded from being shared.
-		$data_from_options['business_address']   = '';
-		$data_from_options['business_address_2'] = '';
-		$data_from_options['business_city']      = '';
-		$data_from_options['business_state']     = '';
-		$data_from_options['business_zipcode']   = '';
-		$data_from_options['business_country']   = '';
-		$data_from_options['coords']['lat']      = '';
-		$data_from_options['coords']['long']     = '';
+		$data_from_options['business_address']       = '';
+		$data_from_options['business_address_2']     = '';
+		$data_from_options['business_city']          = '';
+		$data_from_options['business_state']         = '';
+		$data_from_options['business_zipcode']       = '';
+		$data_from_options['business_country']       = '';
+		$data_from_options['global_location_number'] = '';
+		$data_from_options['coords']['lat']          = '';
+		$data_from_options['coords']['long']         = '';
 
 		// Loop through location fields and remove empty ones.
 		$location = \array_filter(
@@ -334,10 +353,10 @@ class Locations_Repository implements Initializer_Interface {
 	/**
 	 * Load meta fields from post meta fields
 	 *
-	 * @param int   $location_id Id of specific location.
-	 * @param array $meta_fields Specify what meta fields need to be loaded.
+	 * @param int           $location_id Id of specific location.
+	 * @param array<string> $meta_fields Specify what meta fields need to be loaded.
 	 *
-	 * @return array
+	 * @return array<string|int|array<float|string>|null>
 	 */
 	public function load_meta_from_meta( $location_id, $meta_fields = [] ) {
 		$data = [];
@@ -360,9 +379,9 @@ class Locations_Repository implements Initializer_Interface {
 	/**
 	 * Load meta fields from options table
 	 *
-	 * @param array $meta_fields Specify what meta fields need to be loaded.
+	 * @param array<string> $meta_fields Specify what meta fields need to be loaded.
 	 *
-	 * @return array
+	 * @return array<string|int|array<float|string>|null>
 	 */
 	public function load_meta_from_options( $meta_fields = [] ) {
 		$data = [];
@@ -387,7 +406,7 @@ class Locations_Repository implements Initializer_Interface {
 	 *
 	 * @param string|int $location_id Id of the location to get the location categories from.
 	 *
-	 * @return array The wpseo_locations_category terms.
+	 * @return array<string> The wpseo_locations_category terms.
 	 */
 	public function load_terms( $location_id ) {
 		// Put all categories in an array, to be passed on to the map later on and for the categories filter.
@@ -452,7 +471,7 @@ class Locations_Repository implements Initializer_Interface {
 	 * category_id: 0 (term_id of the wpseo-location-category taxonomy)
 	 * location_ids: array() (array of location Ids to retrieve)
 	 *
-	 * @param array $arguments Arguments for getting filtered locations.
+	 * @param array<int|string> $arguments Arguments for getting filtered locations.
 	 *
 	 * @return WP_Query The locations.
 	 */
@@ -502,9 +521,9 @@ class Locations_Repository implements Initializer_Interface {
 	/**
 	 * Gets the filtered location IDs.
 	 *
-	 * @param array $arguments The arguments to use to get the IDs.
+	 * @param array<int|string> $arguments The arguments to use to get the IDs.
 	 *
-	 * @return array The filtered location IDs.
+	 * @return array<int> The filtered location IDs.
 	 */
 	protected function get_filtered_location_ids( $arguments ) {
 		$location_args = [];
@@ -552,6 +571,8 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Retrieves the location name.
+	 *
 	 * @param int $location_id Id of the location to get the title from.
 	 *
 	 * @return string
@@ -561,6 +582,8 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Retrieve the location description.
+	 *
 	 * @param int $location_id Id of the location to get the description from.
 	 *
 	 * @return string
@@ -570,9 +593,11 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Retrieves the location url.
+	 *
 	 * @param int $location_id Id of the location to get the url from.
 	 *
-	 * @return false|mixed|string
+	 * @return string|false
 	 */
 	public function cb_postmeta_url( $location_id ) {
 		$url = \get_post_meta( $location_id, '_wpseo_business_url', true );
@@ -586,9 +611,11 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Returns the location coordinates.
+	 *
 	 * @param int $location_id Id of the location to get the coords from.
 	 *
-	 * @return array
+	 * @return array<float>
 	 */
 	public function cb_postmeta_coords( $location_id ) {
 		return [
@@ -598,9 +625,11 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Returns the location timezone.
+	 *
 	 * @param int $location_id Id of the location to get the coords from.
 	 *
-	 * @return array
+	 * @return string|false
 	 */
 	public function cb_postmeta_timezone( $location_id ) {
 		$value = \get_post_meta( $location_id, '_wpseo_business_timezone', true );
@@ -613,15 +642,19 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Returns the location ID.
+	 *
 	 * @param int $location_id Id of the location to get the id from.
 	 *
-	 * @return mixed
+	 * @return int
 	 */
 	public function cb_postmeta_id( $location_id ) {
 		return $location_id;
 	}
 
 	/**
+	 * Returns whether the location is a postal address.
+	 *
 	 * @param int $location_id Id of the location to get the postal address flag from.
 	 *
 	 * @return bool
@@ -629,22 +662,26 @@ class Locations_Repository implements Initializer_Interface {
 	public function cb_postmeta_postal( $location_id ) {
 		$is_postal_address = \get_post_meta( $location_id, '_wpseo_is_postal_address', true );
 
-		return $is_postal_address == '1';
+		return $is_postal_address === '1';
 	}
 
 	/**
+	 * Returns the business type.
+	 *
 	 * @param int $location_id Id of the location to get the type from.
 	 *
-	 * @return mixed
+	 * @return string|false
 	 */
 	public function cb_postmeta_type( $location_id ) {
 		return \get_post_meta( $location_id, '_wpseo_business_type', true );
 	}
 
 	/**
+	 * Returns the location custom marker.
+	 *
 	 * @param int $location_id Id of the location to get the custom marker value from.
 	 *
-	 * @return false|mixed|string
+	 * @return string|false
 	 */
 	public function cb_postmeta_custom_marker( $location_id ) {
 		$custom_marker = \get_post_meta( $location_id, '_wpseo_business_location_custom_marker', true );
@@ -667,7 +704,7 @@ class Locations_Repository implements Initializer_Interface {
 	 *
 	 * @param int $location_id The location ID.
 	 *
-	 * @return false|string|null The custom marker. Returns null if none can be found.
+	 * @return string|false|null The custom marker. Returns null if none can be found.
 	 */
 	protected function get_custom_marker_from_terms( $location_id ) {
 		$terms = \get_the_terms( $location_id, 'wpseo_locations_category' );
@@ -703,7 +740,9 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param int $location_id Id of the location to get the custom marker value from.
+	 * Returns the business logo.
+	 *
+	 * @param int $location_id Id of the location to get the logo from.
 	 *
 	 * @return int|false
 	 */
@@ -711,7 +750,7 @@ class Locations_Repository implements Initializer_Interface {
 		$logo = \get_post_meta( $location_id, '_wpseo_business_location_logo', true );
 
 		if ( empty( $logo ) && ! \is_admin() ) {
-			$logo = $this->cb_options_logo( $this->wpseo_options );
+			$logo = $this->cb_options_logo();
 		}
 
 		// Check if a number is returned. If not, get the ID from the src, otherwise, simply return the ID.
@@ -719,7 +758,9 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param int $location_id Id of the location to get the custom marker value from.
+	 * Returns the business image.
+	 *
+	 * @param int $location_id Id of the location to get the image from.
 	 *
 	 * @return int|false
 	 */
@@ -734,7 +775,9 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param int $location_id Id of the location to get the custom marker value from.
+	 * Returns whether the location opening hour is set to 24h format.
+	 *
+	 * @param int $location_id Id of the location to check.
 	 *
 	 * @return bool
 	 */
@@ -762,10 +805,12 @@ class Locations_Repository implements Initializer_Interface {
 			$company_name = WPSEO_Options::get( 'company_name' );
 		}
 
-		return isset( $company_name ) ? $company_name : '';
+		return ( $company_name ?? '' );
 	}
 
 	/**
+	 * Get the site description as blog name - blog description.
+	 *
 	 * @return string
 	 */
 	public function cb_options_description() {
@@ -773,7 +818,9 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param array $options WPSEO Local options array.
+	 * Get location_url from options.
+	 *
+	 * @param WPSEO_Local_Option $options WPSEO Local options.
 	 *
 	 * @return string
 	 */
@@ -792,9 +839,11 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param array $options WPSEO Local options array.
+	 * Get location coordinates from options.
 	 *
-	 * @return array
+	 * @param Options_Repository $options WPSEO Local options repository.
+	 *
+	 * @return array<float>
 	 */
 	public function cb_options_coords( $options ) {
 		return [
@@ -804,6 +853,8 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Get location timezone from options.
+	 *
 	 * @return string
 	 */
 	public function cb_options_timezone() {
@@ -811,6 +862,8 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Get location ID from options.
+	 *
 	 * @return string
 	 */
 	public function cb_options_id() {
@@ -818,6 +871,8 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Get location postal address from options.
+	 *
 	 * @return string
 	 */
 	public function cb_options_postal() {
@@ -825,7 +880,9 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param array $options WPSEO Local options array.
+	 * Get location business type from options.
+	 *
+	 * @param Options_Repository $options WPSEO Local options repository.
 	 *
 	 * @return string
 	 */
@@ -834,9 +891,11 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param array $options WPSEO Local options array.
+	 * Get location custom marker from options.
 	 *
-	 * @return false|string
+	 * @param Options_Repository $options WPSEO Local options array repository.
+	 *
+	 * @return string|false
 	 */
 	public function cb_options_custom_marker( $options ) {
 		$marker = $options->get( 'local_custom_marker' );
@@ -849,22 +908,24 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @return false|string Return ID of the company logo.
+	 * Retrieves the company logo ID.
+	 *
+	 * @return int|string ID of the company logo or an empty string.
 	 */
 	public function cb_options_logo() {
-		if ( isset( $this->wpseo_options['company_logo'] ) && \filter_var( $this->wpseo_options['company_logo'], \FILTER_VALIDATE_URL ) ) {
-			return \yoast_wpseo_local_get_attachment_id_from_src( $this->wpseo_options['company_logo'] );
+		$wpseo_titles = \get_option( 'wpseo_titles' );
+		if ( ! isset( $wpseo_titles['company_logo_id'] ) ) {
+			return '';
 		}
-
-		return '';
+		return $wpseo_titles['company_logo_id'];
 	}
 
 	/**
 	 * Callback to retrieve the business image from the options.
 	 *
-	 * @param Options_Repository $options WPSEO Local options.
+	 * @param Options_Repository $options WPSEO Local options repository.
 	 *
-	 * @return false|string Return ID of the company logo.
+	 * @return string|false Return ID of the company logo.
 	 */
 	public function cb_options_image( $options ) {
 		$image = $options->get( 'business_image' );
@@ -877,7 +938,9 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
-	 * @param array $options WPSEO Local options array.
+	 * Get if location opening hours follow the 24h format from options.
+	 *
+	 * @param Options_Repository $options WPSEO Local options repository.
 	 *
 	 * @return string|null Return 'on' or null.
 	 */
@@ -901,9 +964,9 @@ class Locations_Repository implements Initializer_Interface {
 	/**
 	 * Prepares arguments for retrieving data from multiple locations.
 	 *
-	 * @param array $arguments Array with (optional) arguments.
+	 * @param array<int|string|array<int>> $arguments Array with (optional) arguments.
 	 *
-	 * @return array Array with arguments, compared and parse with the defaults.
+	 * @return array<int|string> Array with arguments, compared and parse with the defaults.
 	 */
 	private function prepare_arguments( $arguments ) {
 		$defaults = [
@@ -919,11 +982,13 @@ class Locations_Repository implements Initializer_Interface {
 	}
 
 	/**
+	 * Filters the meta fields to be returned.
+	 *
 	 * @todo Specify the default fields of the meta to be returned.
 	 *
-	 * @param array $meta_fields Meta field keys provided to query.
+	 * @param array<string> $meta_fields Meta field keys provided to query.
 	 *
-	 * @return array
+	 * @return array<string>
 	 */
 	private function prepare_meta_fields( $meta_fields ) {
 		$allowed_fields = \array_merge( \array_keys( $this->map ), \array_keys( $this->custom_map ) );

@@ -52,11 +52,11 @@ class WPSEO_Show_Locations_By_Category extends WP_Widget {
 		if ( $locations->post_count > 0 ) {
 
 			if ( isset( $args['before_widget'] ) ) {
-				echo $args['before_widget'];
+				echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			if ( ! empty( $title ) ) {
-				echo $args['before_title'], esc_html( $title ), $args['after_title'];
+				echo $args['before_title'], esc_html( $title ), $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			echo '<ul>';
@@ -67,7 +67,7 @@ class WPSEO_Show_Locations_By_Category extends WP_Widget {
 			echo '</ul>';
 
 			if ( isset( $args['after_widget'] ) ) {
-				echo $args['after_widget'];
+				echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
 	}
@@ -128,7 +128,12 @@ class WPSEO_Show_Locations_By_Category extends WP_Widget {
 		echo '
 					<option value=""> -- ', esc_html__( 'Select a category', 'yoast-local-seo' ), ' -- </option>';
 
-		$categories = get_terms( 'wpseo_locations_category', [ 'hide_empty' => false ] );
+		$categories = get_terms(
+			[
+				'taxonomy'   => 'wpseo_locations_category',
+				'hide_empty' => false,
+			]
+		);
 
 		foreach ( $categories as $category ) {
 			printf(

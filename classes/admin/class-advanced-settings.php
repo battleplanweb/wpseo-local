@@ -69,6 +69,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 		 *
 		 * @param array $old_value The old option value.
 		 * @param array $new_value The new option value.
+		 *
+		 * @return void
 		 */
 		public function reset_indexable_permalinks( $old_value, $new_value ) {
 			if ( $old_value['locations_slug'] === $new_value['locations_slug'] && $old_value['locations_taxo_slug'] === $new_value['locations_taxo_slug'] ) {
@@ -119,6 +121,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 
 		/**
 		 * If multiple locations are not enabled, show a notification there are more (advanced) settings available if they are activated.
+		 *
+		 * @return void
 		 */
 		public function maybe_show_multiple_location_notification() {
 			WPSEO_Local_Admin_Page::section_before( 'wpseo-local-multiple-locations-notification', 'clear: both; ' . ( ! wpseo_has_multiple_locations() ? '' : 'display: none;' ) );
@@ -130,6 +134,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 
 		/**
 		 * If multiple locations are not enabled, show a notification there are more (advanced) settings available if they are activated.
+		 *
+		 * @return void
 		 */
 		public function post_type_filtered_notification() {
 			$post_type_instance = new PostType();
@@ -143,7 +149,7 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 			printf(
 				/* Translators: %s is a link to the post type edit page */
 				esc_html__( 'Permalink and label settings are not available because your locations post type is being overwritten by a filter. The current post type used for locations is %s', 'yoast-local-seo' ),
-				'<a href="' . admin_url( 'edit.php?post_type=' . $post_type ) . '">' . $post_type_object->labels->name . '</a>'
+				'<a href="' . esc_url( admin_url( 'edit.php?post_type=' . $post_type ) ) . '">' . esc_html( $post_type_object->labels->name ) . '</a>'
 			);
 			echo '</p>';
 			WPSEO_Local_Admin_Page::section_after(); // End wpseo-local-enhanced section.
@@ -151,6 +157,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 
 		/**
 		 * Advanced settings section.
+		 *
+		 * @return void
 		 */
 		public function enhanced_search() {
 			WPSEO_Local_Admin_Page::section_before( 'wpseo-local-enhanced', 'clear: both; ' . ( wpseo_has_multiple_locations() ? '' : 'display: none;' ) );
@@ -171,6 +179,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 
 		/**
 		 * Show the permalink settings when multiple locations is active.
+		 *
+		 * @return void
 		 */
 		public function permalinks() {
 			$base_url = get_site_url();
@@ -222,6 +232,8 @@ if ( ! class_exists( 'WPSEO_Local_Admin_Advanced_Settings' ) ) {
 
 		/**
 		 * Show fields to change the admin labels when multiple locations is active.
+		 *
+		 * @return void
 		 */
 		public function admin_labels() {
 			WPSEO_Local_Admin_Page::section_before( 'wpseo-local-admin_labels', 'clear: both; ' . ( wpseo_has_multiple_locations() ? '' : 'display: none;' ) );

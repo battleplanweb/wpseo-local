@@ -110,6 +110,8 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 		 * Enqueue the scripts necessary for the Store Locator to work.
 		 *
 		 * The wp-polyfill asset is needed for versions of WP before 5.0.
+		 *
+		 * @return void
 		 */
 		public function enqueue_scripts() {
 			$this->asset_manager = new WPSEO_Local_Admin_Assets();
@@ -153,11 +155,11 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 			<form action="#wpseo-storelocator-form" method="post" id="wpseo-storelocator-form" data-form="wpseo-local-store-locator">
 				<fieldset>
 					<?php
-					$search_string    = isset( $_REQUEST['wpseo-sl-search'] ) ? esc_attr( $_REQUEST['wpseo-sl-search'] ) : '';
-					$sl_category_term = ! empty( $_REQUEST['wpseo-sl-category'] ) ? $_REQUEST['wpseo-sl-category'] : '';
+					$search_string    = isset( $_REQUEST['wpseo-sl-search'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['wpseo-sl-search'] ) ) ) : '';
+					$sl_category_term = ! empty( $_REQUEST['wpseo-sl-category'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['wpseo-sl-category'] ) ) ) : '';
 					?>
 					<p>
-						<label for="wpseo-sl-search"><?php echo apply_filters( 'yoast-local-seo-search-label', __( 'Enter your postal code, city and / or state', 'yoast-local-seo' ) ); ?></label>
+						<label for="wpseo-sl-search"><?php echo esc_html( apply_filters( 'yoast-local-seo-search-label', __( 'Enter your postal code, city and / or state', 'yoast-local-seo' ) ) ); ?></label>
 						<input type="text" name="wpseo-sl-search" id="wpseo-sl-form-search" value="<?php echo esc_attr( $search_string ); ?>">
 						<input type="hidden" name="wpseo-sl-lat" id="wpseo-sl-form-lat" value="">
 						<input type="hidden" name="wpseo-sl-lng" id="wpseo-sl-form-lng" value="">
@@ -175,7 +177,7 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 							<select name="wpseo-sl-radius" id="wpseo-sl-radius">
 								<?php
 								$radius_array    = [ 1, 5, 10, 25, 50, 100, 250, 500, 1000 ];
-								$selected_radius = ! empty( $_REQUEST['wpseo-sl-radius'] ) ? esc_attr( $_REQUEST['wpseo-sl-radius'] ) : $atts['radius'];
+								$selected_radius = ! empty( $_REQUEST['wpseo-sl-radius'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['wpseo-sl-radius'] ) ) ) : esc_attr( $atts['radius'] );
 
 								foreach ( $radius_array as $radius ) {
 									echo '<option value="' . (int) $radius . '" ' . selected( $selected_radius, $radius, false ) . '>' . (int) $radius . ( ( $this->options['unit_system'] === 'METRIC' ) ? 'km' : 'mi' ) . '</option>';
@@ -239,7 +241,6 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 					$map_atts = [
 						'id'                   => $ids,
 						'max_number'           => $atts['max_number'],
-						'width'                => $atts['map_width'],
 						'from_sl'              => true,
 						'show_route'           => true,
 						'scrollable'           => $atts['scrollable'],
@@ -257,7 +258,8 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 						'show_email'           => $atts['show_email'],
 						'show_url'             => $atts['show_url'],
 					];
-					echo wpseo_local_show_map( $map_atts );
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in wpseo_local_show_map.
+					echo wpseo_local_show_map( $map_atts ); // nosemgrep audit.php.wp.security.xss.shortcode-attr.
 				}
 
 				if ( empty( $_POST ) === false ) {
@@ -348,21 +350,21 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 			global $wpdb;
 
 			$metric           = ( $this->options['unit_system'] === 'METRIC' ) ? 'km' : 'mi';
-			$radius           = ( ! empty( $_REQUEST['wpseo-sl-radius'] ) ) ? $_REQUEST['wpseo-sl-radius'] : 99999;
-			$sl_category_term = ( ! empty( $_REQUEST['wpseo-sl-category'] ) ) ? $_REQUEST['wpseo-sl-category'] : '';
+			$radius           = ( ! empty( $_REQUEST['wpseo-sl-radius'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['wpseo-sl-radius'] ) ) : 99999;
+			$sl_category_term = ( ! empty( $_REQUEST['wpseo-sl-category'] ) ) ? sanitize_text_field( wp_unslash( $_REQUEST['wpseo-sl-category'] ) ) : '';
 			$distances        = [
 				'in_radius' => 0,
 				'locations' => [],
 			];
 
-			$search_string = isset( $_REQUEST['wpseo-sl-search'] ) ? esc_attr( $_REQUEST['wpseo-sl-search'] ) : '';
+			$search_string = isset( $_REQUEST['wpseo-sl-search'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['wpseo-sl-search'] ) ) ) : '';
 			if ( $search_string === '' ) {
 				return $distances;
 			}
 
 			$coordinates = (object) [
-				'lat' => floatval( $_POST['wpseo-sl-lat'] ),
-				'lng' => floatval( $_POST['wpseo-sl-lng'] ),
+			'lat' => isset( $_POST['wpseo-sl-lat'] ) ? floatval( $_POST['wpseo-sl-lat'] ) : 0.0,
+			'lng' => isset( $_POST['wpseo-sl-lng'] ) ? floatval( $_POST['wpseo-sl-lng'] ) : 0.0,
 			];
 
 			if ( ! $coordinates ) {
@@ -511,6 +513,8 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 
 		/**
 		 * Load jQuery script (if not already loaded before).
+		 *
+		 * @return void
 		 */
 		public function load_scripts() {
 			if ( wp_script_is( 'jquery', 'done' ) === false && apply_filters( 'wpseo_local_load_jquery', true ) !== false ) {
@@ -524,6 +528,8 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 		 * @param int   $location_id Post ID of the location.
 		 * @param array $atts        Array of attributes, used for displaying the address.
 		 *                           These are matching attributes for the wpseo_local_show_address() method.
+		 *
+		 * @return void
 		 */
 		public function get_location_details( $location_id, $atts ) {
 			$coords_lat  = get_post_meta( $location_id, '_wpseo_coordinates_lat', true );
@@ -550,10 +556,11 @@ if ( ! class_exists( 'WPSEO_Local_Storelocator' ) ) {
 				];
 				$location     = wpseo_local_show_address( $address_atts );
 
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Reason: already escaped in wpseo_local_show_address.
 				echo apply_filters( 'wpseo_local_sl_result', $location, $location_id );
 				?>
 				<div class="wpseo-sl-route">
-					<a href="javascript:;" onclick="wpseo_sl_show_route( this, '<?php echo $coords_lat; ?>', '<?php echo $coords_long; ?>' );"><?php echo $atts['show_route_label']; ?></a>
+					<a href="javascript:;" onclick="wpseo_sl_show_route( this, '<?php echo esc_js( $coords_lat ); ?>', '<?php echo esc_js( $coords_long ); ?>' );"><?php echo esc_html( $atts['show_route_label'] ); ?></a>
 				</div>
 			</div>
 			<?php

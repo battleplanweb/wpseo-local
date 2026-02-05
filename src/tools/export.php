@@ -91,6 +91,8 @@ class Export extends Import_Export {
 
 	/**
 	 * Register hooks and filters
+	 *
+	 * @return void
 	 */
 	public function register_hooks() {
 		parent::register_hooks();
@@ -100,6 +102,8 @@ class Export extends Import_Export {
 
 	/**
 	 * Handles the CSV export
+	 *
+	 * @return void
 	 */
 	public function handle_csv_export() {
 		if ( ! isset( $_POST['csv-export'] )
@@ -152,6 +156,8 @@ class Export extends Import_Export {
 				\esc_attr( \get_post_meta( \get_the_ID(), '_wpseo_business_phone_2nd', true ) ),
 				\esc_attr( \get_post_meta( \get_the_ID(), '_wpseo_business_fax', true ) ),
 				\esc_attr( \get_post_meta( \get_the_ID(), '_wpseo_business_email', true ) ),
+				\esc_attr( \get_post_meta( \get_the_ID(), '_wpseo_business_contact_email', true ) ),
+				\esc_attr( \get_post_meta( \get_the_ID(), '_wpseo_business_contact_phone', true ) ),
 				\get_the_content(),
 				( \has_post_thumbnail( \get_the_ID() ) ? \get_the_post_thumbnail_url( \get_the_ID() ) : '' ),
 				$categories,
@@ -218,6 +224,8 @@ class Export extends Import_Export {
 	 * Output HTML for exporting WPSEO Local locations as .csv
 	 *
 	 * @since 3.9
+	 *
+	 * @return void
 	 */
 	public function output_export_html() {
 		echo '<h2>' . \esc_html__( 'Export', 'yoast-local-seo' ) . '</h2>';

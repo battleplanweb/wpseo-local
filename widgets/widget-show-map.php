@@ -38,7 +38,7 @@ class WPSEO_Show_Map extends WP_Widget {
 	 * @return void
 	 */
 	public function widget( $args, $instance ) {
-		$title                   = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
+		$title                   = apply_filters( 'widget_title', ( $instance['title'] ?? '' ) );
 		$show_all_locations      = ! empty( $instance['show_all_locations'] );
 		$location_id             = ! empty( $instance['location_id'] ) ? $instance['location_id'] : '';
 		$width                   = ! empty( $instance['width'] ) ? $instance['width'] : 400;
@@ -73,11 +73,11 @@ class WPSEO_Show_Map extends WP_Widget {
 		}
 
 		if ( isset( $args['before_widget'] ) ) {
-			echo $args['before_widget'];
+			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		if ( ! empty( $title ) ) {
-			echo $args['before_title'], esc_html( $title ), $args['after_title'];
+			echo $args['before_title'], esc_html( $title ), $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$map_args = [
@@ -98,7 +98,7 @@ class WPSEO_Show_Map extends WP_Widget {
 		wpseo_local_show_map( $map_args );
 
 		if ( isset( $args['after_widget'] ) ) {
-			echo $args['after_widget'];
+			echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 

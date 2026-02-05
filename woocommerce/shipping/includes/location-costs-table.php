@@ -16,7 +16,7 @@ $cost_desc = __( 'Enter a cost (excl. tax) or sum, e.g. 10.00 * [qty].', 'yoast-
 		}
 		?>
 	</th>
-	<td class="forminp" id="<?php echo $this->id; ?>_locations">
+	<td class="forminp" id="<?php echo esc_attr( $this->id ); ?>_locations">
 		<table class="shippingrows widefat" cellspacing="0">
 			<caption class="screen-reader-text"><?php esc_html_e( 'Cost per location', 'yoast-local-seo' ); ?></caption>
 			<thead>
@@ -35,12 +35,12 @@ $cost_desc = __( 'Enter a cost (excl. tax) or sum, e.g. 10.00 * [qty].', 'yoast-
 					$defaults = $this->resolve_defaults( $location );
 
 					$yoast_local_label_allow = sprintf(
-						/* translators: %s expands to a pickup location title. */
+						/* translators: Hidden accessibility text; %s expands to a pickup location title. */
 						__( 'Allow pickup location: %s', 'yoast-local-seo' ),
 						$location->post_title
 					);
 					$yoast_local_label_costs = sprintf(
-						/* translators: %s expands to a pickup location title. */
+						/* translators: Hidden accessibility text; %s expands to a pickup location title. */
 						__( 'Costs for pickup location: %s', 'yoast-local-seo' ),
 						$location->post_title
 					);
@@ -91,7 +91,7 @@ $cost_desc = __( 'Enter a cost (excl. tax) or sum, e.g. 10.00 * [qty].', 'yoast-
 								echo '<option value="' . (int) $location->ID . '" data-defaults=\''
 									// phpcs:ignore WordPress.Security.EscapeOutput -- WPCS bug: methods can't be globally ignored yet.
 									. WPSEO_Utils::format_json_encode( $defaults )
-									. '\'>' . $location->post_title . '</option>';
+									. '\'>' . esc_html( $location->post_title ) . '</option>';
 							}
 						}
 						?>

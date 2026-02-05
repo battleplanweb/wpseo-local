@@ -1,0 +1,12 @@
+*** Yoast SEO: Local Changelog ***
+
+
+2026-01-20 - version 15.7
+* fix -  Fixes a bug where a PHP notice was thrown if the selected primary location was deleted.
+* fix -  Fixes a bug where enabling "Open 24/7" option inside a location triggered an error in the console.
+* fix -  Fixes a bug where enabling "Open 24/7" option inside a location generated incorrect schema for `openingHoursSpecification` for that specific location.
+* fix -  Fixes a bug where adding a Store locator block resulted in an error and the block was not rendered.
+* update -  Improves the general security of the plugin via sanitization and escaping.
+* update -  Sets the WordPress tested up to version to 6.9.
+* update -  Bumps the minimum required Free version to 26.8.
+

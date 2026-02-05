@@ -38,7 +38,7 @@ class WPSEO_Show_Address extends WP_Widget {
 	 * @return void
 	 */
 	public function widget( $args, $instance ) {
-		$title              = apply_filters( 'widget_title', isset( $instance['title'] ) ? $instance['title'] : '' );
+		$title              = apply_filters( 'widget_title', ( $instance['title'] ?? '' ) );
 		$location_id        = ! empty( $instance['location_id'] ) ? $instance['location_id'] : '';
 		$hide_name          = ! empty( $instance['hide_name'] );
 		$hide_address       = ! empty( $instance['hide_address'] );
@@ -80,11 +80,11 @@ class WPSEO_Show_Address extends WP_Widget {
 		}
 
 		if ( isset( $args['before_widget'] ) ) {
-			echo $args['before_widget'];
+			echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		if ( ! empty( $title ) ) {
-			echo $args['before_title'], esc_html( $title ), $args['after_title'];
+			echo $args['before_title'], esc_html( $title ), $args['after_title']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		$shortcode_args = [
@@ -117,7 +117,7 @@ class WPSEO_Show_Address extends WP_Widget {
 		wpseo_local_show_address( $shortcode_args, $this->id );
 
 		if ( isset( $args['after_widget'] ) ) {
-			echo $args['after_widget'];
+			echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 	}
 
