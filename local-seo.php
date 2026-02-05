@@ -1,43 +1,10 @@
 <?php
-/**
- * Yoast SEO: Local
- *
- * @package WPSEO_Local\Main
- *
- * @wordpress-plugin
- * Plugin Name: Yoast SEO: Local
- * Version: 15.0
- * Plugin URI: http://yoa.st/4fj
- * Description: This Local SEO module adds all the needed functionality to get your site ready for Local Search Optimization
- * Author: Team Yoast and Arjan Snaterse
- * Author URI: https://yoa.st/team-yoast-local
- * Text Domain: yoast-local-seo
- * Domain Path: /languages/
- * Requires at least: 6.1
- * Requires PHP: 7.2.5
- *
- * WC Tested up to: 7.7
- *
- * Copyright 2012-2022 Joost de Valk & Arjan Snaterse
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 /*
- * All functionality for fetching location data and creating an KML file with it.
- */
+Plugin Name: Yoast SEO: Local (BP)
+Version: 15.1
+GitHub Plugin URI: https://github.com/battleplanweb/wpseo-local
+Primary Branch: master
+*/
 
 if ( ! defined( 'WPSEO_LOCAL_VERSION' ) ) {
 	define( 'WPSEO_LOCAL_VERSION', '15.0' );
